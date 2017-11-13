@@ -1,0 +1,86 @@
+framework/
+assets/
+backup/
+carpeta/
+css/
+data/
+materiales/
+nbproject/
+themes/abound/
+themes/mobile/
+themes/templated-horizons/
+themes/template-intesify/
+themes/temita/img/
+themes/temita/images/
+protected/vendors/
+protected/extensions/vendors/
+protected/runtime/
+protected/extensions/Editor/
+protected/mpdf/
+protected/extensions/bootstrap/
+protected/extensions/bootstrap/
+# archivos no deseados  #
+###################
+*.fdf
+*.crt
+*.map
+*.ctg
+*.z
+*.otf
+*.eof
+*.svg
+*.ttf
+*.woft
+*.less
+*.png
+*.bmp
+*.jpg
+*.jpeg
+*.ser
+*.csv
+*.dat
+*.txt
+*.ttf
+*.icc
+*.md
+
+
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+*.bin
+*.ser
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
