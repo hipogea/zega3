@@ -30,12 +30,12 @@ public $fechareemplazo;
 		return array(
                      array('fechafin,activo','safe','on'=>'anular'),
 			array('codigo, ubicacion', 'length', 'max'=>10),
-                    array('hidequipo,ubicacion,fechainicio,unidades,incremental','required','on'=>'insert,update'),
+                    array('hidequipo,orden,ubicacion,fechainicio,unidades,incremental','required','on'=>'insert,update'),
                     array('hidpadre,fechainicio,codigo,unidades,incremental,ubicacion','required','on'=>'reemplazo'),
                     array('fechainicio', 'checkfechainicio', 'on'=>'insert,update'),
                     array('hidpadre,fechareemplazo,codigo,lecturainicio,lecturaacumulada,ubicacion','safe','on'=>'reemplazo'),
                      array('lecturainicio,fechainicio','checkReemplazo','on'=>'reemplazo'),
-                    array('codigo, hidpadre,hidequipo,ubicacion,hidequipo,lecturaacumulada, fechainicio, activo,lecturaactual,unidades,incremental,fechafin', 'safe', 'on'=>'insert,update'),
+                    array('codigo,orden, hidpadre,hidequipo,ubicacion,hidequipo,lecturaacumulada, fechainicio, activo,lecturaactual,unidades,incremental,fechafin', 'safe', 'on'=>'insert,update'),
 			array('hidequipo', 'length', 'max'=>20),
                       //ARRAY('codigo','checkprevio'),
 			array('lecturaactual, lecturaacumulada', 'length', 'max'=>12),
@@ -77,6 +77,7 @@ public $fechareemplazo;
 			'lecturaacumulada' => 'Accumulated value',
 			'fechainicio' => 'Begin Date',
 			'fechafin' => 'End Date',
+                    'orden' => 'Order',
                     'hidpadre' => 'Has Parent',
 		);
 	}

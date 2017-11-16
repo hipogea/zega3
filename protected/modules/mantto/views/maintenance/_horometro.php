@@ -142,6 +142,17 @@ echo $form->DropDownList($model,'unidades',$datos, array('disabled'=>($model->es
 	</div>  
         <div class="row">
              
+		<?php echo $form->labelEx($model,'orden'); ?>
+         
+                <?php      
+                echo $form->textField($model,'orden',array('size'=>1,'disabled'=>''));    
+                ?>
+            
+		
+	</div>  
+        
+        <div class="row">
+             
 		<?php echo $form->labelEx($model,'hidpadre'); ?>
          
                 <?php   

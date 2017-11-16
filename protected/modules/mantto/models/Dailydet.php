@@ -608,6 +608,52 @@ $criteria->params=array(":vhidparte"=>$idparte);
          
          return false;
      }
+     
+     
+    public function  getEquipment(){
+       IF($this->isNewRecord){
+           return Inventario::findByPk($this->hidequipo);
+       }else{
+           return $this->inventario;
+       } 
+    }
+
+
+    
+     ///OBEITNEE LE OBEJTO PUNTO DEN MEDIDA 
+     public function getMeasurePointByName($name){
+       $this->getEquipment()->getPoint($name);         
+     }
+     
+      ///OBEITNEE LE OBEJTO PUNTO DEN MEDIDA 
+     public function getMeasurePointByOrder($order){
+       $this->getEquipment()->getPoint($order);         
+     }
+     
+     public function  getValuePoint($order){
+        $this->getMeasurePointByOrder($order)->getLastObject()->lectura;
+     }
+     
+     public function getMeasurePointFromId($id=null){
+         if(is_null($id))return null;
+            Manttolecturahorometros::findByPk($id);
+     }
+     public function getValueMeasurePointFromId($id=null){
+         if(is_null($id))return null;
+        return (yii::app()->createCommand()-> 
+              select('lectura')->from('{{manttolecturahorometros}}')-> 
+              where("id=:vid",array(":vid"=>$id))->queryScalar()=!false);
         
+     }
+       
+    private function getCriteriaMeasurePoint($id){
+         
+           $parametros=array(":vid"=>$id);                   
+           $condicion="id=:vid";
+           $criteria=New CDbCriteria();
+           $criteria->addCondition($condicion);
+           $criteria->params=$parametros;
+           return $criteria;
+    }
 }
  

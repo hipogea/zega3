@@ -222,6 +222,8 @@ class Inventario extends ModeloGeneral
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+                   'manttohorometros'=>array(self::HAS_MANY, 'Manttohorometros', 'hidequipo'),
+		 
                     'nproyectos'=>array(self::STAT,'Machineswork','hidinventario'),
 		'barcoactual'=>array(self::BELONGS_TO, 'Embarcaciones', 'codep'),
 		'barcoanterior'=>array(self::BELONGS_TO, 'Embarcaciones', 'codepanterior'),
@@ -814,5 +816,29 @@ public static function canttransporte(){
                  
             }
         }
+        
+        
+  public function getPoints(){
+      return $this->manttohorometros;
+  }   
+  public function getPoint($name){
+      $fila=null;
+      if(is_numeric($name))
+     foreach($this->getPoints() as $point){
+         if($point->codigo==$name){
+           $fila=$point;  break;
+         }
+            
+     }
+     else{
+     foreach($this->getPoints() as $point){
+         if($point->order==$name){
+           $fila=$point;  break;
+         }
+            
+        }
+     }
+     return $fila;
+  }   
        
 }
