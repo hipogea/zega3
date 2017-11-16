@@ -102,7 +102,8 @@ class DailyworkController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		//var_dump(Dailyturnos::getSecuencia('490000000031'));die();
+	
+            //var_dump(Dailyturnos::getSecuencia('490000000031'));die();
             $model=$this->loadModel($id);
 
 		// Uncomment the following line if AJAX validation is needed
@@ -114,6 +115,7 @@ class DailyworkController extends Controller
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
+                  
 $criterio=new CDbCriteria();
                                 
                 
@@ -121,6 +123,7 @@ $criterio=new CDbCriteria();
                       $criterio->params=array(":vcodproyecto"=>$model->codproyecto);
                $siguiente=$model->getNext();
                 $anterior=$model->getPrev();
+              
 		$this->render('update',array(
 			'model'=>$model,'criterio'=>$criterio,
                         'siguiente'=>$siguiente,'anterior'=>$anterior
@@ -177,6 +180,7 @@ $criterio=new CDbCriteria();
 	public function loadModel($id)
 	{
 		$model=Dailywork::model()->findByPk($id);
+                
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;

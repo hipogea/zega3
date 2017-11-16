@@ -1,13 +1,6 @@
-<?php
-/* @var $this CajachicaController */
-/* @var $model Cajachica */
-/* @var $form CActiveForm */
-?>
 <div class="form">
 <div class="division">
 	<div class="wide form">
-
-
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'cajachica-form',
 	// Please note: When you enable ajax validation, make sure the corresponding
@@ -16,9 +9,6 @@
 	// See class documentation of CActiveForm for details on this.
 	'enableAjaxValidation'=>false,
 )); ?>
-
-
-
 	<?php echo $form->errorSummary($model); ?>
 	
 	

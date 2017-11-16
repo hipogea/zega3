@@ -2,6 +2,7 @@
 /* @var $this DailyworkController */
 /* @var $model Dailywork */
 /* @var $form CActiveForm */
+
 ?>
 
 <div class="form">
@@ -202,7 +203,7 @@
 <?php
  
 $claseedit='application.components.booster.widgets.TbEditableColumn';
-$clasenormal='zii.widgets.grid.CDataColumn'
+$clasenormal='zii.widgets.grid.CDataColumn';
 
 ?>
    

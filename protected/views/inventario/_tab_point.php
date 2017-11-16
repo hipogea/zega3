@@ -67,7 +67,7 @@
 		array(										       
 			"id"=>$idactivo,
 				"asDialog"=>1,
-				"gridId"=>'ot-grid',												
+				"gridId"=>'horometro-grid',												
 											)
 							);
 	//$mensaje="Para agregar una observacion debe de inicar sesion primero";

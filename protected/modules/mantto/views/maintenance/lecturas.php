@@ -1,5 +1,5 @@
 <?php $this->widget('zii.widgets.grid.CGridView', array(
-	'id'=>'horometro-grid',
+	'id'=>'LECTURAS-grid',
 	//'filter'=>$model,
     'itemsCssClass'=>'table table-striped table-bordered table-hover',
 	'dataProvider'=> $proveedorlecturas,	

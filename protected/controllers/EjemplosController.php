@@ -399,7 +399,71 @@ $mo=New Alinventario();
 
 public $layout='//layouts/column2';
 	public function actionPio() {
+            $modelant= Manttohorometros::model()->findByPk(23); 
+            $nombremodelo='Manttohorometros';
+            $model=new $nombremodelo('reemplazo');             
+               // $model->valorespordefecto();
+                 $model->ubicacion=$modelant->ubicacion;
+                 $model->hidpadre=$modelant->id;
+                 $model->hidequipo=$modelant->hidequipo;
+                 $model->unidades=$modelant->unidades;
+                 $model->incremental=$modelant->incremental;
+                 //var_dump($modelant->hasMeasures());
+                 IF($modelant->hasMeasures()){
+                     $model->setAttributes(array(
+                         'fechainicio'=>$modelant->getLastObject()->fecha,                         
+                         'lecturainicio'=>(!$modelant->canReset())?$modelant->getLastObject()->lectura:0,
+                     ));
+                     //MiFactoria::Mensaje('notice', 'Some values have been taken from the last measure ');
+                 }
+            
+            var_dump($model->getParentPoint()->getLastObject());die();
+           
+            
+            $diff=strtotime('2017-11-15 18:13:00')-strtotime('2017-11-16 10:08:00');
+            $horas=$diff/(3600);
+            echo $horas;
+            die();
+            //$registro= Manttolecturahorometros::model()->findByPk(59);             
+           // var_dump($registro->difference());die();
+      $registro=New Manttolecturahorometros;
+      $registro->fecha='12/10/2017 06:12:00';
+      $registro->hidhorometro=23;
+      $registro->lectura=4035;
+echo "id vecino anterior  "; var_dump($registro->getIdVecino(true));echo "<br>";
+ echo "is first() "; var_dump($registro->isFirst());echo "<br>";
+echo "id vecino siguiente  "; var_dump($registro->getIdVecino(false));echo "<br>";
+ echo "is last() "; var_dump($registro->isLast());echo "<br>";
+echo "previous()  "; var_dump($registro->previous());echo "<br>";
+echo "next()  "; var_dump($registro->next());echo "<br>";
+echo "differenceTimeBack()  "; var_dump($registro->differenceTimeBack());echo "<br>";
+echo "differenceTimeForward()  "; var_dump($registro->differenceTimeForward());echo "<br>"; 
+echo "differenceVlauesBack()  "; var_dump($registro->differenceValuesBack($registro->manttohorometros->ums->escala+0));echo "<br>";
+echo "differenceVlauesForward()  "; var_dump($registro->differenceValuesForward($registro->manttohorometros->ums->escala+0));echo "<br>"; 
+echo "cuantos por atras  "; var_dump(count($registro->getBack()));echo "<br>";
+echo "cuantos por delante  "; var_dump(count($registro->getForward()));echo "<br>";
+echo " lectura sguietne  "; var_dump($registro->next()->lectura);echo "<br>";
+echo " lectura anteriori  "; var_dump($registro->previous()->lectura);echo "<br>";
+//var_dump($registro->getIdVecino(false));
+die();  
+
+
+
+$registro->getBack();
+$registro->getForward();
+
+
+die();
+            var_dump($registro->fechainicio);
+            $registro->conviertefechas(true);
+             var_dump($registro->fechainicio);
+             $registro->conviertefechas(false);
+             var_dump($registro->fechainicio);die();
             //echo "de"; die();
+            $REGISTRO= Solpe::model()->findByPk(21);
+            echo "de"; die();
+            $REGISTRO->numero='004545';
+            $REGISTRO->save();die();
             var_dump(Dailydet::model()->search_por_parte(21)->getdata());
             die();
               var_dump(yii::app()->periodo->toISO('18/11/2017 12:41').'');

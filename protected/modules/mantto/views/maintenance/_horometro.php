@@ -22,6 +22,12 @@ $form = $this->beginWidget(
        // 'htmlOptions' => array('class' => 'well'), // for inset effect
     )
 );
+if($model->hasMeasures()){
+   $lecturaac=$model->getLastObject()->lectura;
+   
+}else{
+    $lecturaac=$model->lecturainicio;
+}
 ?>
 
     
@@ -33,7 +39,7 @@ $form = $this->beginWidget(
                             ?>
         
         
-<div class="panelizquierdo">
+
 
     
     <div class="row"> 
@@ -70,7 +76,7 @@ $form = $this->beginWidget(
 					'attribute'=>'fechainicio', //attribute name
 					'language'=>'es',
 					'mode'=>'datetime', //use "time","date" or "datetime" (default)
-					'options'=>array('dateFormat'=>'yy-mm-dd',
+					'options'=>array('dateFormat'=>'dd/mm/yy',
 							'showOn'=>'button', // 'focus', 'button', 'both'
                                                         'buttonText'=>Yii::t('ui',' ... '),
 							//'buttonImage'=>Yii::app()->request->baseUrl.'/images/calendar.png',
@@ -78,7 +84,7 @@ $form = $this->beginWidget(
 								),
 				'htmlOptions'=>array(
 			       'style'=>'width:150px;vertical-align:top',
-                                    'readonly'=>'readonly',
+                                   // 'readonly'=>'readonly',
 
 					),// jquery plugin options
 
@@ -98,7 +104,7 @@ $form = $this->beginWidget(
 		<?php echo $form->labelEx($model,'lecturaactual'); ?>
          
                 <?php      
-                echo $form->textField($model,'lecturaactual',array('size'=>8,'disabled'=>''));    
+                echo $form->textField($model,'lecturaactual',array('value'=>$lecturaac,'size'=>8,'disabled'=>$model->escampohabilitado('lecturaactual')?'':'disabled'));    
                 ?>
 		<?php echo $form->error($model,'lecturaactual'); ?>
 	</div>
@@ -106,12 +112,12 @@ $form = $this->beginWidget(
 		<?php echo $form->labelEx($model,'unidades'); ?>
 		<?php 
 $datos = CHtml::listData(Ums::model()->findAll(),'um','desum');
-echo $form->DropDownList($model,'unidades',$datos, array('disabled'=>($model->escampohabilitado('unidades') )?'':'disabled','empty'=>'--Choose unit measurement--', 'disabled'=>'')  )  ;						     
+echo $form->DropDownList($model,'unidades',$datos, array('disabled'=>($model->escampohabilitado('unidades') )?'':'disabled','empty'=>'--Choose unit --')  )  ;						     
  ?>
 		<?php echo $form->error($model,'unidades'); ?>
 	</div>
 
-<div class="row">
+       <div class="row">
 		<?php echo $form->labelEx($model,'fechafin'); ?>
          
                 <?php      
@@ -126,12 +132,26 @@ echo $form->DropDownList($model,'unidades',$datos, array('disabled'=>($model->es
 		<?php echo $form->checkBox($model,'activo',array('disabled'=>'disabled'));?>
 		<?php //echo $form->error($model,'tarifamensual'); ?>
 	</div> 
-
-    </div>
-    <div class="panelderecho">
+        <div class="row">
+		<?php echo $form->labelEx($model,'lecturaacumulada'); ?>
+         
+                <?php      
+                echo $form->textField($model,'lecturaacumulada',array('value'=>$model->getAccumulatedValueFromEquipment(),'size'=>12,'disabled'=>'disabled'));    
+                ?>
+		
+	</div>  
+        <div class="row">
+             
+		<?php echo $form->labelEx($model,'hidpadre'); ?>
+         
+                <?php   
+                   echo CHtml::checkBox('activrtro',($model->hidpadre>0),
+                           array('disabled'=>'disabled'));
+                   ?> 
+            
+		
+	</div>  
    
-	
-    </div>
 	<?php
    
     $this->widget(
