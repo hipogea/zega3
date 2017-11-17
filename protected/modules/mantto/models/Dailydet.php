@@ -43,7 +43,7 @@ class Dailydet extends ModeloGeneral
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-                    array('id,hidparte,hidequipo,hp,hpp,hps,hmi,hmf,hmt,hpi,hpf,hpt,dispo,util,np,ns,npp,ntt,hd,htt,htdb,iduser', 'safe', 'on'=>'update'),
+                    array('id,hidlectura1,hidparte,hidequipo,hp,hpp,hps,hmi,hmf,hmt,hpi,hpf,hpt,dispo,util,np,ns,npp,ntt,hd,htt,htdb,iduser', 'safe', 'on'=>'update'),
 		array('np,ns,ntt','numerical','integerOnly'=>true),
                   /*array('hp,hpp,hmi,hmt,hpi,hpf,hpt,np,ns,ntt,hd,htt', 'numerical',
                       'min'=>0,
@@ -62,7 +62,7 @@ class Dailydet extends ModeloGeneral
 			//array('dispo, util', 'length', 'max'=>5),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, hidparte, hidequipo, hp, hpp, hmi, hmf, hmt, hpi, hpf, hpt, dispo, util, iduser', 'safe', 'on'=>'search'),
+			array('id,hidlectura1, hidparte, hidequipo, hp, hpp, hmi, hmf, hmt, hpi, hpf, hpt, dispo, util, iduser', 'safe', 'on'=>'search'),
 		array('id, hidparte, hidequipo, hp, hpp, hmi, hmf, hmt, hpi, hpf, hpt, dispo, util, iduser,codparte', 'safe', 'on'=>'search_por_parte'),
 		
                     );
@@ -640,10 +640,14 @@ $criteria->params=array(":vhidparte"=>$idparte);
      }
      public function getValueMeasurePointFromId($id=null){
          if(is_null($id))return null;
-        return (yii::app()->createCommand()-> 
+        $valor=yii::app()->createCommand()-> 
               select('lectura')->from('{{manttolecturahorometros}}')-> 
-              where("id=:vid",array(":vid"=>$id))->queryScalar()=!false);
-        
+              where("id=:vid",array(":vid"=>$id))->queryScalar();
+        if($valor!=false){
+            return $valor;
+        }else{
+            return null;
+        }
      }
        
     private function getCriteriaMeasurePoint($id){
@@ -655,5 +659,28 @@ $criteria->params=array(":vhidparte"=>$idparte);
            $criteria->params=$parametros;
            return $criteria;
     }
+    
+    
+    //SACA LA FECHA INICIAL DEL TURNO EN FORMNATO 2017-12-21 14:12:25 0 789343468
+    public function getDateInitial($inTime=false){
+        if(!$inTime)
+        return $this->getDailyWork()->regimen->getLimiteInferior($this->cambiaformatofecha($this->getDailyWork()->fecha,false));
+        return strtotime($this->getDailyWork()->regimen->getLimiteInferior($this->cambiaformatofecha($this->getDailyWork()->fecha,alse)));
+    }
+    
+     //SACA LA FECHA final DEL TURNO EN FORMNATO 2017-12-21 14:12:25 0 789343468
+    public function getDateFinal($inTime=false){
+        if(!$inTime)
+        return $this->getDailyWork()->regimen->getLimiteSuperior($this->cambiaformatofecha($this->getDailyWork()->fecha,false));
+        return strtotime($this->getDailyWork()->regimen->getLimiteSuperior($this->cambiaformatofecha($this->getDailyWork()->fecha,false)));
+    }
+    public function getDailyWork(){
+        if($this->isNewRecord){
+            return Dailywork::model()->findByPk($this->hidparte);
+        }else{
+            return $this->dailywork;
+        }
+    }
+    
 }
  

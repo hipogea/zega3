@@ -24,7 +24,7 @@ class Dailywork extends ModeloGeneral
 	/**
 	 * @return string the associated database table name
 	 */
-    private $measureColumns=array('hidlectura1','hidlectura2','hidlectura3','hidlectura4');
+    public $measureColumns=array('hidlectura1','hidlectura2','hidlectura3','hidlectura4');
     const ESTADO_NUEVO='10';
     const ESTADO_PREVIO='10';
     const COD_DOCU='146';

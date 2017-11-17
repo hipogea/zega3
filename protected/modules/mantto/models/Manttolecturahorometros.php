@@ -279,6 +279,7 @@ class Manttolecturahorometros extends ModeloGeneral
        }
     
          public function checkLectura($attribute,$params) {
+             
              //no puede haber lecturas inconsistentes 
              $point=$this->getPoint();
              $initialValuePoint=$point->lecturainicio;
@@ -432,7 +433,11 @@ class Manttolecturahorometros extends ModeloGeneral
       }
       
       private function getPoint(){
+          if($this->hidhorometro >0)
           return ($this->isNewRecord)?Manttohorometros::model()->findByPk($this->hidhorometro):$this->manttohorometros;
+          throw new CHttpException(500,yii::t('errvalid','Call to function getPoint without hidorometro property'));
+         
+          
       }
       
       public function aftersave(){

@@ -399,6 +399,10 @@ $mo=New Alinventario();
 
 public $layout='//layouts/column2';
 	public function actionPio() {
+            var_dump(is_numeric(1));
+            $r=Inventario::model()->findByPk(19)->getPoint(1);
+            var_dump($r);
+            die();
             $modelant= Manttohorometros::model()->findByPk(23); 
             $nombremodelo='Manttohorometros';
             $model=new $nombremodelo('reemplazo');             

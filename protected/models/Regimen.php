@@ -165,6 +165,7 @@ class Regimen extends ModeloGeneral
            return date('Y-m-d H:i',strtotime($fecha)+$diferencia+$this->horasdia*60*60);
        }
         public function getLimiteInferior($fecha){
+            //var_dump($fecha);die();
             $diferencia= strtotime($this->hinicio)-strtotime(date('Y-m-d'));
            return date('Y-m-d H:i',strtotime($fecha)+$diferencia);
        }

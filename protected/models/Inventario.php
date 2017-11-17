@@ -223,7 +223,7 @@ class Inventario extends ModeloGeneral
 		// class name for the relations automatically generated below.
 		return array(
                    'manttohorometros'=>array(self::HAS_MANY, 'Manttohorometros', 'hidequipo'),
-		 
+		   'nhorometros'=>array(self::STAT, 'Manttohorometros', 'hidequipo'),
                     'nproyectos'=>array(self::STAT,'Machineswork','hidinventario'),
 		'barcoactual'=>array(self::BELONGS_TO, 'Embarcaciones', 'codep'),
 		'barcoanterior'=>array(self::BELONGS_TO, 'Embarcaciones', 'codepanterior'),
@@ -825,7 +825,9 @@ public static function canttransporte(){
       $fila=null;
       if(is_numeric($name))
      foreach($this->getPoints() as $point){
-         if($point->codigo==$name){
+          //var_dump($point);die();
+          
+         if($point->orden==$name){
            $fila=$point;  break;
          }
             
@@ -840,5 +842,8 @@ public static function canttransporte(){
      }
      return $fila;
   }   
-       
+  
+  public function hasPoints(){
+      return($this->nhorometros >0 )?true:false;
+  }
 }

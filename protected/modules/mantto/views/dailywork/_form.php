@@ -207,7 +207,7 @@ $clasenormal='zii.widgets.grid.CDataColumn';
 
 ?>
    
-<?php $this->widget('ext.groupgridview.GroupGridView', array(
+<?php $grilla=$this->widget('ext.groupgridview.GroupGridView', array(
       'id' => 'ot-grid',
       //'dataProvider'=>$model->search(),
       'mergeColumns' => array('codtipo'),
@@ -275,23 +275,28 @@ $clasenormal='zii.widgets.grid.CDataColumn';
             array('name'=>'hd'),
             array(
                 'class' => 'application.components.booster.widgets.TbEditableColumn',
-                'name' => 'hmi','type'=>'html',
+                'name' => 'hidlectura1',
+                'type'=>'html',
+                'value'=>'$data->getValueMeasurePointFromId($data->hidlectura1)',
+                //'type'=>'raw',
                // 'header'=>'$data->getAttributeLabel("hmi")',
                 //'value' => '$data->hmi.CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."clock.png","Press To See",array("onClick"=>"js:$.notify(\'Hi! Look here!\', \'info\')")',
                 'sortable' => false,
                 'editable' => array( //estas son propiedades del control TEDITABLE FIELD
-                    'url' => $this->createUrl('dailywork/updatedailydet'),
-                    'params'=>array('modelito'=>'Dailydet'),
+                    'url' => $this->createUrl('dailywork/UpdateMeasurePoint'),
+                    //'params'=>array('idlectura'=>'$data->id'),
                     'placement' => 'right',
                    'inputclass' => 'input-medium',
-                    'htmlOptions'=>array('id'=>'"modern".$data->id',                        
+                    'htmlOptions'=>array('id'=>'"modern".$ data->inventario->codigoaf',                        
                        // "onmouseover"=>"js:$.notify(\'Hi! Look here!\', \'info\')"
                         ),
                     'success' => 'reloadGrid',
                     //'mode'=>'inline'
                 ),
-                
+            
             ),
+            
+            
             
            /* array(
                 'name'=>'clock',
@@ -403,7 +408,7 @@ $clasenormal='zii.widgets.grid.CDataColumn';
         }
 ?>
 
-
+<?php //var_dump($grilla->columns[8]);?>
 <?php
 
 //--------------------- begin new code --------------------------

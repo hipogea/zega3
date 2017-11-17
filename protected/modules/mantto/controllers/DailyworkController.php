@@ -30,7 +30,7 @@ class DailyworkController extends Controller
 		return array(
 			
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('CheckDailyWork',     'events',    'ajaxDeleteShift',    'manageShifts',   'summary','ajaxcargasemanas',  'updatedailyevent','ajaxDeleteEvent', 'view','admin','daily','creaevento','updatedailydet',   'ajaxproyecto','create','update'),
+				'actions'=>array('UpdateMeasurePoint',     'CheckDailyWork',     'events',    'ajaxDeleteShift',    'manageShifts',   'summary','ajaxcargasemanas',  'updatedailyevent','ajaxDeleteEvent', 'view','admin','daily','creaevento','updatedailydet',   'ajaxproyecto','create','update'),
 				'users'=>array('@'),
 			),
 			
@@ -747,4 +747,103 @@ $criterio=new CDbCriteria();
             $mensaje="";
 	return count($errores);	
       }
+      
+      
+      public function actionUpdateMeasurePoint(){
+            if(isset($_POST['name'])and 
+                   isset($_POST['value'])and
+                       isset($_POST['pk'])/*and
+                     //  isset($_POST['idlectura'])*/
+                     ){
+                   $value= html_entity_decode($_POST['value'], ENT_QUOTES, "UTF-8");
+                    $name= MiFactoria::cleanInput($_POST['name']);
+                     $pk= MiFactoria::cleanInput($_POST['pk']);
+                     // $idlectura= MiFactoria::cleanInput($_POST['idlectura']);
+               }
+              
+           // var_dump($idlectura);
+          $registro= Dailydet::model()->findByPk($pk);   
+          if($registro===null)
+           throw new CHttpException(500,yii::t('errvalid','Can not find Record with id {id} ',array('{id}'=>$pk)));
+                       // var_dump($registro->{$name});die();
+          //verificando si el equipo tinene horometro
+          if(!$registro->inventario->hasPoints())
+          throw new CHttpException(500,yii::t('errvalid','This equipment do not have any meausre point '));
+           
+          if(is_null($registro->{$name}) or empty($registro->{$name}) or ($registro->{$name})=="") {
+              $measure=New Manttolecturahorometros('insert');
+              
+               $measure->setAttributes(
+                  array(
+                      //'fecha'=>$dateRef,
+                       'hidhorometro'=>$registro->inventario->getPoint(1)->id
+                      ));
+          }else{
+              $measure= Manttolecturahorometros::model()->findByPk($registro->{$name});
+              $measure->setScenario('update');
+          }
+          
+          $col=$registro->dailywork->measureColumns;
+          //var_dump(ARRAY_VALUES($col));die();
+          if(!(in_array($name,$col)))
+          throw new CHttpException(500,yii::t('errvalid','The column name {name}  passed do not exists ',array('{name}'=>$name)));
+          $dateRef=null;
+          $initialColumns=array($col[0],$col[2]);
+          $finalColumns=array($col[1],$col[3]);
+          
+         // VAR_DUMP($initialColumns);DIE();
+         //echo  gettype($registro->getDateInitial());die();
+          //if(in_array($name,array($initialColumns)))
+                  $dateRef=$registro->getDateInitial();
+         // if(in_array($name,array($finalColumns)))
+                 // $dateRef=$registro->getDateFinal();
+          
+          $measure->setAttributes(
+                  array(
+                      'fecha'=>$dateRef,
+                       'lectura'=>$value
+                      ));
+        //print_r($measure->attributes);
+          if($measure->validate(null, false)){
+               
+               $measure->save();
+               $measure->refresh();
+              
+           }else{
+              
+               $errores=$measure->geterrors();
+              // var_dump($errores);
+               if(count($errores)>0){
+               if(isset($errores[$name]))
+                  IF(count($errores[$name])>0){
+                      throw new CHttpException(500,$errores[$name][0]);}
+                   throw new CHttpException(500,array_values($errores)[0][0]); 
+                      //throw new CHttpException(500,yii::t('errvalid','This  s equipment do not have any meausre point '));
+          
+               } 
+           }
+           
+           if(is_null($registro->{$name}) or empty($registro->{$name}) or ($registro->{$name})=="") 
+               $registro->{$name}=$measure->id; 
+               $registro->{$name}=$value;
+               
+           if($registro->validate(null, false)){
+               $registro->save(); 
+           }else{
+               $errores=$registro->geterrors();
+              // var_dump($errores);
+               if(count($errores)>0){
+               if(isset($errores[$name]))
+                  IF(count($errores[$name])>0){
+                      throw new CHttpException(500,$errores[$name][0]);}
+                   throw new CHttpException(500,array_values($errores)[0][0]);   
+                     // throw new CHttpException(500,yii::t('errvalid','This  d  equipment do not have any meausre point '));
+          
+               } 
+           }
+           
+           
+           
+            
+      }     
 }
