@@ -1,7 +1,11 @@
 <?php
 
 // change the following paths if necessary
-$yii=dirname(__FILE__).'/../framework/yii.php';
+
+if(strpos(dirname(__FILE__).'','dev')>0)
+        $cad='/../framework/yii.php';
+    else  $cad='/framework/yii.php';
+$yii=dirname(__FILE__).$cad;
 $config=dirname(__FILE__).'/protected/config/main.php';
 //echo $yii; die();
 // remove the following lines when in production mode
