@@ -1511,45 +1511,7 @@ class OtController extends ControladorBase
 
 
 
-	/****************************************************
-	 *  muestra la vista de configuracion de los eventos
-	 *+++++++++++++++++++++++++++++++++++++++++++++++++*/
-
-	public function actionConfiguraop()
-	{
-		$docu=$this->documento;  //guia de remision
-		$docuhijo=$this->documentohijo; //detalle guia de remisio
-
-
-		$matrizpadre=Opcionescamposdocu::Model()->findAll(" codocu=:cod",array(":cod"=>$docu));
-		for ($i=0; $i < count($matrizpadre); $i++){
-			$cantidadregistros=Yii::app()->db->createCommand("SELECT id FROM  ".Yii::app()->params['prefijo']."opcionesdocumentos WHERE IDOPDOC=".$matrizpadre[$i]['id']."")->QueryScalar();
-			If (!$cantidadregistros) {
-				$command = Yii::app()->db->createCommand("INSERT INTO ".Yii::app()->params['prefijo']."opcionesdocumentos (IDUSUARIO,IDOPDOC,valor) VALUES (".Yii::app()->user->id.",".$matrizpadre[$i]['id'].",'') ");
-				$command->execute();
-			}
-		}
-
-		$matrizpadre1=Opcionescamposdocu::Model()->findAll(" codocu=:cod",array(":cod"=>$docuhijo));
-		for ($i=0; $i < count($matrizpadre1); $i++){
-			$cantidadregistros=Yii::app()->db->createCommand("SELECT id FROM  ".Yii::app()->params['prefijo']."opcionesdocumentos WHERE IDOPDOC=".$matrizpadre1[$i]['id']."")->QueryScalar();
-			If (!$cantidadregistros) {
-				$command = Yii::app()->db->createCommand("INSERT INTO ".Yii::app()->params['prefijo']."opcionesdocumentos (IDUSUARIO,IDOPDOC,valor) VALUES (".Yii::app()->user->id.",".$matrizpadre1[$i]['id'].",'') ");
-				$command->execute();
-			}
-		}
-
-		$proveedor=VwOpcionesdocumentos::model()->search_us($docu,Yii::app()->user->id);
-		$proveedor1=VwOpcionesdocumentos::model()->search_us($docuhijo,Yii::app()->user->id);
-		$this->render('vw_admin_opciones',array(
-			'proveedor'=>$proveedor,
-			'proveedor1'=>$proveedor1,
-		));
-
-
-	}
-
-
+	
 
 
 

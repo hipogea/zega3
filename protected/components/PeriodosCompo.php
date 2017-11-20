@@ -295,7 +295,7 @@ public function estadentroperiodosactivos($fecha,$verificatolerancia=false){
         die();*/
         if($decimal){
             // VAR_DUMP($horaini); 
-              $desglose=split(":", $dif);
+              $desglose=explode(":", $dif);
               $dec=$desglose[0]+$desglose[1]/60;
               return round($dec,2);
              } else { return $dif;}

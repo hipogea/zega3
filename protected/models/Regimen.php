@@ -157,17 +157,17 @@ class Regimen extends ModeloGeneral
                         
        public function horafin($fecha){
            $diferencia= strtotime($this->hinicio)-strtotime(date('Y-m-d'));  
-            return date('Y-m-d H:i',strtotime(date('Y-m-d')+$diferencia+$this->horasdia*60*60));
+            return date('Y-m-d H:i:s',strtotime(date('Y-m-d')+$diferencia+$this->horasdia*60*60));
        }
        
        public function getLimiteSuperior($fecha){
            $diferencia= strtotime($this->hinicio)-strtotime(date('Y-m-d'));           
-           return date('Y-m-d H:i',strtotime($fecha)+$diferencia+$this->horasdia*60*60);
+           return date('Y-m-d H:i:s',strtotime($fecha)+$diferencia+$this->horasdia*60*60);
        }
         public function getLimiteInferior($fecha){
             //var_dump($fecha);die();
             $diferencia= strtotime($this->hinicio)-strtotime(date('Y-m-d'));
-           return date('Y-m-d H:i',strtotime($fecha)+$diferencia);
+           return date('Y-m-d H:i:s',strtotime($fecha)+$diferencia);
        }
        
 }

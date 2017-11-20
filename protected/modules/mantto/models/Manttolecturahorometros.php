@@ -41,7 +41,8 @@ class Manttolecturahorometros extends ModeloGeneral
 			array('hidhorometro', 'numerical', 'integerOnly'=>true),
                     array('lectura', 'checkLectura', 'on'=>'insert,update'),
                     array('hidhorometro,lectura,fecha', 'safe', 'on'=>'insert,update'),
-		
+		array('fecha+hidhorometro', 'application.extensions.uniqueMultiColumnValidator','on'=>'insert,update','message'=>'This Date already has a measure'),
+			
 			array('lectura', 'length', 'max'=>20),
 			array('fecha', 'length', 'max'=>19),
 			// The following rule is used by search().
@@ -259,7 +260,7 @@ class Manttolecturahorometros extends ModeloGeneral
       
        public function difference(){
            if(!is_null($this->previous()))
-           return ($this->lectura+0)-($this->previous()->lectura+0);
+           return ($this->lectura()+0)-($this->previous()->lectura()+0);
            return 0;
        }
        
@@ -279,7 +280,7 @@ class Manttolecturahorometros extends ModeloGeneral
        }
     
          public function checkLectura($attribute,$params) {
-             
+            
              //no puede haber lecturas inconsistentes 
              $point=$this->getPoint();
              $initialValuePoint=$point->lecturainicio;
@@ -292,8 +293,11 @@ class Manttolecturahorometros extends ModeloGeneral
              $isTime=$this->isPointTime();
               $isFuture=$this->isFuture();
               $isDateRight=$this->dateIsBeforeInitPoint();
+              
+            // var_dump($isIncremental);
+               
              
-             
+              
              
              
            if($isFuture)
@@ -304,21 +308,24 @@ class Manttolecturahorometros extends ModeloGeneral
            return;}
            
            if($isFirst){
-              if($isIncremental && ($this->lectura < $initialValuePoint)) {
+              
+              if($isIncremental && ($this->lectura() < $initialValuePoint)) {
                $this->adderror('lectura',yii::t('errvalid','This value is less than the initial value of measure point '));
               return;}
-               if(!$isIncremental && ($this->lectura > $initialValuePoint)) {
+               if(!$isIncremental && ($this->lectura() > $initialValuePoint)) {
                $this->adderror('lectura',yii::t('errvalid','This value is greater than the initial value of measure point '));
               return;}
               if($isTime && ($this->getPastTimeFromPoint() < $scaleTime*$this->getValuesDifferenceFromPoint() )) {
                $this->adderror('lectura',yii::t('errvalid','Difference time calendar is less than difference time between  Measure Point initial and this value '));
               return;}
               
+              
+              
               if(!$isLast) {
-                  if($isIncremental && ($this->lectura > $this->next()->lectura+0) ){
+                  if($isIncremental && ($this->lectura() > $this->next()->lectura()+0) ){
                   $this->adderror('lectura',yii::t('errvalid',' This value must be less than value from next Measure '));
                   return;}
-                  if(!$isIncremental && ($this->lectura < $this->next()->lectura+0) ){
+                  if(!$isIncremental && ($this->lectura() < $this->next()->lectura()+0) ){
                   $this->adderror('lectura',yii::t('errvalid',' This value must be greater than value from next Measure '));
                   return;}
                    if($isTime && ($this->differenceTimeForward() < $this->differenceValuesForward($scaleTime)) ){
@@ -327,32 +334,34 @@ class Manttolecturahorometros extends ModeloGeneral
                         }
            }
            
-            if(!$isFirst){
-              
-                  if($isIncremental && ($this->lectura < $this->previous()->lectura+0 )){
-                  $this->adderror('lectura',yii::t('errvalid',' This value must be less than value from previous Measure '));
-                  return;}
-                  if(!$isIncremental && ($this->lectura > $this->previous()->lectura+0 )){
-                  $this->adderror('lectura',yii::t('errvalid',' This value must be greater than value from previous Measure '));
-                  return;}
-                   if($isTime && ($this->differenceTimeBack() < $this->differenceValuesBack($scaleTime)) ){
-                  $this->adderror('lectura',yii::t('errvalid',' Difference time calendar is less than difference time between  Measure  previous Point '));
-                  return;}
+            if(!$isFirst){ 
+                  
                 if(!$isLast) {
-                    if($isIncremental && ($this->lectura > $this->next()->lectura+0 )){
+                    if($isIncremental && ($this->lectura() > $this->next()->lectura()+0 )){
                   $this->adderror('lectura',yii::t('errvalid',' This value must be less than value from next Measure '));
                   return;}
-                  if(!$isIncremental && ($this->lectura < $this->next()->lectura+0 )){
+                  if(!$isIncremental && ($this->lectura() < $this->next()->lectura()+0 )){
                   $this->adderror('lectura',yii::t('errvalid',' This value must be greater than value from next Measure '));
                   return;}
                    if($isTime && ($this->differenceTimeForward() < $this->differenceValuesForWard($scaleTime))){
                   $this->adderror('lectura',yii::t('errvalid',' Difference time calendar is less than difference time between  Measure  next Point '));
-                  return;
+                   return;}
+                }else{
+                    if($isIncremental && ($this->lectura() < $this->previous()->lectura()+0 )){
+                  $this->adderror('lectura',yii::t('errvalid',' This value must be greater than value from previous Measure '));
+                  return;}
+                  if(!$isIncremental && ($this->lectura() > $this->previous()->lectura()+0 )){
+                  $this->adderror('lectura',yii::t('errvalid',' This value must be less*- than value from previous Measure '));
+                  return;}
+                   if($isTime && ($this->differenceTimeBack() < $this->differenceValuesBack($scaleTime)) ){
+                  $this->adderror('lectura',yii::t('errvalid',' Difference time calendar is less than difference time between  Measure  previous Point '));
+                  return;}
                 }
                         
-              }
+              
             
            }  
+                     
          }
            
            
@@ -411,7 +420,7 @@ class Manttolecturahorometros extends ModeloGeneral
                    $escala=1;
                }
                if(!is_null($this->previous()))
-               return abs(($this->lectura+0)-($this->previous()->lectura+0))*$escala;
+               return abs(($this->lectura()+0)-($this->previous()->lectura()+0))*$escala;
                return null;
                
           
@@ -421,7 +430,7 @@ class Manttolecturahorometros extends ModeloGeneral
       public function differenceValuesForward($escala){
           
                if(!is_null($this->next()))
-                 return abs(($this->lectura+0)-($this->next()->lectura+0))*$escala;
+                 return abs(($this->lectura()+0)-($this->next()->lectura()+0))*$escala;
               return null;
       }
       
@@ -433,6 +442,7 @@ class Manttolecturahorometros extends ModeloGeneral
       }
       
       private function getPoint(){
+         // var_dump($this);die();
           if($this->hidhorometro >0)
           return ($this->isNewRecord)?Manttohorometros::model()->findByPk($this->hidhorometro):$this->manttohorometros;
           throw new CHttpException(500,yii::t('errvalid','Call to function getPoint without hidorometro property'));
@@ -441,9 +451,10 @@ class Manttolecturahorometros extends ModeloGeneral
       }
       
       public function aftersave(){
+          
      //en le caso de editar soloactualziar de maner asimple si es el ultimo registro
-              if($this->isLast() and $this->cambiocampo('lectura'))
-                  $this->getPoint()->updatePoint($this->differenceValuesBack($this->manttohorometros->ums->escala+0));
+             // if($this->isLast() and $this->cambiocampo('lectura'))
+                //  $this->getPoint()->updatePoint($this->differenceValuesBack($this->manttohorometros->ums->escala+0));
          
           return parent::aftersave();
       }
@@ -478,12 +489,21 @@ class Manttolecturahorometros extends ModeloGeneral
     public function getValuesDifferenceFromPoint(){
        
         $ValueInitial=$this->getPoint()->lecturainicio+0;
-        $ValueFinal=$this->lectura+0;
+        $ValueFinal=$this->lectura()+0;
         return abs($ValueFinal-$ValueInitial);
+    }
+    public function lectura(){
+       $ca=$this->lectura;
+        if($this->isNumeric($ca)){
+            $ca=(float)trim($ca);
+            return $ca;
+        }
+        return $this->lectura;
+    }
+    
+    private function isNumeric($value){
+        $valo= preg_match('/[0-9,.]/',$value);
+        return($valo > 0)?true:false;
     }
     
 }
-
-
-
-

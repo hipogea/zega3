@@ -399,6 +399,167 @@ $mo=New Alinventario();
 
 public $layout='//layouts/column2';
 	public function actionPio() {
+             yii::import('application.modules.mantto.behaviors.measurePointBehavior');
+            
+            $partes= Dailywork::model()->findAll("id>28");
+            $op=array('I','E');
+            
+            foreach($partes as $parte){
+                foreach($parte->dailydet as $detalle){
+                    
+                    $detalle->refrescacampos();
+                    $hola=$detalle->attachbehavior('auditoriaBehavior',
+                           new measurePointBehavior(
+                                   array(
+                                       
+                                       )));
+                   
+                   $horometro1=$detalle->getMeasurePointByOrder(1);
+                   $horometro2=$detalle->getMeasurePointByOrder(2);
+                   
+                    //para el campo hidlectura2
+                   $detalle->nameField='hidlectura1';
+                   $detalle->idPoint=$horometro1->id;
+                   $detalle->dateOfMeasure=$detalle->getDateInitial();
+                   $detalle->valueMeasure=$detalle->getValueMeasurePointFromId($detalle->previous()->hidlectura2);
+                   $detalle->putMeasureInPoint();
+                   
+                   //para el campo hidlectura2
+                   $detalle->refrescacampos();
+                   $detalle->nameField='hidlectura2';
+                   $detalle->idPoint=$horometro1->id;
+                   $detalle->dateOfMeasure=$detalle->getDateFinal();
+                   $detalle->valueMeasure=$detalle->getValueMeasurePointFromId($detalle->hidlectura1)+$detalle->hd;
+                   $detalle->putMeasureInPoint();
+                  
+                  // echo "el id asgnado es  lctura 2 es ".$detalle->hidlectura2."  ya esta  av  <br>";
+                   echo "grab campos1 <br>";
+                   if($detalle->save()){ print_r($detalle->attributes);
+                   echo "<br>";echo $detalle->id."ok<br>";}else{
+                        print_r($detalle->attributes);echo "<br>";
+                       echo $detalle->id."<br>";
+                       print_r($detalle->geterrors());
+                       echo "no<br>";
+                       
+                   }
+                   if($detalle->inventario->tienecarter=='1'){
+                   $detalle->refrescacampos();
+                   
+                    //para el campo hidlectura2
+                   $detalle->nameField='hidlectura3';
+                   $detalle->idPoint=$horometro2->id;
+                   $detalle->dateOfMeasure=$detalle->getDateInitial();
+                   $detalle->valueMeasure=$detalle->getValueMeasurePointFromId($detalle->previous()->hidlectura4);
+                   $detalle->putMeasureInPoint();
+                   echo "saliendo el  primer id ".$detalle->hidlectura3."<br>";
+                   //para el campo hidlectura2
+                   $detalle->refrescacampos();
+                   $detalle->nameField='hidlectura4';
+                   $detalle->idPoint=$horometro2->id;
+                   $detalle->dateOfMeasure=$detalle->getDateFinal();
+                   $detalle->valueMeasure=$detalle->getValueMeasurePointFromId($detalle->hidlectura3)+$detalle->hd;
+                   $detalle->putMeasureInPoint();
+                    echo "saliendo el  segundo  id ".$detalle->hidlectura3."<br>";
+                   
+                   
+                   
+                   
+                    echo "grab campos [] ID  lectura4 previa ".$detalle->previous()->hidlectura4." lectua 3 actual   ".$detalle->hidlectura3."  deben ser iguales . ANTES ".$detalle->getValueMeasurePointFromId($detalle->hidlectura3)."  AHORA VALOR  => ".$detalle->valueMeasure." diferencia ".$detalle->hd."<br>";
+                   if($detalle->save()){echo $detalle->id."ok<br>";
+                   print_r($detalle->attributes);echo "<br>";
+                   }else{
+                       print_r($detalle->attributes);echo "<br>";
+                       echo $detalle->id."<br>";
+                       print_r($detalle->geterrors());
+                       echo "no<br>";
+                       
+                   }
+                   
+                   }
+                    
+                    /*$detalle->addCheckDaily();
+                    $r=new Dailyevents;
+                    $r->setAttributes(
+                    array(
+                        'hidet'=>$detalle->id,
+                        'descripcion'=>yii::t('errvalid',' Any event for  ',array('{equipo}'=>$detalle->inventario->codigoaf)),
+                         'codresponsable'=>$detalle->dailywork->codresponsable,
+                        'tipmanoobra'=>$op[rand(0,1)],
+                        'hinicio'=>date('H:i',strtotime($detalle->dailywork->regimen->hinicio)+50*rand(1,2)*60),
+                        'hfinal'=>date('H:i',strtotime($detalle->dailywork->regimen->hinicio)+50*60+rand(1,3)*3600),
+                        )
+                    );
+                    $r->save();*/
+                }
+            }
+            
+            die();
+            
+            
+            
+            
+            
+            
+                   
+                   die();
+            
+            
+            
+            $reg=New Manttolecturahorometros();
+            $reg->hidhorometro=34;
+            $reg->fecha='2017-10-01 19:40';
+            $reg->lectura=32;
+            if($reg->save()){
+                echo "ok";
+            }else{
+                print_r($reg->geterrors());
+            }
+            die();
+            phpinfo();die();
+           // var_dump(preg_match('/[0-9,.]/'," 10"));die();
+  $registro=Manttolecturahorometros::model()->findByPk(126);         
+           /*$registro=New Manttolecturahorometros;
+      $registro->fecha='12/10/2017 06:12:00';
+      $registro->hidhorometro=23;
+      $registro->lectura=4035;*/
+echo "id vecino anterior  "; var_dump($registro->getIdVecino(true));echo "<br>";
+ echo "is first() "; var_dump($registro->isFirst());echo "<br>";
+echo "id vecino siguiente  "; var_dump($registro->getIdVecino(false));echo "<br>";
+ echo "is last() "; var_dump($registro->isLast());echo "<br>";
+echo "previous()  "; var_dump($registro->previous());echo "<br>";
+echo "next()  "; var_dump($registro->next());echo "<br>";
+echo "differenceTimeBack()  "; var_dump($registro->differenceTimeBack());echo "<br>";
+echo "differenceTimeForward()  "; var_dump($registro->differenceTimeForward());echo "<br>"; 
+echo "differenceVlauesBack()  "; var_dump($registro->differenceValuesBack($registro->manttohorometros->ums->escala+0));echo "<br>";
+echo "differenceVlauesForward()  "; var_dump($registro->differenceValuesForward($registro->manttohorometros->ums->escala+0));echo "<br>"; 
+echo "cuantos por atras  "; var_dump(count($registro->getBack()));echo "<br>";
+echo "cuantos por delante  "; var_dump(count($registro->getForward()));echo "<br>";
+echo " lectura sguietne  "; var_dump($registro->next()->lectura);echo "<br>";
+echo " lectura anteriori  "; var_dump($registro->previous()->lectura);echo "<br>";
+//var_dump($registro->getIdVecino(false));
+die();   
+            
+            
+            
+            $registro= Manttolecturahorometros::model()->findByPk(114);
+            $otro=" 10";
+            $previo=$registro->previous();
+            echo " el original: ";var_dump(trim($previo->lectura));echo "<br>";
+            echo " LA SUAM DE L ORIGINAL : ";var_dump($previo->lectura +0);echo "<br>";
+            echo " El otro : ";var_dump($otro);echo "<br>";
+            echo " LA suma del otro : ";var_dump($otro +0);echo "<br>";
+            die();
+            echo $previo->lectura+0 ;die();
+            var_dump($previo->lectura());die();
+            $registro->lectura=4;
+            if($registro->validate(null, false)){
+                echo "todo ok";
+            }else{
+                var_dump($registro->geterrors());
+            }
+            die();
+            var_dump();die();
+            var_dump($registro->getValueMeasurePointFromId($registro->hidlectura1));die();
             var_dump(is_numeric(1));
             $r=Inventario::model()->findByPk(19)->getPoint(1);
             var_dump($r);
@@ -430,26 +591,7 @@ public $layout='//layouts/column2';
             die();
             //$registro= Manttolecturahorometros::model()->findByPk(59);             
            // var_dump($registro->difference());die();
-      $registro=New Manttolecturahorometros;
-      $registro->fecha='12/10/2017 06:12:00';
-      $registro->hidhorometro=23;
-      $registro->lectura=4035;
-echo "id vecino anterior  "; var_dump($registro->getIdVecino(true));echo "<br>";
- echo "is first() "; var_dump($registro->isFirst());echo "<br>";
-echo "id vecino siguiente  "; var_dump($registro->getIdVecino(false));echo "<br>";
- echo "is last() "; var_dump($registro->isLast());echo "<br>";
-echo "previous()  "; var_dump($registro->previous());echo "<br>";
-echo "next()  "; var_dump($registro->next());echo "<br>";
-echo "differenceTimeBack()  "; var_dump($registro->differenceTimeBack());echo "<br>";
-echo "differenceTimeForward()  "; var_dump($registro->differenceTimeForward());echo "<br>"; 
-echo "differenceVlauesBack()  "; var_dump($registro->differenceValuesBack($registro->manttohorometros->ums->escala+0));echo "<br>";
-echo "differenceVlauesForward()  "; var_dump($registro->differenceValuesForward($registro->manttohorometros->ums->escala+0));echo "<br>"; 
-echo "cuantos por atras  "; var_dump(count($registro->getBack()));echo "<br>";
-echo "cuantos por delante  "; var_dump(count($registro->getForward()));echo "<br>";
-echo " lectura sguietne  "; var_dump($registro->next()->lectura);echo "<br>";
-echo " lectura anteriori  "; var_dump($registro->previous()->lectura);echo "<br>";
-//var_dump($registro->getIdVecino(false));
-die();  
+      
 
 
 

@@ -100,11 +100,19 @@ if($model->hasMeasures()){
 	</div>
 
             
-<div class="row">
+        <div class="row">
+		<?php echo $form->labelEx($model,'lecturainicio'); ?>
+         
+                <?php      
+                echo $form->textField($model,'lecturainicio',array('size'=>8,'disabled'=>$model->escampohabilitado('lecturainicio')?'':'disabled'));    
+                ?>
+		<?php echo $form->error($model,'lecturainicio'); ?>
+	</div>
+        <div class="row">
 		<?php echo $form->labelEx($model,'lecturaactual'); ?>
          
                 <?php      
-                echo $form->textField($model,'lecturaactual',array('value'=>$lecturaac,'size'=>8,'disabled'=>$model->escampohabilitado('lecturaactual')?'':'disabled'));    
+                echo $form->textField($model,'lecturaactual',array('value'=>$lecturaac,'size'=>8,'disabled'=>'disabled'));    
                 ?>
 		<?php echo $form->error($model,'lecturaactual'); ?>
 	</div>

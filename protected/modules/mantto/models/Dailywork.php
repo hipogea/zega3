@@ -383,6 +383,20 @@ class Dailywork extends ModeloGeneral
       
     }
     
+    public function getObjectForEquipment($idequipment){
+       $ide= yii::app()->db->createCommand()-> 
+            select('id')->from('{{dailydet}}')-> 
+                    where("hidparte=:vhidparte and hidequipo=:vhidequipo",
+            array(":vhidparte"=>$this->id,":vhidequipo"=>$idequipment))-> 
+                     limit(1)->queryScalar(); 
+       //echo "adfr<br>";
+      if($ide!=false){//echo// $ide."saliohy<br>";
+      //var_dump(Dailydet::model()->findByPk($ide));
+       return Dailydet::model()->findByPk($ide);
+      }else{//echo "esnull <br>";
+      return null;}
+    }
+    
     public function  isProbablyDataIncomplete(){
         if(($this->avgutil+0 < 0.2) or
             ($this->avgdispo+0 > 0.95) or
@@ -395,7 +409,9 @@ class Dailywork extends ModeloGeneral
   public function measureDataIncomplete(){
       $incompletes=array();
       foreach($this->measureColumns as $clave=>$column){
+          
           $valores=$this->getMeasuresColumn($column);
+          //print_r($valores);
           if(count($valores)>0)
           $incompletes[$column]=array_values($valores);
       }
@@ -403,9 +419,23 @@ class Dailywork extends ModeloGeneral
   } 
  private function getMeasuresColumn($column){
      ///EXCLUSIVE MYSQL ??
-    return yii::app()->createCommand()-> 
-           select("hidequipo")->from('{{manttolecturahorometros}}')-> 
-      where("hidparte=:vid and ".$column." is null  ",array(":vid"=>$this->id))->queryColumn();
+    return yii::app()->db->createCommand()-> 
+           select("id")->from('{{dailydet}} a, {{inventario}} b')-> 
+      where("a.hidequipo=b.idinventario and  !(b.tienecarter='0'  or b.tienecarter is null )  and   (hidparte=:vid and ".$column." is null  or ".$column."=0) ",array(":vid"=>$this->id))->queryColumn();
  }  
+ 
+ public function getPrevious(){
+     $idprev=$this->getPrev();
+     if($idprev>0)
+       return Dailywork::model ()->findByPk($idprev);
+     return null;
+ }
+ 
+ public function getNextObject(){
+     $idprev=$this->getNext();
+     if($idprev>0)
+       return Dailywork::model ()->findByPk($idprev);
+     return null;
+ }
  
 }

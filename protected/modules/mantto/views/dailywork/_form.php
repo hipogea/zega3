@@ -287,7 +287,7 @@ $clasenormal='zii.widgets.grid.CDataColumn';
                     //'params'=>array('idlectura'=>'$data->id'),
                     'placement' => 'right',
                    'inputclass' => 'input-medium',
-                    'htmlOptions'=>array('id'=>'"modern".$ data->inventario->codigoaf',                        
+                    'htmlOptions'=>array('id'=>'"modern".$data->id',                        
                        // "onmouseover"=>"js:$.notify(\'Hi! Look here!\', \'info\')"
                         ),
                     'success' => 'reloadGrid',
@@ -307,49 +307,72 @@ $clasenormal='zii.widgets.grid.CDataColumn';
             */
             array(
                 'class' => 'application.components.booster.widgets.TbEditableColumn',
-                'name' => 'hmf','type'=>'html',
-                 //'header'=>'$data->getAttributeLabel("hmf")',
-                 //'value' => '$data->hmf',
+                'name' => 'hidlectura2',
+                'type'=>'html',
+                'value'=>'$data->getValueMeasurePointFromId($data->hidlectura2)',
+                //'type'=>'raw',
+               // 'header'=>'$data->getAttributeLabel("hmi")',
+                //'value' => '$data->hmi.CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."clock.png","Press To See",array("onClick"=>"js:$.notify(\'Hi! Look here!\', \'info\')")',
                 'sortable' => false,
                 'editable' => array( //estas son propiedades del control TEDITABLE FIELD
-                    'url' => $this->createUrl('dailywork/updatedailydet'),
+                    'url' => $this->createUrl('dailywork/UpdateMeasurePoint'),
+                    //'params'=>array('idlectura'=>'$data->id'),
                     'placement' => 'right',
-                    'inputclass' => 'input-medium',
+                   'inputclass' => 'input-medium',
+                    'htmlOptions'=>array('id'=>'"modern".$data->id',                        
+                       // "onmouseover"=>"js:$.notify(\'Hi! Look here!\', \'info\')"
+                        ),
                     'success' => 'reloadGrid',
                     //'mode'=>'inline'
-                )
+                ),
+            
             ),
+            
+            
              array('name'=>'hmt','type'=>'html'),
               array(
                 'class' => 'application.components.booster.widgets.TbEditableColumn',
-                // 'header'=>'$data->getAttributeLabel("hpi")',
-                  'name' => 'hpi',
-                  'type'=>'html',
-                //'editable'=>array('mode'=>'inline'),
-                  'sortable' => false,
+                'name' => 'hidlectura3',
+                'type'=>'html',
+                'value'=>'$data->getValueMeasurePointFromId($data->hidlectura3)',
+                //'type'=>'raw',
+               // 'header'=>'$data->getAttributeLabel("hmi")',
+                //'value' => '$data->hmi.CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."clock.png","Press To See",array("onClick"=>"js:$.notify(\'Hi! Look here!\', \'info\')")',
+                'sortable' => false,
                 'editable' => array( //estas son propiedades del control TEDITABLE FIELD
-                    'url' => $this->createUrl('dailywork/updatedailydet'),
+                    'url' => $this->createUrl('dailywork/UpdateMeasurePoint'),
+                    //'params'=>array('idlectura'=>'$data->id'),
                     'placement' => 'right',
                    'inputclass' => 'input-medium',
+                    'htmlOptions'=>array('id'=>'"modern".$data->id',                        
+                       // "onmouseover"=>"js:$.notify(\'Hi! Look here!\', \'info\')"
+                        ),
                     'success' => 'reloadGrid',
-                   // 'mode'=>'inline'
-                )
+                    //'mode'=>'inline'
+                ),
+            
             ),
             array(
                 'class' => 'application.components.booster.widgets.TbEditableColumn',
-                //'class'=>'zii.widgets.grid.CDataColumn',
-                'name' => 'hpf',
-                // 'header'=>'$data->getAttributeLabel("hpf")',
-                //'editable'=>array('mode'=>'inline'),
-                 //'value' => '$data->hpf',
+                'name' => 'hidlectura4',
+                'type'=>'html',
+                'value'=>'$data->getValueMeasurePointFromId($data->hidlectura4)',
+                //'type'=>'raw',
+               // 'header'=>'$data->getAttributeLabel("hmi")',
+                //'value' => '$data->hmi.CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."clock.png","Press To See",array("onClick"=>"js:$.notify(\'Hi! Look here!\', \'info\')")',
                 'sortable' => false,
                 'editable' => array( //estas son propiedades del control TEDITABLE FIELD
-                    'url' => $this->createUrl('dailywork/updatedailydet'),
+                    'url' => $this->createUrl('dailywork/UpdateMeasurePoint'),
+                    //'params'=>array('idlectura'=>'$data->id'),
                     'placement' => 'right',
                    'inputclass' => 'input-medium',
+                    'htmlOptions'=>array('id'=>'"modern".$data->id',                        
+                       // "onmouseover"=>"js:$.notify(\'Hi! Look here!\', \'info\')"
+                        ),
                     'success' => 'reloadGrid',
                     //'mode'=>'inline'
-                ) 
+                ),
+            
             ),
 		//array('name'=>'mobs','header'=>'Observacion                                                                        '),
 		//array('name'=>'usuario','header'=>'Autor'),

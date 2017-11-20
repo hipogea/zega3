@@ -30,7 +30,7 @@ public $fechareemplazo;
 		return array(
                      array('fechafin,activo','safe','on'=>'anular'),
 			array('codigo, ubicacion', 'length', 'max'=>10),
-                    array('hidequipo,orden,ubicacion,fechainicio,unidades,incremental','required','on'=>'insert,update'),
+                    array('hidequipo,orden,ubicacion,lecturainicio,fechainicio,unidades,incremental','required','on'=>'insert,update'),
                     array('hidpadre,fechainicio,codigo,unidades,incremental,ubicacion','required','on'=>'reemplazo'),
                     array('fechainicio', 'checkfechainicio', 'on'=>'insert,update'),
                     array('hidpadre,fechareemplazo,codigo,lecturainicio,lecturaacumulada,ubicacion','safe','on'=>'reemplazo'),
@@ -322,5 +322,17 @@ public $fechareemplazo;
            $accumulate+=$this->getParentPoint()->getAccumulatedValueFromEquipment();
        
        return $accumulate;
+   }
+   
+   public function isMeasureFromThis($id){
+       if($this->isNewRecord)
+           return false;
+       $valor=yii::app()->db->createCommand()-> 
+             select("id")->from("{{manttolecturahorometros}}")->where(
+                  "hidhorometro=:vid",   
+                   array(":vid"=>$id) )-> 
+                   queryScalar();
+      if($valor!=false)return false;
+      return true;
    }
 }

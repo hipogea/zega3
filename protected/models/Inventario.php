@@ -823,23 +823,27 @@ public static function canttransporte(){
   }   
   public function getPoint($name){
       $fila=null;
-      if(is_numeric($name))
-     foreach($this->getPoints() as $point){
-          //var_dump($point);die();
-          
+      if(is_numeric($name)){
+          //print_r($this->getPoints());die();
+           foreach($this->getPoints() as $point){
+              // var_dump($name);var_dump($point->orden);echo "<br>";
          if($point->orden==$name){
+             //echo "ocindicne o no";
            $fila=$point;  break;
          }
             
      }
-     else{
-     foreach($this->getPoints() as $point){
-         if($point->order==$name){
+      }else{
+         foreach($this->getPoints() as $point){
+         if($point->codigo==$name){
            $fila=$point;  break;
          }
             
-        }
+        }  
+      
+    
      }
+     //var_DUMP($fila);DIE();
      return $fila;
   }   
   

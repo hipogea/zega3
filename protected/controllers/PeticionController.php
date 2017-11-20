@@ -52,43 +52,7 @@ const ESTADO_PROCESO_COMPRA='30';
 
 
 
-	/****************************************************
-	 *  muestra la vista de configuracion de LOS VALORES X DEFAULT
-	 *+++++++++++++++++++++++++++++++++++++++++++++++++*/
-
-	public function actionConfiguraop(){
-		$docu=$this->documento;  //peticion
-		$docuhijo=$this->documentohijo; //detalle petricion
-
-
-		$matrizpadre=Opcionescamposdocu::Model()->findAll(" codocu=:cod",array(":cod"=>$docu));
-		for ($i=0; $i < count($matrizpadre); $i++){
-			$cantidadregistros=Yii::app()->db->createCommand("SELECT id FROM  ".Yii::app()->params['prefijo']."opcionesdocumentos WHERE IDOPDOC=".$matrizpadre[$i]['id']."")->QueryScalar();
-			If (!$cantidadregistros) {
-				$command = Yii::app()->db->createCommand("INSERT INTO ".Yii::app()->params['prefijo']."opcionesdocumentos (IDUSUARIO,IDOPDOC,valor) VALUES (".Yii::app()->user->id.",".$matrizpadre[$i]['id'].",'') ");
-				$command->execute();
-			}
-		}
-
-		$matrizpadre1=Opcionescamposdocu::Model()->findAll(" codocu=:cod",array(":cod"=>$docuhijo));
-		for ($i=0; $i < count($matrizpadre1); $i++){
-			$cantidadregistros=Yii::app()->db->createCommand("SELECT id FROM  ".Yii::app()->params['prefijo']."opcionesdocumentos WHERE IDOPDOC=".$matrizpadre1[$i]['id']."")->QueryScalar();
-			If (!$cantidadregistros) {
-				$command = Yii::app()->db->createCommand("INSERT INTO ".Yii::app()->params['prefijo']."opcionesdocumentos (IDUSUARIO,IDOPDOC,valor) VALUES (".Yii::app()->user->id.",".$matrizpadre1[$i]['id'].",'') ");
-				$command->execute();
-			}
-		}
-
-		$proveedor=VwOpcionesdocumentos::model()->search_us($docu,Yii::app()->user->id);
-		$proveedor1=VwOpcionesdocumentos::model()->search_us($docuhijo,Yii::app()->user->id);
-		$this->render('vw_admin_opciones',array(
-			'proveedor'=>$proveedor,
-			'proveedor1'=>$proveedor1,
-		));
-
-
-	}
-
+	
 
 //Devuelve el id de la cabecera, pero se asegura de que este no
 ///lo pasen por la URL, es decir revisa la sesion de edicion del documento, primero

@@ -866,30 +866,6 @@ public function actionVerdetalle($id)
 	
 
 
-	/****************************************************
-	 *  muestra la vista de configuracion de los eventos
-	 *+++++++++++++++++++++++++++++++++++++++++++++++++*/	
-	
-	public function actionConfiguraop()
-	{
-			$docu='001';  //guia de remision
-			$docuhijo='023'; //detalle guia de remisio
-				
-				$command = Yii::app()->db->createCommand("select fn_opciones_documento(".Yii::app()->user->id." ,'".$docu."') "); 
-				 $command->execute();
-				$command = Yii::app()->db->createCommand("select fn_opciones_documento(".Yii::app()->user->id." ,'".$docuhijo."') "); 
-				 $command->execute();
-				 
-				 $proveedor=VwOpcionesdocumentos::model()->search_us($docu,Yii::app()->user->id);
-				  $proveedor1=VwOpcionesdocumentos::model()->search_us($docuhijo,Yii::app()->user->id);
-				 $this->render('vw_admin_opciones',array(
-							'proveedor'=>$proveedor,
-							'proveedor1'=>$proveedor1, 
-							));
-	    
-			
-	}
-	
 	
 	
 	
