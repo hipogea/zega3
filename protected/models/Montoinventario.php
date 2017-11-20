@@ -236,7 +236,7 @@ class Montoinventario extends CActiveRecord
 		return array('absisas'=>array_map('self::uniformiza',array_keys($series)),'ordenadas'=> $ordenadas);
 	}
 
-private function uniformiza($valor){
+private static function uniformiza($valor){
 
 
 		return $valor.'';
