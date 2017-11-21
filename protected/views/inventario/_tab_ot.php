@@ -1,15 +1,15 @@
 <?php 
-var_dump(Machineswork::model()->search_por_activo(20)->getdata());
+//var_dump(Machineswork::model()->search_por_activo(20)->getdata());
 $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'ot-grid',
 	'itemsCssClass'=>'table table-striped table-bordered table-hover',
 	'dataProvider'=> Machineswork::model()->search_por_activo($idactivo),	
 	'columns'=>array(
             'numero',
-	 	//array('name'=>'finicio','header'=>'F Ini','value'=>'$data->finicio'),
-		//array('name'=>'descri','header'=>'Proyecto','value'=>'$data->ot->textocorto'),
-		//array('name'=>'comentario','type'=>'html','header'=>'Observaciones','value'=>'$data->comentario'),
-			/*array(
+	 	array('name'=>'finicio','header'=>'F Ini','value'=>'$data->finicio'),
+		array('name'=>'descri','header'=>'Proyecto','value'=>'$data->ot->textocorto'),
+		array('name'=>'comentario','type'=>'html','header'=>'Observaciones','value'=>'$data->comentario'),
+			array(
 			'class'=>'CButtonColumn',
                     'template'=>'{update}{delete}',
 			 'buttons'=>array(
@@ -41,7 +41,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 	   ),
 
                             ),
-		),*/
+		),
 		),
 )); 
 

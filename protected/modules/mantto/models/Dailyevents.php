@@ -38,7 +38,7 @@ class Dailyevents extends ModeloGeneral
 		                    array('hfinal', 'checkhoras', 'on'=>'insert,update'),
 		    array('hidet, fechahora', 'length', 'max'=>20),
 			array('codcriticidad', 'length', 'max'=>2),
-			array('descripcion', 'length', 'max'=>30),
+			array('descripcion', 'length', 'max'=>40),
 			array('detalle', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -138,7 +138,7 @@ class Dailyevents extends ModeloGeneral
                }else{
                         $registro= $this->dailydet;                        
                }
-               
+               //var_dump($this->hidet);die();
                         $parte=$registro->dailywork;
                         $fecha=$parte->cambiaformatofecha($parte->fecha,false);
                         $horaminimaturno=$parte->regimen->getLimiteInferior($fecha);
@@ -256,6 +256,8 @@ class Dailyevents extends ModeloGeneral
                     $this->adderror('hfinal',yii::t('errvalid','Las horas de parada acumulada en este turno {acumuladas} y las horas trabajadas + parada  {diferencia}, exceden las  {horasturno} horas  del turno  ',array('{acumuladas}'=>$diferencia,'{diferencia}'=>$elmayor,'{horasturno}'=>$horasturno)));
                return;
               }
+              
+              
               
            }
            

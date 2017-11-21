@@ -1,8 +1,4 @@
-<?php
-/* @var $this CajachicaController */
-/* @var $model Cajachica */
-
-$this->breadcrumbs=array(
+<?php$this->breadcrumbs=array(
 	'Cajachicas'=>array('index'),
 	'Manage',
 );

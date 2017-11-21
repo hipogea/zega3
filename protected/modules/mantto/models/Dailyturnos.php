@@ -167,7 +167,7 @@ class Dailyturnos extends CActiveRecord
         public static function getSecuencia($numero){
         return  Yii::app()->db->createCommand()
   ->select('a.hidturno')
-  ->from(self::tableName().' a')
+  ->from('{{dailyturnos}}'.' a')
   ->join('{{regimen}} b', 'a.hidturno=b.id')  
   ->where('a.codproyecto=:vcodproyecto', array(':vcodproyecto'=>$numero))
   ->order('b.hinicio')

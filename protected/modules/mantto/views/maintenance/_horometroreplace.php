@@ -31,12 +31,12 @@ $form = $this->beginWidget(
     <?php      
                             echo $form->hiddenField($model,'hidpadre',array('value'=>$id));    
                             echo $form->hiddenField($model,'hidequipo',array('value'=>$model->hidequipo));    
-                            echo $form->hiddenField($model,'fechainicio',array('value'=>'2017-10-10'));    
+                            //echo $form->hiddenField($model,'fechainicio',array('value'=>'2017-10-10'));    
                            
                             ?>
         
         
-<div class="panelizquierdo">
+
 
     
    
@@ -60,21 +60,39 @@ $form = $this->beginWidget(
     <div class="row">
 		<?php echo $form->labelEx($model,'fechainicio'); ?>
          
-                <?php      
-                echo Chtml::textField(uniqid(),'2017-10-01',array('size'=>12,'value'=>'2017-10-01','disabled'=>'disabled'));    
-                ?>
+                <?php Yii::import('application.extensions.CJuiDateTimePicker.CJuiDateTimePicker');
+			$this->widget('CJuiDateTimePicker',array(
+					'model'=>$model, //Model object
+					'attribute'=>'fechainicio', //attribute name
+					'language'=>'es',
+					'mode'=>'datetime', //use "time","date" or "datetime" (default)
+					'options'=>array('dateFormat'=>'dd/mm/yy',
+							'showOn'=>'button', // 'focus', 'button', 'both'
+                                                        'buttonText'=>Yii::t('ui',' ... '),
+							//'buttonImage'=>Yii::app()->request->baseUrl.'/images/calendar.png',
+							//'buttonImageOnly'=>true,
+								),
+				'htmlOptions'=>array(
+			       'style'=>'width:200px;vertical-align:top',
+                                    'readonly'=>'readonly',
+
+					),// jquery plugin options
+
+				));
+
+			?>
 		<?php echo $form->error($model,'fechainicio'); ?>
 	</div>
     
 
             
 <div class="row">
-		<?php echo $form->labelEx($model,'lecturaactual'); ?>
+		<?php echo $form->labelEx($model,'lecturainicio'); ?>
          
                 <?php      
-                echo $form->textField($model,'lecturaactual',array('size'=>8,'disabled'=>''));    
+                echo $form->textField($model,'lecturainicio',array('size'=>8,'disabled'=>''));    
                 ?>
-		<?php echo $form->error($model,'lecturaactual'); ?>
+		<?php echo $form->error($model,'lecturainicio'); ?>
 	</div>
     
                 
@@ -83,7 +101,7 @@ $form = $this->beginWidget(
 		<?php echo $form->labelEx($model,'unidades'); ?>
          
                 <?php      
-                echo $form->textField($model,'unidades',array('size'=>8,'disabled'=>'disabled'));    
+                echo $form->textField($model,'unidades',array('value'=>$model->ums->desum,'size'=>8,'disabled'=>'disabled'));    
                 ?>
 		
 	</div>
@@ -92,17 +110,13 @@ $form = $this->beginWidget(
 
 
        
-    </div>
-    <div class="panelderecho">
    
-	
-    </div>
 	<?php
    
     $this->widget(
     'booster.widgets.TbButton',
     array(
-        'label' => 'Create Measurement Point',
+        'label' => 'Replace Measurement Point',
         'context' => 'success',
         'context' => 'success',
         'htmlOptions'=>array('type'=>'input')

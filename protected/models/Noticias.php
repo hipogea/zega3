@@ -35,9 +35,10 @@ class Noticias extends CActiveRecord
 	public static function isAdminTablon($iduser=NULL){
 		IF(is_null($iduser))
 			$iduser=Yii::app()->user->id;
-
-		if($iduser==Confignoticias::model()->findByPk(1)->iduseradm){
-			return true;
+$OBJ=Confignoticias::model()->findByPk(1);
+                IF(!IS_NULL($OBJ))
+		if($iduser==$OBJ->iduseradm){
+			return true; 
 		} else {
 			return false;
 		}

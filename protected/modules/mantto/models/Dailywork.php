@@ -22,8 +22,13 @@
 class Dailywork extends ModeloGeneral
 {
 	/**
-	 * @return string the associated database table name
+	 * @return string the associated database table name 
 	 */
+    public $measureColumns=array(
+        1=>array('hidlectura1','hidlectura2'), //estas columnas apuntan al primer horometro
+        2=>array('hidlectura3','hidlectura4'), //estas columnas apuntan al segundo horoemtro
+        //asi no tuviera segundo horometro el equipo se conserva el orden y el tamaño del array
+        );
     const ESTADO_NUEVO='10';
     const ESTADO_PREVIO='10';
     const COD_DOCU='146';
@@ -382,6 +387,20 @@ class Dailywork extends ModeloGeneral
       
     }
     
+    public function getObjectForEquipment($idequipment){
+       $ide= yii::app()->db->createCommand()-> 
+            select('id')->from('{{dailydet}}')-> 
+                    where("hidparte=:vhidparte and hidequipo=:vhidequipo",
+            array(":vhidparte"=>$this->id,":vhidequipo"=>$idequipment))-> 
+                     limit(1)->queryScalar(); 
+       //echo "adfr<br>";
+      if($ide!=false){//echo// $ide."saliohy<br>";
+      //var_dump(Dailydet::model()->findByPk($ide));
+       return Dailydet::model()->findByPk($ide);
+      }else{//echo "esnull <br>";
+      return null;}
+    }
+    
     public function  isProbablyDataIncomplete(){
         if(($this->avgutil+0 < 0.2) or
             ($this->avgdispo+0 > 0.95) or
@@ -389,4 +408,79 @@ class Dailywork extends ModeloGeneral
             return true;
         return false;
      }
+     
+     
+  public function measureDataIncomplete(){
+      $incompletes=array();
+      $fields= $this->getNamesColumnsDailyDet();
+      foreach($fields as $clave=>$column){          
+          $valores=$this->getMeasuresColumn($column);
+          //print_r($valores);
+          if(count($valores)>0)
+          $incompletes[$column]=array_values($valores);
+      }
+     return $incompletes;
+  } 
+ private function getMeasuresColumn($column){
+    if($this->getOrderColumnDailydet($column)==1)
+             $criterio=$this->criteria12 ($column);
+     if($this->getOrderColumnDailydet($column)==2)
+             $criterio=$this->criteria34 ($column);
+    return yii::app()->db->createCommand()-> 
+           select("id")->from('{{dailydet}} a, {{inventario}} b')-> 
+      where($criterio->condition,$criterio->params)->queryColumn();
+ }  
+ 
+ public function getPrevious(){
+     $idprev=$this->getPrev();
+     if($idprev>0)
+       return Dailywork::model ()->findByPk($idprev);
+     return null;
+ }
+ 
+ public function getNextObject(){
+     $idprev=$this->getNext();
+     if($idprev>0)
+       return Dailywork::model ()->findByPk($idprev);
+     return null;
+ }
+ 
+ private function criteria34($nameField){
+     $crite=NeW CDbCriteria();
+     $crite->addCondition("a.hidequipo=b.idinventario and b.tienecarter='1' and  (a.".$nameField." is null or  a.".$nameField." =0 ) and a.hidparte=:vhidparte");
+      $crite->params=array(
+          ":vhidparte"=>$this->id,
+      );
+     return $crite;
+     }
+     
+  private function criteria12($nameField){
+     $crite=NeW CDbCriteria();
+     $crite->addCondition("a.hidequipo=b.idinventario and (a.".$nameField." is null or  a.".$nameField." =0 ) and a.hidparte=:vhidparte");
+      $crite->params=array(
+          ":vhidparte"=>$this->id,
+      );
+     return $crite;
+     
+     }
+ public function getOrderColumnDailydet($column){
+     $orden=0;
+     foreach($this->measureColumns as $clave=>$valor){
+         //var_dump($valor);
+         if(in_array($column,$valor)){
+             $orden=$clave;
+             break;
+         }
+     }return $orden;
+ }
+ 
+ public function getNamesColumnsDailyDet(){
+    $columns=array();
+    foreach($this->measureColumns as $clave=>$grupo){
+         foreach($grupo as $clave2=>$name){
+             $columns[]=$name;
+         }
+       }return $columns;
+    }
+
 }

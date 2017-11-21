@@ -183,7 +183,7 @@ $form = $this->beginWidget(
 	<?php $this->endWidget(); ?>
 <?php unset($form); ?>
 
-<?php $this->widget('ext.groupgridview.GroupGridView', array(
+<?php $grilla= $this->widget('ext.groupgridview.GroupGridView', array(
       'id' => 'eventos-grid',
       'dataProvider'=>$model->search_por_detalle($model->hidet),
      // 'mergeColumns' => array('codtipo'),
@@ -352,6 +352,7 @@ $form = $this->beginWidget(
 
 
 <?php
+
 
 //--------------------- begin new code --------------------------
 // add the (closed) dialog for the iframe

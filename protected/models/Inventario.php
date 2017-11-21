@@ -222,6 +222,8 @@ class Inventario extends ModeloGeneral
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+                   'manttohorometros'=>array(self::HAS_MANY, 'Manttohorometros', 'hidequipo'),
+		   'nhorometros'=>array(self::STAT, 'Manttohorometros', 'hidequipo'),
                     'nproyectos'=>array(self::STAT,'Machineswork','hidinventario'),
 		'barcoactual'=>array(self::BELONGS_TO, 'Embarcaciones', 'codep'),
 		'barcoanterior'=>array(self::BELONGS_TO, 'Embarcaciones', 'codepanterior'),
@@ -668,6 +670,7 @@ public static function canttransporte(){
 		if ($this->isNewRecord) {
 			       $this->codigodoc='390';
                                $this->codestado='10';
+                               $this->tienecarter='0';
                        if($this->getScenario()=='muybasico'){
                            $this->llenacamposadicionales();
                        }
@@ -814,5 +817,38 @@ public static function canttransporte(){
                  
             }
         }
-       
+        
+        
+  public function getPoints(){
+      return $this->manttohorometros;
+  }   
+  public function getPoint($name){
+      $fila=null;
+      if(is_numeric($name)){
+          //print_r($this->getPoints());die();
+           foreach($this->getPoints() as $point){
+              // var_dump($name);var_dump($point->orden);echo "<br>";
+         if($point->orden==$name){
+             //echo "ocindicne o no";
+           $fila=$point;  break;
+         }
+            
+     }
+      }else{
+         foreach($this->getPoints() as $point){
+         if($point->codigo==$name){
+           $fila=$point;  break;
+         }
+            
+        }  
+      
+    
+     }
+     //var_DUMP($fila);DIE();
+     return $fila;
+  }   
+  
+  public function hasPoints(){
+      return($this->nhorometros >0 )?true:false;
+  }
 }

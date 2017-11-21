@@ -43,7 +43,7 @@ class Dailydet extends ModeloGeneral
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-                    array('id,hidparte,hidequipo,hp,hpp,hps,hmi,hmf,hmt,hpi,hpf,hpt,dispo,util,np,ns,npp,ntt,hd,htt,htdb,iduser', 'safe', 'on'=>'update'),
+                    array('id,hidlectura1,hidlectura2,hidlectura3,hidlectura4,hidparte,hidequipo,hp,hpp,hps,hmi,hmf,hmt,hpi,hpf,hpt,dispo,util,np,ns,npp,ntt,hd,htt,htdb,iduser', 'safe', 'on'=>'update'),
 		array('np,ns,ntt','numerical','integerOnly'=>true),
                   /*array('hp,hpp,hmi,hmt,hpi,hpf,hpt,np,ns,ntt,hd,htt', 'numerical',
                       'min'=>0,
@@ -62,12 +62,13 @@ class Dailydet extends ModeloGeneral
 			//array('dispo, util', 'length', 'max'=>5),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, hidparte, hidequipo, hp, hpp, hmi, hmf, hmt, hpi, hpf, hpt, dispo, util, iduser', 'safe', 'on'=>'search'),
-		array('id, hidparte, hidequipo, hp, hpp, hmi, hmf, hmt, hpi, hpf, hpt, dispo, util, iduser,codparte', 'safe', 'on'=>'search_por_parte'),
+			array('id,hidlectura1,hidlectura2,hidlectura3,hidlectura4, hidparte, hidequipo, hp, hpp, hmi, hmf, hmt, hpi, hpf, hpt, dispo, util, iduser', 'safe', 'on'=>'search'),
+		array('id,hidlectura1,hidlectura2,hidlectura3,hidlectura4, hidparte, hidequipo, hp, hpp, hmi, hmf, hmt, hpi, hpf, hpt, dispo, util, iduser,codparte', 'safe', 'on'=>'search_por_parte'),
 		
                     );
 	}
 
+        
 	/**
 	 * @return array relational rules.
 	 */
@@ -188,21 +189,35 @@ $criteria->params=array(":vhidparte"=>$idparte);
           $this->refrescacampos();
           return parent::afterfind();
       }  
-        
+       
+      public function afterSave(){
+          
+          if($this->isNewRecord){
+              
+          if($this->isAutoEvent()){
+             
+                 $this->addCheckDaily ();
+          }
+             
+          }
+        return parent::afterSave();
+      }
+      
+      
       public function beforesave(){
          
-          $this->refrescacampos();
+         /* $this->refrescacampos();*/
           return parent::beforesave();
       }  
         
       public function beforeValidate(){
            //para compensar la validacion de los horometros en banco
-          if(is_null($this->hmf) or $this->hmf==0)              
+          /*if(is_null($this->hmf) or $this->hmf==0)              
               $this->hmf=$this->hmi;
           if(!$this->isNewRecord)
             if($this->inventario->tienecarter=='1')
           if(is_null($this->hpf) or $this->hpf==0)              
-              $this->hpf=$this->hpi;
+              $this->hpf=$this->hpi;*/
            return parent::beforeValidate();
       }
       
@@ -220,7 +235,10 @@ $criteria->params=array(":vhidparte"=>$idparte);
       
       public function  horasmotor(){
           //HOormeto fi9nal del turno -horometro nicio turno del motor
-          return round($this->hmf-$this->hmi,2);
+          if($this->hidlectura1 > 0  && $this->hidlectura2  > 0)
+          return round($this->getValueMeasurePointFromId($this->hidlectura2)-$this->getValueMeasurePointFromId($this->hidlectura1),2);
+           
+          return 0;
           
       }  
       
@@ -234,14 +252,9 @@ $criteria->params=array(":vhidparte"=>$idparte);
            //var_dump(round(is_null($this->hpf)?0:$this->hpf-is_null($this->hpi)?0:$this->hpi,2));die();
            //var_dump($this->hpf); var_dump($this->hpi);
               if($tienecontrol=='1') {
-                  $x1=is_null($this->hpi)?0:(double)$this->hpi;
-                   $x2=is_null($this->hpf)?0:(double)$this->hpf;
-                  /* $x1=(double)$this->hpi;
-                   $x2=(double)$this->hpf;
-                   var_dump($x2);var_dump($x1);
-                    var_dump(round($x2-$x1,2));*/
-                return round($x2-$x1,2);
-                
+                  if($this->hidlectura3 > 0  && $this->hidlectura4  > 0)
+                  return round($this->getValueMeasurePointFromId($this->hidlectura4)-$this->getValueMeasurePointFromId($this->hidlectura3),2);
+             
               }
                
               return 0;
@@ -280,8 +293,8 @@ $criteria->params=array(":vhidparte"=>$idparte);
           $this->hpp=$this->nhorasparadaprogramada; //hora spdara programada precheck
            $this->hps=$this->nhorasparadaexterna; //horas prada por servicios
            $this->hd=$this->horasdisponibles();
-          $this->hmt=$this->horasmotor();
-           $this->hpt=$this->horasperfo();
+          $this->hmt=$this->horasmotor();//DIFRENCEIA DE LECTURAS DE HOORMETRO DEL MOTOR 
+           $this->hpt=$this->horasperfo();//diferencia de lectuas de horoeemtro 2
            $this->tbd=$this->gethorasparada();//horas de parada total
            $this->np=$this->nparadasint;
            $this->ns=$this->nparadasext;
@@ -324,19 +337,16 @@ $criteria->params=array(":vhidparte"=>$idparte);
            }
            
         public function checkhorasperfo($attribute,$params) {
+           
             $this->refrescacampos();
-          /* if($this->hpi+0 >$this->gethorasturno())
-               $this->adderror('hpi',yii::t('errvalid','El valor del campo "{campo}" = "{valorcampo}"  ',array('{valorcampo}'=>$this->hpi,'{campo}'=>$this->getAttributeLabel('hpi'))).yii::t('errvalid','es mayor que {valref}',array('{valref}'=>$this->gethorasturno())));
-            if($this->hpf+0 >$this->gethorasturno())
-               $this->adderror('hpf',yii::t('errvalid','El valor del campo "{campo}" = "{valorcampo}"  ',array('{valorcampo}'=>$this->hpf,'{campo}'=>$this->getAttributeLabel('hpf'))).yii::t('errvalid','es mayor que {valref}',array('{valref}'=>$this->gethorasturno())));
-            */
+          
             if($this->hpt+0 >$this->gethorasturno())
                $this->adderror('hpt',yii::t('errvalid','El valor del campo "{campo}" = "{valorcampo}"  ',array('{valorcampo}'=>$this->hpt,'{campo}'=>$this->getAttributeLabel('hpt'))).yii::t('errvalid','es mayor que {valref}',array('{valref}'=>$this->gethorasturno())));
             
-            if($this->hpi+0 >0 and $this->hpf+0 >0){
-               if($this->hpi+0 > $this->hpf+0)
+            if($this->hidlectura3+0 >0 and $this->hidlectura4+0 >0){
+               /*if($this->hpi+0 > $this->hpf+0)
                $this->adderror('hpf',yii::t('errvalid','El valor del campo "{campo}" = "{valorcampo}"  ',array('{valorcampo}'=>$this->hpi,'{campo}'=>$this->getAttributeLabel('hpi'))).yii::t('errvalid','es mayor que {valref}',array('{valref}'=>$this->hpf)));
-              
+              */
                 if($this->htt+0 >$this->gethorasturno())
                $this->adderror('htt',yii::t('errvalid','El valor del campo "{campo}" = "{valorcampo}"  ',array('{valorcampo}'=>$this->htt,'{campo}'=>$this->getAttributeLabel('htt'))).yii::t('errvalid','es mayor que {valref}',array('{valref}'=>$this->gethorasturno())));
             
@@ -346,17 +356,18 @@ $criteria->params=array(":vhidparte"=>$idparte);
            }   
            
             public function checkhorasmotor($attribute,$params) {
-                     
+               
              
-             if(!is_null($this->hmi) and !is_null($this->hmf)){
+             if(!is_null($this->hidlectura1) and !is_null($this->hidlectura2)){
               
+                 
                  
               /*
                * Este pesazo de codigo se evalua siempre y cuando se haya activado la 
                * la restriccion en la configuracion del docmuento partes de operatividad
                */
-                 $centro=$this->dailywork->ot->codcen;
-             if(Configuracion::valor(Dailywork::COD_DOCU, $centro,'1125')=='1'){
+                $centro=$this->dailywork->ot->codcen;
+            /* if(Configuracion::valor(Dailywork::COD_DOCU, $centro,'1125')=='1'){
                 //no puede llenarse un horoemtor de inicio sin haber 
                //haber llenado el horometor  final del turno anterior
               $lecturaanthmi= $this->getHorometroAnterior('hmf');
@@ -376,21 +387,21 @@ $criteria->params=array(":vhidparte"=>$idparte);
                $this->adderror('hmf',yii::t('errvalid','There XXi is a horometer {lecturaprevia} with less value {lectura} in the next document',array('{lecturaprevia}'=>$lecturasiguiente,'{lectura}'=>$this->hmf)));
                return;}
                
-              }
+              }*/
               /*------fin del fragmento 
                * Hasta aqui el resto es geeneral
                * ------------------------
                */
               
                  //el horoemtrop final no puede ser menor al inicial 
-                 if($this->hmi > $this->hmf){
+                /* if($this->hmi > $this->hmf){
                $this->adderror('hmf',yii::t('errvalid','El valor del campo "{campo}" = "{valorcampo}"  ',array('{valorcampo}'=>$this->hmi,'{campo}'=>$this->getAttributeLabel('hmi'))).yii::t('errvalid','es mayor que {valref}',array('{valref}'=>$this->hmf)));
-                 return;}
+                 return;}*/
                 
                  //$this->refrescacampos();
                 //analizando los campos de horometros aicinal de peroforacion
                  if($this->inventario->tienecarter=='1'){
-                      if(!is_null($this->hpi) and !is_null($this->hpf))
+                      if(!is_null($this->hidlectura3) and !is_null($this->hidlectura4))
                                 {
                            /*
                * Este pesazo de codigo se evalua siempre y cuando se haya activado la 
@@ -399,7 +410,7 @@ $criteria->params=array(":vhidparte"=>$idparte);
              if(Configuracion::valor(Dailywork::COD_DOCU, $centro,'1125')=='1'){
                            //no puede llenarse un horoemtor de inicio sin haber 
                             //haber llenado el horometor  final del turno anterior
-                                $lecturaanthmi= $this->getHorometroAnterior('hpf');
+                               /* $lecturaanthmi= $this->getHorometroAnterior('hpf');
                                     if($lecturaanthmi==-1) {//si no se ha llenado el horometro hmf del registro anterior
                                                      $this->adderror('hpi',yii::t('errvalid','In the previous document, there is a value {hmf} that has not been entered. This value must be filled first',array('{hmi}'=>$this->getAttributeLabel('hpi'))));
                                                      return;
@@ -415,23 +426,23 @@ $criteria->params=array(":vhidparte"=>$idparte);
                if($this->hpf > $lecturasiguiente){
                $this->adderror('hpf',yii::t('errvalid','There XXiu is a horometer {lecturaprevia} with less value {lectura} in the next document',array('{lecturaprevia}'=>$lecturasiguiente,'{lectura}'=>$this->hpf)));
                return;}                                
-                                                    
+               */                                     
              }/*------fin del fragmento 
                * Hasta aqui el resto es geeneral
                * ------------------------
                */
                                                 //el horoemtrop final no puede ser menor al inicial 
-                                        if($this->hpi > $this->hpf){
+                                       /* if($this->hpi > $this->hpf){
                                              $this->adderror('hpf',yii::t('errvalid','El valor del campo "{campo}" = "{valorcampo}"  ',array('{valorcampo}'=>$this->hpi,'{campo}'=>$this->getAttributeLabel('hpi'))).yii::t('errvalid','es mayor que {valref}',array('{valref}'=>$this->hpf)));
                                                 return;
-                                                    }
+                                                    }*/
                                              
                                        
                                                     
                                                     
                 
                                      }else{
-                                            $this->adderror('hpt',yii::t('errvalid','The ss data of the meter hours must be complete'));
+                                           // $this->adderror('hpt',yii::t('errvalid','The ss data of the meter hours must be complete'));
                 
                                     }
                      
@@ -465,6 +476,7 @@ $criteria->params=array(":vhidparte"=>$idparte);
                $this->adderror('hmt',yii::t('errvalid','The meter hours difference  added to the break down hours ({parada}), is greater than the hours ({turno}) of the shift ',array('{parada}'=>$this->tbd   ,'{turno}'=>$this->gethorasturno())));
               return;
                  }
+               
                //El tiempo de trabajo  mas llas hroas de hroometro no pueden menores al turno 
                  if($elmayor +$tolerancia < $this->gethorasturno()){
                $this->adderror('hmt',yii::t('errvalid','The meter hours difference  added to the break down hours ({parada}), is less than the hours ({turno}) of the shift ',array('{parada}'=>$this->tbd   ,'{turno}'=>$this->gethorasturno())));
@@ -475,7 +487,7 @@ $criteria->params=array(":vhidparte"=>$idparte);
                  
                  //Si elq equipo no puede descansar; los horometros tineen que haber corrido
                  /// noo puede haber descanso 
-                 $verifica=false;
+               /*  $verifica=false;
                if($this->inventario->tienecarter=='1'){
                    //equipos con dos horometros 
                    if($this->hmt==0 and $this->hpt==0)
@@ -489,14 +501,14 @@ $criteria->params=array(":vhidparte"=>$idparte);
                    $this->adderror('hidequipo',yii::t('errvalid','The meter hours difference is zero. Machine {maquina} can not rest ',array('{maquina}'=>$this->inventario->codigoaf)));
                    return;
                }
-                
+                */
                
                
                  
                
                 
             }   else{
-               $this->adderror('hmt',yii::t('errvalid','The data of the meter hours must be complete'));
+              // $this->adderror('hmt',yii::t('errvalid','The data of the meter hours must be complete'));
               
             }
             
@@ -608,6 +620,196 @@ $criteria->params=array(":vhidparte"=>$idparte);
          
          return false;
      }
-        
+     
+     
+    public function  getEquipment(){
+       IF($this->isNewRecord){
+           return Inventario::findByPk($this->hidequipo);
+       }else{
+           return $this->inventario;
+       } 
+    }
+
+
+    
+     ///OBEITNEE LE OBEJTO PUNTO DEN MEDIDA 
+     public function getMeasurePointByName($name){
+       $this->getEquipment()->getPoint($name);         
+     }
+     
+      ///OBEITNEE LE OBEJTO PUNTO DEN MEDIDA 
+     public function getMeasurePointByOrder($order){
+      return  $this->getEquipment()->getPoint($order);         
+     }
+     
+     public function  getValuePoint($order){
+       return  $this->getMeasurePointByOrder($order)->getLastObject()->lectura;
+     }
+     
+     public function getMeasurePointFromId($id=null){
+         if(is_null($id))return null;
+          return  Manttolecturahorometros::findByPk($id);
+     }
+     public function getValueMeasurePointFromId($id=null){
+         if(is_null($id))return null;
+        $valor=yii::app()->db->createCommand()-> 
+              select('lectura')->from('{{manttolecturahorometros}}')-> 
+              where("id=:vid",array(":vid"=>$id))->queryScalar();
+        if($valor!=false){
+            return $valor;
+        }else{
+            return null;
+        }
+     }
+       
+    private function getCriteriaMeasurePoint($id){
+         
+           $parametros=array(":vid"=>$id);                   
+           $condicion="id=:vid";
+           $criteria=New CDbCriteria();
+           $criteria->addCondition($condicion);
+           $criteria->params=$parametros;
+           return $criteria;
+    }
+    
+    
+    //SACA LA FECHA INICIAL DEL TURNO EN FORMNATO 2017-12-21 14:12:25 0 789343468
+    public function getDateInitial($inTime=false){
+        if(!$inTime)
+        return $this->getDailyWork()->regimen->getLimiteInferior($this->cambiaformatofecha($this->getDailyWork()->fecha,false));
+        return strtotime($this->getDailyWork()->regimen->getLimiteInferior($this->cambiaformatofecha($this->getDailyWork()->fecha,alse)));
+    }
+    
+     //SACA LA FECHA final DEL TURNO EN FORMNATO 2017-12-21 14:12:25 0 789343468
+    public function getDateFinal($inTime=false){
+        if(!$inTime){
+           //echo get_class($this->getDailyWork())."<br>";
+           // var_dump($this->getDailyWork()->regimen->getLimiteSuperior($this->cambiaformatofecha($this->getDailyWork()->fecha,false)));
+        return $this->getDailyWork()->regimen->getLimiteSuperior($this->cambiaformatofecha($this->getDailyWork()->fecha,false));
+        }return strtotime($this->getDailyWork()->regimen->getLimiteSuperior($this->cambiaformatofecha($this->getDailyWork()->fecha,false)));
+    }
+    public function getDailyWork(){
+        if($this->isNewRecord){
+            if($this->hidparte>0)
+            return Dailywork::model()->findByPk($this->hidparte);
+            throw new CHttpException(500,yii::t('errvalid','The field hidparte is empty, check this '));
+            
+        }else{
+            return $this->dailywork;
+        }
+    }
+    
+    /*Sgrega un evento diario - check list de inspeccion premiliminar 
+     * noramlemente es automtico
+     */
+    public function addCheckDaily(){
+        if(!($this->hidequipo > 0 and $this->hidparte >0))
+            throw new CHttpException(500,yii::t('errvalid','The field hidparte or the field hidequipo is empty, check this '));
+                 
+        if($this->isNewRecord){
+            $rek= Dailywork::model()->findByPk($this->hidparte);
+            $equipo= Inventario::model()->findByPk($this->hidequipo);
+        }ELSE{
+            $rek= $this->dailywork;
+            $equipo=$this->inventario;
+        }
+            $evento=New Dailyevents;
+            
+            $evento->setAttributes(
+                    array(
+                        'hidet'=>$this->id,
+                        'descripcion'=>substr(yii::t('errvalid','Daily inital Check for {equipo} ',array('{equipo}'=>$equipo->codigoaf)),0,40),
+                         'codresponsable'=>$rek->codresponsable,
+                        'tipmanoobra'=>'P',
+                        'hinicio'=>$rek->regimen->hinicio,
+                        'hfinal'=>date('H:i',strtotime($rek->regimen->hinicio)+45*60),
+                        )
+                    );
+            //print_r($evento->attributes);die();
+           if($evento->save()){
+              return true; 
+           }else{
+               //print_r($evento->geterrors());die();
+             //$this->dailydet->adderror();
+             return false;
+           }
+        //}
+    }
+    
+   private function isAutoEvent() {
+      if(Configuracion::valor($this-> 
+         dailywork->codocu, 
+              $this->dailywork->ot->codcen,
+         '1136')=='1')return true;
+      return false;
+   }
+   
+  public function previous() {
+      $previo=$this->dailywork->getPrevious();
+       if(!is_null($previo)) {
+           
+         $cal=$previo->getObjectForEquipment($this->hidequipo); 
+         if(!is_null($cal))
+             return $cal;
+         return null;
+       }
+        return null;    
+  }
+  
+  public function next() {
+      $previo=$this->dailywork->getNextObject();
+       if(!is_null($previo)) {
+         $cal=$previo->getObjectForEquipment($this->hidequipo); 
+         if(is_null($cal))
+             return $cal;
+         return null;
+       }
+        return null;    
+  }
+  
+  public function attachBehaviorMeasure($field,$idPoint,$date,$value) {
+      yii::import('application.modules.mantto.behaviors.measurePointBehavior');
+       $this->attachbehavior('auditoriaBehavior',
+                           new measurePointBehavior );
+       $this->nameField=$field;
+        $this->idPoint=$idPoint;
+         $this->dateOfMeasure=$date;
+         $this->valueMeasure=$value;
+                   
+  }
+  
+  /* Esta funcion recupera (rescata) el Id del documento de 
+   * medida para la fecha de termino o inicio del turno,
+   * Puede que por alguan razon , el registro dailydet
+   * pierda la referencia a este punto (se pierda el hidlecturax)
+   * pero exista un registro de medida en ese horometro para
+   * esa hora especifica (sea  de inicio o termino) 
+   * @final :  Indica que  se trata de una medicion al final del
+   * turno
+   * 
+   * Ejemplo : Puede que un usuario registre una lectura  fuera
+   * del parte, pero por coindicencia coloque la hora de inicio 
+   * o final del turno; entonces el sistema, al momento 
+   * de llenar el parte y las lecturas, el avisará al usuario
+   * que ya alguien ha registrado esa lectura; por loque se tiene
+   * que recuperar
+   */
+ private function rescueMeasure($nameField){
+     $order=$this->getDailyWork()->getOrderColumnDailydet($nameField);
+     $date=($order=1)?$this->getDateInitial():$this->getDateFinal();
+     $measure=$this->resolvePoint($nameField)->getMeasureByDate($date);
+     return $measure;
+ }
+ ///devuekve el objeto punto de medida segun el campo
+public function resolvePoint($nameField){
+    $rf=$this->getDailyWork();
+  if(!is_null($rf)){
+     return $this->getEquipment()->getPoint($rf->getOrderColumnDailydet($nameField));
+  }
+   throw new CHttpException(500,yii::t('errvalid','For this  this Equipment   do not exists measure point.'));
+         
+}
+ 
+ 
 }
  

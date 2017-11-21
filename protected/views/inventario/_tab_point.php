@@ -11,7 +11,9 @@
             array('name'=>'fechainicio','header'=>'Begin Date','value'=>'$data->fechainicio'),
              array('name'=>'lecturaactual','header'=>'Current Value','value'=>'$data->lecturaactual'),
 		array('name'=>'unidades','header'=>'Unit Measur','value'=>'$data->ums->desum'),
-		array(
+		array('name'=>'orden','header'=>'Order','value'=>'$data->orden'),
+		
+            array(
 			'class'=>'CButtonColumn',
                     'template'=>'{update}{view}',
 			 'buttons'=>array(
@@ -67,7 +69,7 @@
 		array(										       
 			"id"=>$idactivo,
 				"asDialog"=>1,
-				"gridId"=>'ot-grid',												
+				"gridId"=>'horometro-grid',												
 											)
 							);
 	//$mensaje="Para agregar una observacion debe de inicar sesion primero";

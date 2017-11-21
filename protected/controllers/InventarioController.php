@@ -712,7 +712,7 @@ public function actionpio() {
 	public function actionDetalle($id)
 	{
             $datos=Machineswork::model()->search_por_activo(10);
-            var_dump($datos->getdata());die();
+            //var_dump($datos->getdata());die();
 	   $model=$this->loadModel($id);
 		if(isset($id)) {
 		//$fot=new Fotos($model->idinventario,Yii::getPathOfAlias('webroot.fotosinv').DIRECTORY_SEPARATOR.$model->codpropietario.DIRECTORY_SEPARATOR,null ) ;

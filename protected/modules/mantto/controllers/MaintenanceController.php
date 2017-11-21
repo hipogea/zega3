@@ -143,6 +143,16 @@ class MaintenanceController extends Controller
                  $model->hidequipo=$modelant->hidequipo;
                  $model->unidades=$modelant->unidades;
                  $model->incremental=$modelant->incremental;
+                  $model->order=$modelant->order;
+                 //var_dump($modelant->hasMeasures());
+                 IF($modelant->hasMeasures()){
+                     $model->setAttributes(array(
+                         'fechainicio'=>$modelant->getLastObject()->fecha,                         
+                         'lecturainicio'=>(!$modelant->canReset())?$modelant->getLastObject()->lectura:0,
+                     ));
+                     MiFactoria::Mensaje('notice', 'Some values have been taken from the last measure ');
+                 }
+                // print_r($model->attributes);
 		if(isset($_POST[$nombremodelo]))
 		{
 			$model->attributes=$_POST[$nombremodelo];
@@ -220,7 +230,7 @@ class MaintenanceController extends Controller
                $id= (integer)MiFactoria::cleanInput($_GET['id']); 
              $proveedorlecturas= Manttolecturahorometros::model()->search_por_horometro($id);
              // var_dump($proveedorlecturas);
-            $cad=$this->renderPartial('lecturas',array('proveedorlecturas'=>$proveedorlecturas),true, true);
+            ECHO $this->renderPartial('lecturas',array('proveedorlecturas'=>$proveedorlecturas),true, true);
               //  var_dump($cad);    
                }
     //}
@@ -243,21 +253,14 @@ class MaintenanceController extends Controller
                     //var_dump( $model->attributes);die();
                     //var_dump( $model->fecha);
 			if($model->save()){
-                             if (!empty($_GET['asDialog']))
-			{
-                        //Close the dialog, reset the iframe and update the grid
-			   echo CHtml::script("window.parent.$('#cru-dialog1').dialog('close');
+                           echo CHtml::script("window.parent.$('#cru-dialog1').dialog('close');
 				window.parent.$('#cru-frame1').attr('src','');
 				window.parent.$.fn.yiiGridView.update('{$_GET['gridId']}');
 					");
-				//Yii::app()->end();
-		          }
-			//$this->render('ot_equipo',array('id'=>$model->id));
-			//Yii::app()->end();
-                            
+                                yii::app()->end();
                                     }
                                     //var_dump( $model->fecha);
-				}
+	}
                   
                    // var_dump( $model->fecha);die();  }            
                      $this->layout="//layouts/iframe";           

@@ -44,6 +44,7 @@ return array(
 		'application.interfaces.*',
 		'application.modules.contabilidad.models.*',
             'application.modules.mantto.models.*',
+             'application.modules.mantto.interfaces.*',
             'application.modules.ventas.models.*',
 		'application.modules.cruge.components.*',
 		'application.modules.cruge.extensions.crugemailer.*',

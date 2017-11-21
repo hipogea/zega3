@@ -1,18 +1,13 @@
 <?php
 class ActiveRecordLogableBehavior extends CActiveRecordBehavior
 {
-	private $_oldattributes = array();
-
-	public function afterSave($event)
+private $_oldattributes = array();
+public function afterSave($event)
 	{
 		if (!$this->Owner->isNewRecord) {
-
 			// new attributes
 			$newattributes = $this->Owner->getAttributes();
 			$oldattributes = $this->getOldAttributes();
-
-                        
-                        
 			// compare old and new
 			foreach ($newattributes as $name => $value) {
 				if (!empty($oldattributes)) {
@@ -50,7 +45,8 @@ class ActiveRecordLogableBehavior extends CActiveRecordBehavior
 					$log->field=        $name;
 					$log->nombrecampo= $this->Owner->getAttributeLabel($name);
 					$log->creationdate= new CDbExpression('NOW()');
-					$log->userid=       Yii::app()->user->id;
+					/*  MYSQL  EXCLUSIVE*/
+                                        $log->userid=       Yii::app()->user->id;
 
 					//Debemos de evitar loggear campos del tipo memo
 					if(strlen($old) >=16) {

@@ -797,7 +797,7 @@ public function preparaAuditoria(){
         
  ///cambia las fechas del modelo en los formatos estabeldicdos en la configuracion de
         //de la aplicacion
-private function conviertefechas($salida){    
+public function conviertefechas($salida){    
     IF(property_exists($this,'camposfechas'))
     foreach($this->camposfechas as $clave=>$campo)
         {
@@ -809,7 +809,7 @@ private function conviertefechas($salida){
 public function cambiaformatofecha($fecha,$salida=true){
    
     if($salida){ 
-        die();
+        //die();
         return yii::app()->periodo->fechaParaMostrar($fecha);
     }else{//SI va a ingresar
         //var_dump(yi i::app()->periodo->validaformatos($fecha));
