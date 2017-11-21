@@ -143,7 +143,7 @@ class MaintenanceController extends Controller
                  $model->hidequipo=$modelant->hidequipo;
                  $model->unidades=$modelant->unidades;
                  $model->incremental=$modelant->incremental;
-                  $model->order=$modelant->order;
+                  $model->orden=$modelant->orden;
                  //var_dump($modelant->hasMeasures());
                  IF($modelant->hasMeasures()){
                      $model->setAttributes(array(

@@ -399,6 +399,8 @@ $mo=New Alinventario();
 
 public $layout='//layouts/column2';
 	public function actionPio() {
+            print_r(Documentos::model()->findByPk('146')->getNamesAttributes());   die();
+            print_r(MiFactoria::getModels());die();
              yii::import('application.modules.mantto.behaviors.measurePointBehavior');
             
             $partes= Dailywork::model()->findAll("id>28");

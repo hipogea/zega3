@@ -428,6 +428,7 @@ return array(
 	// application-level parameters that can be accessed
 	// using Yii::app()->params['paramName']
 	'params'=>array(
+            'environment'=>'DEV',
 		// this is used in contact pageoel
 		//'webRoot' => dirname(dirname(__FILE__).DIRECTORY_SEPARATOR.'..'),
 		'nombrecamposlog'=>array('creadopor','creadoel','modificadopor','modificadoel'), //la matriz con le nombre delos campos de auditoria de cualquier tabla

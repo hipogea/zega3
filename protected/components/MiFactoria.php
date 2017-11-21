@@ -1588,6 +1588,57 @@ if(!$mensaje->save())
         }
         return $nuevoarreglo;
     }
-    
+   
+    //saca todos los modelos en un array
+    public static function  getModels(){
+        $models=array();
+       $patRegularModels=Yii::app()->getBasePath().DIRECTORY_SEPARATOR.'models';       
+       $pathModules=Yii::app()->getBasePath().DIRECTORY_SEPARATOR.'modules';
+     
+                   foreach (scandir($pathModules) as $f) 
+                       {
+                         $ruta=$pathModules.DIRECTORY_SEPARATOR.$f;
+                            if ($f == '.' || $f == '..') {
+				continue;
+				}
+			     if (strlen($f)) {
+				if ($f[0] == '.') {
+						continue;
+				}
+				}
+                         foreach (scandir($ruta) as $f1) {
+				if($f1=="models"){
+                                                    foreach (scandir($ruta.DIRECTORY_SEPARATOR.$f1) as $f2) {
+                                                                if ($f2 == '.' || $f2 == '..') {
+                                                                    continue;
+                                                                    }
+                                                                if (strlen($f2)) {
+                                                                    if ($f2[0] == '.') {
+                                                                    continue;
+                                                                                    }
+                                                                                }
+                                                                                $models[] = substr($f2,0,strpos($f2,'.php'));
+                                                                    }
+                                                }
+                                    }
+                                
+                         }
+                         
+       foreach (scandir($patRegularModels) as $f) {
+				if ($f == '.' || $f == '..') {
+					continue;
+				}
+				if (strlen($f)) {
+					if ($f[0] == '.') {
+						continue;
+					}
+				}
+
+				$models[] = substr($f,0,strpos($f,'.php'));
+
+			}
+      sort($models); 
+      return $models;
+    }
     
 }//fin de la clase Mifactoria
