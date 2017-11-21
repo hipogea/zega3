@@ -670,6 +670,7 @@ public static function canttransporte(){
 		if ($this->isNewRecord) {
 			       $this->codigodoc='390';
                                $this->codestado='10';
+                               $this->tienecarter='0';
                        if($this->getScenario()=='muybasico'){
                            $this->llenacamposadicionales();
                        }

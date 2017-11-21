@@ -12,7 +12,7 @@
  * The followings are the available model relations:
  * @property Manttohorometros $hidhorometro0
  */
-class Manttolecturahorometros extends ModeloGeneral
+class Manttolecturahorometros extends ModeloGeneral implements ImeasurePoints
 {
     
     public $_signo=0;
@@ -436,12 +436,12 @@ class Manttolecturahorometros extends ModeloGeneral
       
       
       
-      private function isPointTime(){
+      public function isPointTime(){
          // var_dump($this->getPoint());die();
           RETURN ($this->getPoint()->ums->dimension=='T');
       }
       
-      private function getPoint(){
+      public function getPoint(){
          // var_dump($this);die();
           if($this->hidhorometro >0)
           return ($this->isNewRecord)?Manttohorometros::model()->findByPk($this->hidhorometro):$this->manttohorometros;
@@ -505,5 +505,19 @@ class Manttolecturahorometros extends ModeloGeneral
         $valo= preg_match('/[0-9,.]/',$value);
         return($valo > 0)?true:false;
     }
+    
+   public function getMeasureByDate($date){
+       
+   }
+    
+    
+     public function  updatePoint($difference=null){
+       
+   }
+     
+     public function  getEquipo(){
+       
+   }
+    
     
 }

@@ -774,5 +774,33 @@ $criteria->params=array(":vhidparte"=>$idparte);
          $this->valueMeasure=$value;
                    
   }
+  
+  /* Esta funcion recupera (rescata) el Id del documento de 
+   * medida para la fecha de termino o inicio del turno,
+   * Puede que por alguan razon , el registro dailydet
+   * pierda la referencia a este punto (se pierda el hidlecturax)
+   * pero exista un registro de medida en ese horometro para
+   * esa hora especifica (sea  de inicio o termino) 
+   * @final :  Indica que  se trata de una medicion al final del
+   * turno
+   * 
+   * Ejemplo : Puede que un usuario registre una lectura  fuera
+   * del parte, pero por coindicencia coloque la hora de inicio 
+   * o final del turno; entonces el sistema, al momento 
+   * de llenar el parte y las lecturas, el avisará al usuario
+   * que ya alguien ha registrado esa lectura; por loque se tiene
+   * que recuperar
+   */
+ private function rescueMeasure($final=true){
+     if($this->get){
+         
+     }
+ }
+ 
+private function resolvePoint($nameField){
+    
+}
+ 
+ 
 }
  

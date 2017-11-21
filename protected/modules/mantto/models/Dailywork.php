@@ -419,9 +419,13 @@ class Dailywork extends ModeloGeneral
   } 
  private function getMeasuresColumn($column){
      ///EXCLUSIVE MYSQL ??
+     if(in_array($column,array('hidlectura1','hidlectura2')))
+             $criterio=$this->criteria12 ($column);
+     if(in_array($column,array('hidlectura3','hidlectura4')))
+             $criterio=$this->criteria12 ($column);
     return yii::app()->db->createCommand()-> 
            select("id")->from('{{dailydet}} a, {{inventario}} b')-> 
-      where("a.hidequipo=b.idinventario and  !(b.tienecarter='0'  or b.tienecarter is null )  and   (hidparte=:vid and ".$column." is null  or ".$column."=0) ",array(":vid"=>$this->id))->queryColumn();
+      where($criterio->condition,$criterio->params)->queryColumn();
  }  
  
  public function getPrevious(){
@@ -437,5 +441,24 @@ class Dailywork extends ModeloGeneral
        return Dailywork::model ()->findByPk($idprev);
      return null;
  }
+ 
+ private function criteria34($nameField){
+     $crite=NeW CDbCriteria();
+     $crite->addCondition("a.hidequipo=b.idinventario and b.tienecarter='1' and  (a.".$nameField." is null or  a.".$nameField." =0 ) and a.hidparte=:vhidparte");
+      $crite->params=array(
+          ":vhidparte"=>$this->id,
+      );
+     return $crite;
+     }
+     
+  private function criteria12($nameField){
+     $crite=NeW CDbCriteria();
+     $crite->addCondition("a.hidequipo=b.idinventario and (a.".$nameField." is null or  a.".$nameField." =0 ) and a.hidparte=:vhidparte");
+      $crite->params=array(
+          ":vhidparte"=>$this->id,
+      );
+     return $crite;
+     
+     }
  
 }

@@ -1,6 +1,6 @@
 <?php
 
-class Manttohorometros extends ModeloGeneral
+class Manttohorometros extends ModeloGeneral implements ImeasurePoints 
 {
 	/**
 	 * @return string the associated database table name
@@ -267,7 +267,7 @@ public $fechareemplazo;
        $id=$this->getLastIdLecture();
        if(is_null($id))
            return null;
-      return  Manttolecturahorometros::model()->findByPk($id);
+      return  $this->Modellecturas()->findByPk($id);
    }
    
    private function getCriterio(){
@@ -335,4 +335,25 @@ public $fechareemplazo;
       if($valor!=false)return false;
       return true;
    }
+  
+   public function getMeasureByDate($date){
+       if($this->isNewRecord)
+       throw new CHttpException(500,yii::t('errvalid','Call to function getMeasureByDate in New Record'));
+       return $this->Modellecturas()->find($this->criteriaByDate($date));
+   }
+  
+   private function criteriaByDate($date){
+     $crite=NeW CDbCriteria();
+     $crite->addCondition(" fecha=:vfecha and hidhorometro=:vhidhorometro ");
+      $crite->params=array(
+          ":vhidhorometro"=>$this->id,
+          ":vfecha"=>$this->cambiaformatofecha($date, false),
+      );
+     return $crite;
+     
+     }
+     
+     private function Modellecturas(){
+        return Manttolecturahorometros::model();
+     }
 }
