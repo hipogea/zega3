@@ -1,6 +1,4 @@
-<?php
-
-class OcompraController extends ControladorBase
+<?php class OcompraController extends ControladorBase
 {
 
     public $layout='//layouts/column2';
@@ -1488,7 +1486,7 @@ public function actionImprimir2($id)
 	 *  muestra la vista de configuracion de los eventos
 	 *+++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-	public function actionConfiguraop()
+	/*public function actionConfiguraop()
 	{
         $docu=$this->documento;  //guia de remision
         $docuhijo=$this->documentohijo; //detalle guia de remisio
@@ -1521,7 +1519,7 @@ public function actionImprimir2($id)
 
 
     }
-
+*/
 
 
 

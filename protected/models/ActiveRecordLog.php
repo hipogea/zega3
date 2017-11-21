@@ -196,4 +196,13 @@ class ActiveRecordLog extends CActiveRecord
 		return true;
 	}
 
+    public function getPrimaryKeyGeneral(){
+        if(strpos(":",$this->idModelReal)>0){
+            return unserialize($this->idModelReal);
+        }else{
+            return $this->idModelGeneral;
+        }
+        
+    }    
+        
 }

@@ -183,6 +183,13 @@ return array(
 'modelName'=>'Person',
 'viewName'=>'/site/extensions/_tabularInputAsTable',
 ),
+                    
+                    
+'showLog'=>array(
+'class'=>'ext.actions.ShowLogAction',
+),                    
+                    
+                    
 );
 }
 

@@ -192,10 +192,32 @@ private function clave(){
 	//$this->Owner->refresh();
 	$vaL=$this->Owner->getPrimaryKey();
 	IF(IS_ARRAY($vaL))
-	{return $vaL[0];}ELSE{
+	{return serialize($vaL);}ELSE{
 		return $vaL;
 	}
 }
+
+
+
+//forma criterio para hallaar los 
+//regisgtros del log 
+//para un modelo un id  y un campo especifico
+private function getCriteriaLog(){
+       $cri=New CDbCriteria();
+       $cri->addCondition("idModelReal=:vid2 and model=:vmodel and field=:vfield");
+       $cri->params=array(
+           ":vid2"=>$this->owner->getPrimaryKey(),
+           ":vmodel"=>get_class($this->owner),
+           ":vfield"=>$this->_campo,
+       );
+      return $cri;
+   }
+   
+  private function getData(){
+      
+  }
+
+
 
 
 }
