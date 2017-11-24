@@ -1,4 +1,4 @@
-<?php$this->breadcrumbs=array(
+<?php $this->breadcrumbs=array(
 	'Cajachicas'=>array('index'),
 	'Manage',
 );

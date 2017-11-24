@@ -390,14 +390,15 @@ return array(
 			'routes'=>array(
 				array(
 					'class'=>'CFileLogRoute',
-					//'levels'=>'error, info, rbac', // <--- agregar 'rbac'
+					'levels'=>'error, info, rbac', // <--- agregar 'rbac'
 					'levels'=>'error,warning', //agreagamos aqui el mail para probar los correos en modo DEBUG 
 					//'enabledParamLogging'=>true,
 				),
+                            
                             array(
-                   'class'=>'CEmailLogRoute',
-                   'levels'=>'info',
-                   'emails'=>'neotegnia@gmail.com',
+                   'class'=>'CProfileLogRoute',
+                   'levels'=>'info,error,rbac',
+                   //'emails'=>'neotegnia@gmail.com',
                                 
                                 ),
                             
@@ -428,6 +429,7 @@ return array(
 	// application-level parameters that can be accessed
 	// using Yii::app()->params['paramName']
 	'params'=>array(
+            'environment'=>'DEV',
 		// this is used in contact pageoel
 		//'webRoot' => dirname(dirname(__FILE__).DIRECTORY_SEPARATOR.'..'),
 		'nombrecamposlog'=>array('creadopor','creadoel','modificadopor','modificadoel'), //la matriz con le nombre delos campos de auditoria de cualquier tabla

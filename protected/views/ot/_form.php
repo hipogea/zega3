@@ -581,34 +581,34 @@ $this->widget('zii.widgets.jui.CJuiTabs', array(
 			'Labores'=>array('id'=>'tab_',
 				'content'=>$this->renderPartial('tab_labores', array('form'=>$form,'model'=>$model),TRUE)
 			), 
-			/*'Recursos'=>array('id'=>'tab_ui',
+			'Recursos'=>array('id'=>'tab_ui',
 				'content'=>$this->renderPartial('tab_recursos', array('form'=>$form,'model'=>$model,'modelolabor'=>$modelolabor),TRUE)
 			),
                     
-                    'Rec externos'=>array('id'=>'tab_uifre4',
+                   /* 'Rec externos'=>array('id'=>'tab_uifre4',
 				'content'=>$this->renderPartial('tab_consignaciones', array('form'=>$form,'model'=>$model,'modeloconsi'=>$modeloconsi),TRUE)
 			),
                     /*
                     'Componentes rotativos'=>array('id'=>'tab_uifre5',
 				'content'=>$this->renderPartial('tab_neot', array('model'=>$model,'modeloconsi'=>$modeloconsi),TRUE)
-			),
+			),*/
                      'Imputaciones Caja Menor'=>array('id'=>'tab_imgghty454',
 				'content'=>$this->renderPartial('tab_cajachica', array('modelopadre'=>$model),TRUE)
 			),
                     
-                    'Registro visual'=>array('id'=>'tab_img',
+                    /*'Registro visual'=>array('id'=>'tab_img',
 				'content'=>$this->renderPartial('tab_images', array('modelopadre'=>$model),TRUE)
 			),
+                    */
                     
-                    
-                     'Registro visual'=>array('id'=>'tab_img',
+                   /*  'Registro visual'=>array('id'=>'tab_img',
 				'content'=>$this->renderPartial('tab_images', array('modelopadre'=>$model),TRUE)
 			),
+                    */
                     
                     
                     
-                    
-                    
+                    /*
 			'Auditoria'=>array('id'=>'tab____..__',
 				'content'=>$this->renderPartial('//site/tab_auditoria', array('form'=>$form,'model'=>$model),TRUE)
 			),

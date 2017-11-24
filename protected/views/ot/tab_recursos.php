@@ -82,13 +82,13 @@ $this->widget('zii.widgets.grid.CGridView', array(
 		//array('htmlOptions'=>array('width'=>10),'name'=>'codigoalma','visible'=>(yii::app()->settings->get("materiales","materiales_codigoservicio")==$data->codart)?true:false),
 		//array('htmlOptions'=>array('width'=>5),'header'=>'um','value'=>'$data->ums->desum'),
 		//array('htmlOptions'=>array('width'=>5), 'type'=>'raw','name'=>'codart','value'=>'$data->codart','visible'=>(!yii::app()->settings->get("materiales","materiales_codigoservicio")==$data->codart)?true:false),
-		array('header'=>'N° Solic','type'=>'raw','value'=>'CHTml::link($data->solpe->numero,yii::app()->createUrl("/solpe/update/",array("id"=>$data->hidsolpe)), array("target"=>"_blank" ))', 'htmlOptions'=>array('width'=>4),),
+		array('header'=>'N° Solic','type'=>'raw','value'=>'CHTml::link($data->getNumSolpe(),yii::app()->createUrl("/solpe/update/",array("id"=>$data->hidsolpe)), array("target"=>"_blank" ))', 'htmlOptions'=>array('width'=>4),),
 		array('name'=>'cant', 'type'=>'raw','header'=>'Cant','htmlOptions'=>array('width'=>20) ),
 		array('name'=>'codart', 'type'=>'raw','header'=>'Cod','value'=>'($data->tipsolpe=="M")?$data->codart:CHtml::image(Yii::app()->getTheme()->baseUrl."/img/hammer.png") ','htmlOptions'=>array('width'=>20) ),
 		
                                                         //array('name'=>'.','type'=>'raw','value'=>'($data->tipsolpe=="S")?CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."hammer.png"):""'),
 
-                                                        array('name'=>'hidlabor','header'=>'Recurso','value'=>'$data->txtmaterial','filter'=>CHTml::listData(Tempdetot::model()->findAll("idusertemp=:vuser and hidorden=:vorden",array(":vorden"=>$model->id,":vuser"=>yii::app()->user->id)),'idaux','textoactividad'), 'htmlOptions'=>array('width'=>400),),
+               array('name'=>'hidlabor','header'=>'Recurso','value'=>'$data->txtmaterial','filter'=>CHTml::listData(Tempdetot::model()->findAll("idusertemp=:vuser and hidorden=:vorden",array(":vorden"=>$model->id,":vuser"=>yii::app()->user->id)),'idaux','textoactividad'), 'htmlOptions'=>array('width'=>400),),
 		
                                                        // 'txtmaterial',
 		//'codart',
@@ -160,8 +160,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
                                					',
 
 				),
-				'visiblex' => array($this::ESTADO_CREADO, $this::ESTADO_AUTORIZADO, $this::ESTADO_ANULADO, $this::ESTADO_CONFIRMADO, $this::ESTADO_FACTURADO),
-
+				'visiblex' => array($this::ESTADO_CREADO),
 			),
 
 
@@ -203,7 +202,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
                                							 }
                                					',
 				),
-				'visiblex' => array($this::ESTADO_CREADO, $this::ESTADO_AUTORIZADO, $this::ESTADO_ANULADO, $this::ESTADO_CONFIRMADO, $this::ESTADO_FACTURADO),
+				'visiblex' => array($this::ESTADO_CREADO),
 
 			),
 

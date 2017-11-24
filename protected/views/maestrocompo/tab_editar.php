@@ -24,12 +24,7 @@
 										'ruta' => array(),
 										'visiblex' => array('10'),
 									),
-
-									'out' => array(
-				'						type' => 'B',
-										'ruta' => array($this->id . '/admin',array()),
-										'visiblex' => array('10'),
-										),
+									
 										);
 								$this->widget('ext.toolbar.Barra',
 									array(

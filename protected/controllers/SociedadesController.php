@@ -160,4 +160,16 @@ class SociedadesController extends Controller
 			Yii::app()->end();
 		}
 	}
+        
+        public function afterSave(){
+            $clip=NeW Clipro();
+            $clip->setAttributes(array(
+                'dsocio'=>$this->despro,
+                'rucpro'=>$this->rucsoc,
+                'direcciontemp'=>$this->direccionfiscal,
+                'socio'=>'1'
+            ));
+            if(!$clip->save())print_r($clip->geterrors());
+            return parent::afterSave();
+        }
 }

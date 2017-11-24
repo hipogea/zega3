@@ -460,6 +460,5 @@ class Tempdetot extends ModeloGeneral
          
      }
      
-     
-     
+   
 }

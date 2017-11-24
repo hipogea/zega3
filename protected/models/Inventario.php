@@ -760,14 +760,14 @@ public static function canttransporte(){
 		                 ));
 	}
         
-    public static function colocaarchivox($fullFileName,$userdata=null) {
+    public static function colocaarchivox($fullFileName,$userdata=null,$controller=null) {
         $filename=$fullFileName;
         $extension=pathinfo($filename)['extension'];
         $registro=self::model()->findByPk($userdata);
         $extension= strtolower($extension);
         $registro->agregacomportamientoarchivo($extension);               
               
-       $registro->colocaarchivo($fullFileName);
+       $registro->colocaarchivo($fullFileName,$controller);
     }
     
     public function agregacomportamientoarchivo($extension){
@@ -800,16 +800,35 @@ public static function canttransporte(){
         private function llenacamposadicionales(){
             if($this->getScenario()=='muybasico'){
                 //revisa las ep
-                
+                $cosa="";
                 $barco=yii::app()->db->createCommand()->select('codep')
                         ->from('{{embarcaciones}}')
                         ->limit(1)->queryScalar();
+                $cosa=' ships or vehicles ';
+                $mensa=yii::t('es','You dont have any data for '.$cosa.' Please fill the data for this , before ');
+               if(!($barco!=false)) throw new CHttpException(404,$mensa);
+		
                 $documento=yii::app()->db->createCommand()->select('codocu')
                         ->from('{{estado}}')->where("codestado=:vestado",array(":vestado"=>$this->codestado))
                         ->limit(1)->queryScalar();
-                 $lugar=yii::app()->db->createCommand()->select('codlugar')
-                        ->from('{{lugares}}')
+                $cosa=' status ';
+                $mensa=yii::t('es','You dont have any data for '.$cosa.' Please fill the data for this , before ');
+               if(!($documento!=false)) throw new CHttpException(404,$mensa);
+		
+                
+                $socio=yii::app()->db->createCommand()->select('codpro')
+                        ->from('{{clipro}}')->where("socio='1'",array())
                         ->limit(1)->queryScalar();
+                 $cosa=' societies in companies master  ';
+                $mensa=yii::t('es','You dont have any data for '.$cosa.' Please fill the data for this , before ');
+                if(!($socio!=false))throw new CHttpException(404,$mensa);
+		
+                 $lugar=yii::app()->db->createCommand()->select('codlugar')
+                        ->from('{{lugares}}')->where("codpro=:vcodpro",array(":vcodpro"=>$socio))
+                        ->limit(1)->queryScalar();
+                 $cosa=' Places in {codigo}  ';
+                $mensa=yii::t('es','You dont have any data for '.$cosa.' Please fill the data for this , before ',array('{codigo}'=>$cosa));
+                if(!($lugar!=false))throw new CHttpException(404,$mensa);
                  $this->setAttributes(array(
                      'codep'=>$barco,'codepanterior'=>$barco,'codeporiginal'=>$barco,'codlugar'=>$lugar,
                      'fecha'=>date('Y-m-d'),'numerodocumento'=>'0000','coddocu'=>$documento

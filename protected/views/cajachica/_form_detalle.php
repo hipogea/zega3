@@ -198,7 +198,7 @@
 	<div class="row">
 		<?php echo $form->labelEx($model,'monedahaber'); ?>
 		<?php $datos=CHTml::listdata(Monedas::model()->FindAll("habilitado='1'",array("order"=>"desmon ASC")),'codmoneda','desmon'); ?>
-		<?php echo $form->DropdownList($model,'monedahaber',$datos,array('empty'=>'--Seleccione moneda--','disabled'=>$habilitado)); ?>
+		<?php echo $form->DropdownList($model,'monedahaber',$datos,array('empty'=>'--Seleccione moneda--','disabled'=>'')); ?>
 		<?php echo $form->error($model,'monedahaber'); ?>
 	</div>
 	

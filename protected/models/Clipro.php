@@ -31,7 +31,7 @@ class Clipro extends ModeloGeneral
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		$reglas= array(
-			//array('codpro', 'required'),
+                array('socio','safe','on' =>'insert'),
 		 array('codpro,telpro,emailpro', 'safe', 'on'=>'BATCH_UPD_COMUNICACIONES'),
 			 //array('codpro,telpro,emailpro', 'safe', 'on'=>'BATCH_UPD_COMUNICACIONES'),
 		array('emailpro', 'match','pattern'=>'/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/','message'=>'El correo no es el apropiado','on'=>'BATCH_INS,BATCH_UPD,insert,update,BATCH_UPD_COMUNICACIONES'),

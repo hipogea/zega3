@@ -20,7 +20,7 @@
 
 <div class="row">
 		<?php
-                
+               
 		$botones=array(
 
 			'save'=>array(
@@ -43,7 +43,7 @@
                             ),
                             'dialog' => 'cru-dialog3',
                             'frame' => 'cru-frame3',
-                           'visiblex'=>array($this::ESTADO_ENACTIVIDAD,$this::ESTADO_FUERAOPERACION,$this::ESTADO_TRAMITEBAJA,$this::ESTADO_ARCHIVO),
+                           'visiblex'=>array(!$model->isNewRecord,$this::ESTADO_ENACTIVIDAD,$this::ESTADO_FUERAOPERACION,$this::ESTADO_TRAMITEBAJA,$this::ESTADO_ARCHIVO),
 
 
                         ),

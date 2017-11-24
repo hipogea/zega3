@@ -363,5 +363,16 @@ class Tempdesolpe extends ModeloGeneral
 	 $this->adderror('codart','Este material no tiene grupo de valor válido, complete este valor en los datos maestros del material para este centro y almacen');
 
       }
+      
+      
+   public function getNumSolpe(){
+       if(is_null($this->solpe)){
+           return "";
+       }else{
+          return $this->solpe->numero; 
+       }
+           
+   }
+        
 
 }

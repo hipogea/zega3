@@ -55,7 +55,7 @@
 
 
 <?php 
-        if ($habilitado=="") {
+       
  				$createUrl = $this->createUrl('/maestrocompo/creaconversion',
 										array(
 										       "codigo"=>$model->codigo,
@@ -72,7 +72,7 @@
 
 
 					
-        }
+        
 
 ?>
 

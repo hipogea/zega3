@@ -13,7 +13,7 @@ MiFactoria::titulo('Editar material  '.$model->codigo,'color_swatch_2')
 				'theme' => 'default',
 				'tabs' => array(
 					'Datos generales'=>array('id'=>'tab_',
-						'content'=>$this->renderPartial('tab_editar', array('form'=>$form,'model'=>$model),TRUE)
+						'content'=>$this->renderPartial('tab_editar', array('model'=>$model),TRUE)
 					),
 
 

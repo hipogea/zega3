@@ -121,7 +121,8 @@ class Trabajadores extends ModeloGeneral
 									}
 		if($this->cambiocampo('iduser')) ///Si han actualizado el campo iduser
 		                                {
-											if(!is_null($this->iduser))  {
+											if(!is_null($this->iduser) and strlen(trim($this->iduser))>0)  {
+                                                                                            
 												$registros = Yii::app()->db->createCommand(" select idfield  from	cruge_field t where t.fieldname='codtra' ")->queryAll();
 												if(count($registros)> 0 )  {
 													foreach  ($registros as $row) {

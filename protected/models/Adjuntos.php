@@ -40,7 +40,7 @@ class Adjuntos extends CActiveRecord
 			array('borrado, subido', 'length', 'max'=>28),
 			array('titulo', 'length', 'max'=>30),
 			array('extension', 'length', 'max'=>4),
-			array('enlace, iduser,texto,subido', 'safe','on'=>'insert'),
+			array('enlace, iduser,texto,subido,action', 'safe','on'=>'insert'),
                     array('titulo, texto', 'safe','on'=>'textos'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
