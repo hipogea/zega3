@@ -19,16 +19,12 @@
  * @property Estado $codocu0
  * @property Trabajadores $codresponsable0
  */
-class Dailywork extends ModeloGeneral
+class Dailywork extends ModeloGeneral implements IDocumentsDaily
 {
 	/**
 	 * @return string the associated database table name 
 	 */
-    public $measureColumns=array(
-        1=>array('hidlectura1','hidlectura2'), //estas columnas apuntan al primer horometro
-        2=>array('hidlectura3','hidlectura4'), //estas columnas apuntan al segundo horoemtro
-        //asi no tuviera segundo horometro el equipo se conserva el orden y el tamaño del array
-        );
+   
     const ESTADO_NUEVO='10';
     const ESTADO_PREVIO='10';
     const COD_DOCU='146';
@@ -83,7 +79,7 @@ class Dailywork extends ModeloGeneral
 			'regimen'=>array(self::BELONGS_TO, 'Regimen', 'hidturno'),
 			'dailydet' => array(self::HAS_MANY, 'Dailydet', 'hidparte'),
 			'estado' => array(self::BELONGS_TO, 'Estado', 'codestado'),
-			'documentos' => array(self::BELONGS_TO, 'Estado', 'codocu'),
+			'documentos' => array(self::BELONGS_TO, 'Documentos', 'codocu'),
 			'trabajadores' => array(self::BELONGS_TO, 'Trabajadores', 'codresponsable'),
 		       'ndailydet' => array(self::STAT, 'Dailydet', 'hidparte'),
                     'avgutil' => array(self::STAT, 'Dailydet', 'hidparte','select'=>"avg(t.util)"),
@@ -465,7 +461,7 @@ class Dailywork extends ModeloGeneral
      }
  public function getOrderColumnDailydet($column){
      $orden=0;
-     foreach($this->measureColumns as $clave=>$valor){
+     foreach($this->initFields() as $clave=>$valor){
          //var_dump($valor);
          if(in_array($column,$valor)){
              $orden=$clave;
@@ -476,11 +472,17 @@ class Dailywork extends ModeloGeneral
  
  public function getNamesColumnsDailyDet(){
     $columns=array();
-    foreach($this->measureColumns as $clave=>$grupo){
+    foreach($this->initFields() as $clave=>$grupo){
          foreach($grupo as $clave2=>$name){
              $columns[]=$name;
          }
        }return $columns;
     }
-
+public function initFields() {
+    return array(
+        1=>array('hidlectura1','hidlectura2'), //estas columnas apuntan al primer horometro
+        2=>array('hidlectura3','hidlectura4'), //estas columnas apuntan al segundo horoemtro
+        //asi no tuviera segundo horometro el equipo se conserva el orden y el tamaño del array
+        );
+}
 }

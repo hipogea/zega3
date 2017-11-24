@@ -58,10 +58,11 @@
 
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'x_report'); ?>
-		<?php echo $form->textField($model,'x_report',array('size'=>3,'maxlength'=>3)); ?>
-		<?php echo $form->error($model,'x_report'); ?>
-	</div>
+		<?php echo $form->labelEx($model,'tabla');
+
+		$datos = array_combine(MiFactoria::getModels(),MiFactoria::getModels());
+		echo $form->DropDownList($model,'tabla',$datos, array('empty'=>'--Choose Model--')  )  ;
+                    ?>
 
 
 

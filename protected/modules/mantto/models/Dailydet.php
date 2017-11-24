@@ -32,7 +32,10 @@ class Dailydet extends ModeloGeneral
 	{
 		return '{{dailydet}}';
 	}
-
+          public function init(){
+              $this->campoestado='codocu';
+              $this->documento='147';
+          }
         public $_horasturno;
          public $_horasparada=null;
 	/**
@@ -43,7 +46,7 @@ class Dailydet extends ModeloGeneral
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-                    array('id,hidlectura1,hidlectura2,hidlectura3,hidlectura4,hidparte,hidequipo,hp,hpp,hps,hmi,hmf,hmt,hpi,hpf,hpt,dispo,util,np,ns,npp,ntt,hd,htt,htdb,iduser', 'safe', 'on'=>'update'),
+                    array('id,codocu,hidlectura1,hidlectura2,hidlectura3,hidlectura4,hidparte,hidequipo,hp,hpp,hps,hmi,hmf,hmt,hpi,hpf,hpt,dispo,util,np,ns,npp,ntt,hd,htt,htdb,iduser', 'safe', 'on'=>'update'),
 		array('np,ns,ntt','numerical','integerOnly'=>true),
                   /*array('hp,hpp,hmi,hmt,hpi,hpf,hpt,np,ns,ntt,hd,htt', 'numerical',
                       'min'=>0,
@@ -55,7 +58,7 @@ class Dailydet extends ModeloGeneral
                   array('hmi,hmf','checkhorasmotor','on'=>'update'),
                     //array('hpi,hpf','checkhorasperfo','on'=>'update'),
                     
-                    array('hidparte, hidequipo,codtipo,hmi,hmf,hpi,hpf', 'safe','on'=>'minimo'),
+                    array('hidparte, hidequipo,codtipo,hmi,hmf,hpi,hpf,codocu', 'safe','on'=>'minimo'),
 			array('hidparte, hidequipo', 'required'),
 			//array('hidparte, hp, hpp, hmi, hmf, hmt, hpi, hpf, hpt, iduser', 'numerical', 'integerOnly'=>true),
 			array('hidequipo', 'length', 'max'=>20),
@@ -205,7 +208,7 @@ $criteria->params=array(":vhidparte"=>$idparte);
       
       
       public function beforesave(){
-         
+         $this->codocu=$this->documento;
          /* $this->refrescacampos();*/
           return parent::beforesave();
       }  

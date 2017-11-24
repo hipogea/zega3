@@ -138,19 +138,23 @@ class UiController extends Controller
         if (isset($_POST[CrugeUtil::config()->postNameMappings['CrugeLogon']])) {
             $model->attributes = $_POST[CrugeUtil::config()->postNameMappings['CrugeLogon']];
             if ($model->validate()) {
+                 //echo "valido";
                 if ($model->login(false) == true) {
-
+                    // echo "entro ";die();
                     Yii::log(__CLASS__ . "\nCrugeLogon->login() returns true\n", "info");
 
                     // a modo de conocimiento, Yii::app()->user->returnUrl es
                     // establecida automaticamente por CAccessControlFilter cuando
                     // preFilter llama a accessDenied quien a su vez llama a
                     // CWebUser::loginRequired que es donde finalmente se llama a setReturnUrl
+                   // var_dump(Yii::app()->user->returnUrl);die();
                     $this->redirect(Yii::app()->user->returnUrl);
                 } else {
+                    //echo "no pasa nada<br>";
                     Yii::app()->user->setFlash('loginflash', Yii::app()->user->getLastError());
                 }
             } else {
+               // echo "no pasa nada<br>";die();
                 Yii::log(
                     __CLASS__ . "\nCrugeUser->validate es false\n" . CHtml::errorSummary($model)
                     ,
