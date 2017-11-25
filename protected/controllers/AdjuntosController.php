@@ -54,8 +54,8 @@ class AdjuntosController extends Controller
 			if($model->save()){
 				
 					//Close the dialog, reset the iframe and update the grid
-					echo CHtml::script("window.parent.$('#cru-dialog4').dialog('close');
-                                        window.parent.$('#cru-detalle4').attr('src','');
+					echo CHtml::script("window.parent.$('#cru-dialog1').dialog('close');
+                                        window.parent.$('#cru-detalle1').attr('src','');
 					window.parent.$.fn.yiiGridView.update('detalle-imggrilla-grid');
 								
 										");

@@ -553,15 +553,31 @@ private function prepara() {
    
    //devuelve un conjnto de registro del modelo adjuntos
    //con un id y un codocu
-   public function getDataProvider($id,$codocu){
+   public function getDataProvider($id,$codocu,$modelin){
        $criterio=New CDBcriteria();
-       $criterio->addCondition("hiddocu=:vid");
+       if(is_null($modelin)){
+           $modelin=New Adjuntos('search');
+           echo "salio nuevo<br>";
+       }
+                                        if(isset($_GET['ajax'])){
+                                        print_r($modelin->attributes);die();}
+        //$criterio->compare('codocu',$modelin->codocu,true);
+		$criterio->compare('hiddocu',$modelin->hiddocu,true);
+		$criterio->compare('enlace',$modelin->enlace,true);
+		$criterio->compare('iduser',$modelin->iduser);
+		$criterio->compare('borrado',$modelin->borrado,true);
+		$criterio->compare('subido',$modelin->subido,true);
+		$criterio->compare('iduserborra',$modelin->iduserborra);
+		$criterio->compare('titulo',$modelin->titulo,true);
+		$criterio->compare('texto',$modelin->texto,true);
+		$criterio->compare('extension',$modelin->extension,true);
+        $criterio->addCondition("hiddocu=:vid");
         $criterio->addCondition("codocu=:vcodocu");
         $criterio->params=array(
             ":vid"=>$id,
             ":vcodocu"=>$codocu
         );
-        return new CActiveDataProvider("Adjuntos", array(
+        return new CActiveDataProvider($modelin, array(
 			'criteria'=>$criterio,
 		));
    }
@@ -603,8 +619,8 @@ private function prepara() {
         ),
     )
 );*/
-  public function getCarrusel($id,$codocu){
-      $datos=$this->getDataProvider($id, $codocu)->getdata();
+  public function getCarrusel($id,$codocu,$modelin){
+      $datos=$this->getDataProvider($id, $codocu,$modelin)->getdata();
     $arreglo=array();
       if(count($datos)>0 ){
           foreach($datos as $fila){

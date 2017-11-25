@@ -88,7 +88,7 @@ $this->menu=array(
            $model->attachbehavior('adjuntador',$comportamiento );  
       $this->widget(
     'application.components.booster.widgets.TbCarousel',
-     $model->getCarrusel($model->idinventario,'390')
+     $model->getCarrusel($model->idinventario,'390',$modeloadjuntos)
       );
       
       
@@ -112,6 +112,31 @@ $this->widget('ext.imagegallery1.ImageGallery1',array(
 //print_r($misfotosgaleria);
 ?>
 
+
+<!--
+<iframe id="mayor" width="100%" height="100%"></iframe>
+	!-->							
+								
+   </div>
+  </div>  
+			<div style="float: left; width:100%;">
+			<?php 
+                        
+	            $this->renderpartial('vw_detalles',
+                            array('model'=>$model,
+                                'modelolog'=>$modelolog,
+                                'canica'=>$model->idinventario,
+                                'proveedorlog'=>$proveedorlog,
+                                'proveedorobs'=>$proveedorobs,
+                                'modeloadjuntos'=>$modeloadjuntos,
+                                )
+                            );
+				 ?>  
+			</div>
+
+ 
+</div>
+
 <?php
 //--------------------- begin new code --------------------------
    // add the (closed) dialog for the iframe
@@ -132,25 +157,3 @@ $this->widget('ext.imagegallery1.ImageGallery1',array(
 $this->endWidget();
 //--------------------- end new code --------------------------
 ?>
-
-<!--
-<iframe id="mayor" width="100%" height="100%"></iframe>
-	!-->							
-								
-   </div>
-  </div>  
-			<div style="float: left; width:100%;">
-			<?php 
-	            $this->renderpartial('vw_detalles',
-                            array('model'=>$model,
-                                'modelolog'=>$modelolog,
-                                'canica'=>$model->idinventario,
-                                'proveedorlog'=>$proveedorlog,
-                                'proveedorobs'=>$proveedorobs
-                                )
-                            );
-				 ?>  
-			</div>
-
- 
-</div>

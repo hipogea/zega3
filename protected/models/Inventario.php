@@ -760,14 +760,14 @@ public static function canttransporte(){
 		                 ));
 	}
         
-    public static function colocaarchivox($fullFileName,$userdata=null,$controller=null) {
+    public static function colocaarchivox($fullFileName,$userdata=null) {
         $filename=$fullFileName;
         $extension=pathinfo($filename)['extension'];
         $registro=self::model()->findByPk($userdata);
         $extension= strtolower($extension);
         $registro->agregacomportamientoarchivo($extension);               
               
-       $registro->colocaarchivo($fullFileName,$controller);
+       $registro->colocaarchivo($fullFileName);
     }
     
     public function agregacomportamientoarchivo($extension){

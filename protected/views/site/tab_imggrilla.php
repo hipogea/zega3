@@ -1,11 +1,12 @@
 <div class=row">
 <?php
+echo get_class($modeloadjuntos);
 //var_dump($id);var_dump($codocu);
-$prove=$model->getDataProvider($id,$codocu);
+$prove=$model->getDataProvider($id,$codocu,$modeloadjuntos);
 $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'detalle-imggrilla-grid',
 	'dataProvider'=>$prove,
-	//'filter'=>$model,
+	'filter'=>$modeloadjuntos,
 	'itemsCssClass'=>'table table-striped table-bordered table-hover',
    'summaryText'=>' Total de Items : {count}',
 	'columns'=>array(
@@ -28,10 +29,10 @@ $this->widget('zii.widgets.grid.CGridView', array(
 		//array('htmlOptions'=>array('width'=>5),'header'=>'um','value'=>'$data->ums->desum'),
 		//array('htmlOptions'=>array('width'=>5), 'type'=>'raw','name'=>'codart','value'=>'$data->codart','visible'=>(!yii::app()->settings->get("materiales","materiales_codigoservicio")==$data->codart)?true:false),
 		//array('header'=>'N° Solic','value'=>'$data->solpe->numero', 'htmlOptions'=>array('width'=>4),),
-		ARRAY('name'=>'id','type'=>'raw','value'=>'CHtml::link(CHtml::image($data->rutaCorta($data->enlace),"",ARRAY("width"=>70,"height"=>80)),"#", array("onclick"=>\'$("#cru-frame4").attr("src","\'.Yii::app()->createurl(\'/adjuntos/Edita\', array(\'id\'=> $data->id ) ).\'");$("#cru-dialog4").dialog("open"); return false;\' ) ).$data->texto'),
-array('name'=>'usuario','type'=>'html','value'=>'CHTml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."user_business_boss.png").strtoupper(yii::app()->user->um->LoadUserById($data->iduser)->username)'),
-		
-                                                        array('name'=>'subido', 'type'=>'raw','header'=>'Subido','htmlOptions'=>array('width'=>290) ),
+		ARRAY('name'=>'id','type'=>'raw','value'=>'CHtml::link(CHtml::image($data->rutaCorta($data->enlace),"",ARRAY("width"=>200,"height"=>180)),"#", array("onclick"=>\'$("#cru-frame1").attr("src","\'.Yii::app()->createurl(\'/adjuntos/Edita\', array(\'id\'=> $data->id ) ).\'");$("#cru-dialog1").dialog("open"); return false;\' ) )'),
+array('name'=>'iduser','type'=>'html','value'=>'CHTml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."user_business_boss.png").strtoupper(yii::app()->user->um->LoadUserById($data->iduser)->username)','htmlOptions'=>array('width'=>100)),
+		array('name'=>'texto','value'=>'substr($data->texto,0,80)'),
+                   array('name'=>'subido', 'type'=>'raw','header'=>'Subido','htmlOptions'=>array('width'=>100) ),
 		/*array('name'=>'usuario','type'=>'html','value'=>'CHTml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."user_business_boss.png").strtoupper(yii::app()->user->um->LoadUserById($data->iduser)->username)'),
 			 array(
             'name'=>'imagen',
@@ -70,11 +71,11 @@ array('name'=>'usuario','type'=>'html','value'=>'CHTml::image(Yii::app()->getThe
 											"gridId"=>$this->grid->id
 											)
 									    )',
-                    'click' => ('function(){
-							    $("#cru-frame4").attr("src",$(this).attr("href"));
-							    $("#cru-dialog4").dialog("open");
-							     return false;
-							 }'),
+                   'click'=>'function(){
+                                        $("#cru-frame1").attr("src",$(this).attr("href")); 
+					$("#cru-dialog1").dialog("open");  
+					return false;
+							 }',
                     'imageUrl' => '' . Yii::app()->getTheme()->baseUrl . Yii::app()->params['rutatemagrid'] . 'lapicito.png',
                     'label' => 'Editar',
                 ),

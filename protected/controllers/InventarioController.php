@@ -78,8 +78,10 @@ const ESTADO_ARCHIVO='90';
 	 */
 	public function actionView($id)
 	{
+            
 		$this->render('view',array(
 			'model'=>$this->loadModel($id),
+                        //'modeloadjuntos'=>$modeloadjuntos,
 		));
 	}
 
@@ -711,6 +713,13 @@ public function actionpio() {
 	
 	public function actionDetalle($id)
 	{
+            
+            $modeloadjuntos=new Adjuntos('search');
+		$modeloadjuntos->unsetAttributes();  // clear any default values
+		if(isset($_GET['Adjuntos'])){
+		//	$modeloadjuntos->attributes=$_GET['Adjuntos'];
+            //var_dump($_GET['Adjuntos']);
+                }
             $datos=Machineswork::model()->search_por_activo(10);
             //var_dump($datos->getdata());die();
 	   $model=$this->loadModel($id);
@@ -751,6 +760,7 @@ public function actionpio() {
 							  'modeloobs'=>$modeloobs,
 							  'proveedorlog'=>$proveedorlog,
 							  'proveedorobs'=>$proveedorobs,
+                                                          'modeloadjuntos'=>$modeloadjuntos,
 								));
 		
 		}
