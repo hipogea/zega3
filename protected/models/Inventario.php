@@ -766,7 +766,7 @@ public static function canttransporte(){
         $registro=self::model()->findByPk($userdata);
         $extension= strtolower($extension);
         $registro->agregacomportamientoarchivo($extension);               
-              
+             
        $registro->colocaarchivo($fullFileName);
     }
     

@@ -209,7 +209,7 @@ class Trabajadores extends ModeloGeneral
             }
         }
         
-        public static function getCodigoFromUsuario($id){
+        public static function getCodigoFromUsuario($id,$regi=false){
             if(yii::app()->user->id==$id){
                 $codi=Yii::app()->user->getField('codtra');
             }else{
@@ -220,7 +220,8 @@ class Trabajadores extends ModeloGeneral
              
             $regtrabajador=self::model()->findByPk($codi);
             if(strlen(trim($codi))>0 and !is_null($codi) and !is_null( $regtrabajador)  ){
-               return $regtrabajador->codigotra;
+               if(!$regi)return $regtrabajador->codigotra;
+               return $regtrabajador;
             }else{
                 return null;
             }
@@ -234,5 +235,25 @@ class Trabajadores extends ModeloGeneral
         public static function tipoDocumento(){
             return array('A'=>'DNI','B'=>'Pasaporte','C'=>'PTP');
         }
-        
+       
+         public static function colocaarchivox($fullFileName,$userdata=null) {
+        $filename=$fullFileName;
+        $extension=pathinfo($filename)['extension'];
+        $registro=self::model()->findByPk($userdata);
+        $extension= strtolower($extension);
+        $registro->agregacomportamientoarchivo($extension);               
+             
+       $registro->colocaarchivo($fullFileName);
+    }
+    
+    public function agregacomportamientoarchivo($extension){
+         $comportamiento=new TomaFotosBehavior();
+        $comportamiento->_codocu='346';
+         $comportamiento->_ruta=yii::app()->settings->get('general','general_directorioimg');
+         $comportamiento->_numerofotosporcarpeta=yii::app()->settings->get('general','general_nregistrosporcarpeta')+0;
+          $comportamiento->_extensionatrabajar=$extension;
+           $comportamiento->_id=$this->codigotra; 
+           $this->attachbehavior('adjuntador',$comportamiento );  
+    }
+  
 }

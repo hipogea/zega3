@@ -39,6 +39,7 @@ class TbEditableField extends TbEditable
     */
     public function init()
     {
+      // echo "hola2;";die();
         if (!$this->model) {
             throw new CException('Parameter "model" should be provided for TbEditableField');
         }
@@ -77,6 +78,10 @@ class TbEditableField extends TbEditable
         //for security reason only safe attributes can be editable (e.g. defined in rules of model)
         //just print text (see 'run' method)
         if (!$staticModel->isAttributeSafe($this->attribute)) {
+           /* echo  $staticModel->getScenario();
+            var_dump($this->attribute);
+            print_r($staticModel->safeAttributeNames);
+            var_dump($staticModel->isAttributeSafe($this->attribute));die();*/
             $this->apply = false;
             $this->text = $originalText;
         }

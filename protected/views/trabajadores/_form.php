@@ -11,23 +11,55 @@
 	'enableAjaxValidation'=>false,
 )); ?>
 
+    
+<div class="row">
+		<?php
+               
+		$botones=array(
+
+			'save'=>array(
+				'type'=>'A',
+				'ruta'=>array(),
+				'visiblex'=>array('10'),
+			),
+
+
+			
+			
+                    
+                     'camera' => array(
+                            'type' => 'C',
+                            'ruta' => array($this->id.'/tomafoto', array(
+                                'id' => $model->codigotra,                                    
+                                "asDialog" => 1,
+                                "gridId" => 'detalle-grid',
+                            )
+                            ),
+                            'dialog' => 'cru-dialog3',
+                            'frame' => 'cru-frame3',
+                           'visiblex'=>array($this->isMyProfile($model->codigotra),  '10'),
+
+
+                        ),
+
+			
+		);
+                 //echo "salio"; die();
+		$this->widget('ext.toolbar.Barra',
+			array(
+				//'botones'=>MiFactoria::opcionestoolbar($model->id,$this->documento,$model->codestado),
+				'botones'=>$botones,
+				'size'=>24,
+				'extension'=>'png',
+				'status'=>'10',
+			)
+		);?>
+	</div>
+    
 	<p class="note">Campos con  <span class="required">*</span> Son obligatorios.</p>
 
 	<?php echo $form->errorSummary($model); ?>
 
-
-	<?php $this->widget('ext.AskToSaveWork', array('watchElement'=>'Trabajadores_codigotra','message'=>"You haven't save your product yet!"))?>
-
-
-	<!-- aqui comiemza el flashhh
-    <?php
-    foreach(Yii::app()->user->getFlashes() as $key => $message) {
-        echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
-    }
-    ?>
-
-
-    -- aqui comiemza el flashhh --!>
 
 
     <div class="row">
@@ -201,3 +233,27 @@
 <?php $this->endWidget(); ?>
 </div>
 </div><!-- form -->
+
+
+
+
+<?php
+//--------------------- begin new code --------------------------
+   // add the (closed) dialog for the iframe
+    $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+    'id'=>'cru-dialog3',
+    'options'=>array(
+        'title'=>'Explorador',
+        'autoOpen'=>false,
+        'modal'=>true,
+        'width'=>300,
+        'height'=>300,
+    ),
+    ));
+?>
+<iframe id="cru-frame3" width="100%" height="100%"></iframe>
+<?php
+ 
+$this->endWidget();
+//--------------------- end new code --------------------------
+?>

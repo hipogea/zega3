@@ -10,7 +10,7 @@
     
        
     $cs->scriptMap=array(
-        'jquery-ui.css' => $baseUrl.'/css/jquery-ui.css',
+        //'jquery-ui.css' => $baseUrl.'/css/jquery-ui.css',
        /* 'jquery.ui.accordion.css' => $baseUrl.'/css/jquery.ui.accordion.css',
         'jquery.ui.autocomplete.css' =>  $baseUrl.'/css/jquery.ui.autocomplete.css',
         'jquery.ui.button.css' =>  $baseUrl.'/css/jquery.ui.button.css',
@@ -33,7 +33,7 @@
           $cs->registerCssFile($baseUrl.'/css/iconosfuentes.css'); 
          $cs->registerCssFile($baseUrl.'/css/miestilo.css');        
             $cs->scriptMap=array(
-                     'jquery-ui.css' => $baseUrl.'/css/jquery-ui.css',
+                    // 'jquery-ui.css' => $baseUrl.'/css/jquery-ui.css',
                     'styles.css' => $baseUrl.'/css/styles.css',
                     'pager.css' => $baseUrl.'/css/pager.css',
                                  );

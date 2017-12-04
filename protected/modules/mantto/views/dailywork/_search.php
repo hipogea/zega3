@@ -6,10 +6,22 @@
 <div class="division">
 <div class="wide form">
 
-<?php $form=$this->beginWidget('CActiveForm', array(
+<?php /*$form=$this->beginWidget('CActiveForm', array(
 	'action'=>Yii::app()->createUrl($this->route),
 	'method'=>'get',
-)); ?>
+)); */
+$form = $this->beginWidget(
+    'booster.widgets.TbActiveForm',
+    array(
+        //'id' => 'inlineForm',
+        'action'=>Yii::app()->createUrl($this->route),
+	'method'=>'get',
+        'type' => 'inline',
+        'htmlOptions' => array('class' => 'well'),
+    )
+);
+
+?>
   
   <div class="row">
 		<?php
@@ -47,14 +59,11 @@
 
   
 
-<div class="row">
                                      <?php echo $form->labelEx($model,'codproyecto'); ?>
 					
 					<?php echo $form->textField($model,'codproyecto', array('size'=>8)  );
 					?>
-	</div>
 
-	  <div class="row">
 			<?php echo $form->labelEx($model,'codresponsable'); ?>
 			<?php
 			$this->widget('ext.matchcode1.Seleccionavarios',array(
@@ -75,8 +84,8 @@
 
 
 			?>
-		</div>
-<div class="row">
+		
+
 			<?php echo $form->labelEx($model,'codigoaf'); ?>
 			<?php
 			$this->widget('ext.matchcode1.Seleccionavarios',array(
@@ -97,16 +106,16 @@
 
 
 			?>
-		</div>
+	
 
 	
-<br>
+
 	
 
 	
 </div>
     <div class="panelderecho">
-          <div class="row">
+         
 						<?php echo $form->labelEx($model,'fecha'); ?>
 
 						<?php $this->widget('zii.widgets.jui.CJuiDatePicker',
@@ -161,7 +170,7 @@
 								)
 							);?>
 		
-					</div>
+		
     
     
                                     
@@ -190,26 +199,25 @@
     
                        
     
-      <div class="row">
+
                                      <?php echo $form->labelEx($model,'codcen'); ?>
 					<?php  $datos = CHtml::listData(Centros::model()->findAll(array('order'=>'nomcen')),'codcen','nomcen');
 					echo $form->DropDownList($model,'codcen',$datos, array('empty'=>'--Seleccione un centro --')  );
 					?>
-	</div>
-<div class="row">
+	
                                      <?php echo $form->labelEx($model,'hidturno'); ?>
 					<?php  $datos = CHtml::listData(Regimen::model()->findAll(array('order'=>'desregimen')),'id','desregimen');
 					echo $form->DropDownList($model,'hidturno',$datos, array('empty'=>'--Seleccione un Turno --')  );
 					?>
-	</div>
 	
-	<div class="row">
+	
+	
 			<?php echo $form->labelEx($model,'codtipo'); ?>
 			<?php
 			$datos = CHtml::listData(Tipoactivos::model()->findAll(),'codtipo','destipo');
 			echo $form->DropDownList($model,'codtipo',$datos, array('empty'=>'--Indique el tipo--')  )  ;	?>
 			<?php echo $form->error($model,'codtipo'); ?>
-		</div>
+		
     </div>
 
 	

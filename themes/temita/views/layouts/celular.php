@@ -11,25 +11,21 @@
 		<!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
 		<?php 
                 
-                 $cs->registerCssFile($baseUrl.'/css/bootstrap.min.css');
-	  $cs->registerCssFile($baseUrl.'/css/bootstrap-responsive.min.css');
-	 $cs->registerCssFile($baseUrl.'/css/abound.css');
-          $cs->registerCssFile($baseUrl.'/css/iconosfuentes.css'); 
-         $cs->registerCssFile($baseUrl.'/css/miestilo.css'); 
+                
      
             $cs->scriptMap=array(
-                     'jquery-ui.css' => $baseUrl.'/css/jquery-ui.css',
-                    'styles.css' => $baseUrl.'/css/styles.css',
+                     //'jquery-ui.css' => $baseUrl.'/css/jquery-ui.css',
+                   // 'styles.css' => $baseUrl.'/css/styles.css',
                     'pager.css' => $baseUrl.'/css/pager.css',
                                  );
-             $cs->registerScriptFile($baseUrl.'/css/jquery-ui.css',CClientScript::POS_HEAD);
-                $cs->registerScriptFile($baseUrl.'/js/plugins/blockuiplugin.js',CClientScript::POS_HEAD); 
+            // $cs->registerScriptFile($baseUrl.'/css/jquery-ui.css',CClientScript::POS_HEAD);
+               // $cs->registerScriptFile($baseUrl.'/js/plugins/blockuiplugin.js',CClientScript::POS_HEAD); 
         
                       
                 
                 
                 
-                //$cs->registerScriptFile($baseUrl.'/celular/js/jquery.min.js'); 
+                $cs->registerScriptFile($baseUrl.'/celular/js/jquery.min.js'); 
                 $cs->registerScriptFile($baseUrl.'/celular/js/jquery.dropotron.min.js');
                  $cs->registerScriptFile($baseUrl.'/celular/js/skel.min.js');
                   $cs->registerScriptFile($baseUrl.'/celular/js/skel-layers.min.js');

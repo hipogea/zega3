@@ -399,6 +399,54 @@ $mo=New Alinventario();
 
 public $layout='//layouts/column2';
 	public function actionPio() {
+            var_dump(Yii::app()->user->checkAccess('action_dailywork_popucho'));die();
+            var_dump(Yii::app()->authManager->getAuthItems(null, 9)['Demo']);
+            die();
+            print_r(Menugeneral::getChildsMenu(1));die();
+            var_dump(yii::app()->getModulePath());
+            var_dump(yii::app()->modules);
+            var_dump(yii::getPathOfAlias('mantto'));die();
+            $controladores=array();	
+		
+                    $p=Yii::app()->getBasePath().DIRECTORY_SEPARATOR.'modules';
+                   foreach (scandir($p) as $f) 
+                       {
+                         $ruta=Yii::app()->getBasePath().DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$f;
+                            if ($f == '.' || $f == '..') {
+				continue;
+				}
+			     if (strlen($f)) {
+				if ($f[0] == '.') {
+						continue;
+				}
+				}
+                         foreach (scandir($ruta) as $f1) {
+				if($f1=="controllers"){
+                                                    foreach (scandir($ruta.DIRECTORY_SEPARATOR.$f1) as $f2) {
+                                                                if ($f2 == '.' || $f2 == '..') {
+                                                                    continue;
+                                                                    }
+                                                                if (strlen($f2)) {
+                                                                    if ($f2[0] == '.') {
+                                                                    continue;
+                                                                                    }
+                                                                                }
+                                                                                $controladores[] = yii::app()->baseUrl.DIRECTORY_SEPARATOR.$f.DIRECTORY_SEPARATOR.$f1.substr($f2,0,strpos($f2,'.php'));
+                                                                    }
+                                                }
+                                    }
+                                
+                         }
+            PRINT_R($controladores);DIE();                
+            
+            
+            
+            
+            
+            
+            
+            
+            
             print_r(Documentos::model()->findByPk('146')->getNamesAttributes());   die();
             print_r(MiFactoria::getModels());die();
              yii::import('application.modules.mantto.behaviors.measurePointBehavior');

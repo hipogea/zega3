@@ -3,8 +3,8 @@ protected/config
 assets/
 backup/
 carpeta/
-css/
 data/
+css/
 materiales/
 nbproject/
 themes/abound/
@@ -14,12 +14,15 @@ themes/template-intesify/
 themes/temita/img/
 themes/temita/images/
 protected/vendors/
+protected/config/
 protected/extensions/vendors/
 protected/runtime/
 protected/extensions/Editor/
 protected/mpdf/
 protected/extensions/bootstrap/
 protected/extensions/bootstrap/
+protected/extensions/eflatmenu/
+protected/extensions/emenu/
 # archivos no deseados  #
 ###################
 *.fdf
@@ -37,6 +40,7 @@ protected/extensions/bootstrap/
 *.bmp
 *.jpg
 *.jpeg
+*.gif
 *.ser
 *.csv
 *.dat

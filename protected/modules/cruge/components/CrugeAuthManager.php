@@ -739,7 +739,11 @@ class CrugeAuthManager extends CAuthManager implements IAuthManager
                 $data = null;
             }
             $items[$row['name']] = new CAuthItem($this, $row['name'], $row['type'], $row['description'], $row['bizrule'], $data);
-        }
+       
+            
+//
+           // $items[$row['name']] = $row;
+            }
         return $items;
     }
 
@@ -1899,8 +1903,7 @@ class CrugeAuthManager extends CAuthManager implements IAuthManager
                 $allsubitems[] = $task;
             }
         }
-        print_r( $allsubitems);
-        yii::app()->end();
+        
 
 
         // Menues de Primer Nivel

@@ -1,20 +1,22 @@
 
-<div class="division"> 
-    <div class="wide form">
-<div class="form">
+
+   
     
     <?php 
-        
-       $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'ot-form',
-	// Please note: When you enable ajax validation, make sure the corresponding
-	// controller action is handling ajax validation correctly.
-	// There is a call to performAjaxValidation() commented in generated controller code.
-	// See class documentation of CActiveForm for details on this.
-	'enableAjaxValidation'=>false, 
-)); ?>
+       $form=$this->beginWidget('CActiveForm', 
+    array(
+       'id'=>'ot-form',
+        'enableAjaxValidation'=>false, 
+        //'action'=>Yii::app()->createUrl($this->route),
+	//'method'=>'get',
+       // 'type' => 'inline',
+       // 'htmlOptions' => array('class' => 'well'),
+    )
+);
+     ?>
 	           
-	<div class="wide form">
+	 <div class="wide form">
+
             <div class="row">
                 <?php 
               
@@ -158,7 +160,7 @@
             
             </div>
 
-            </div>
+            
 
             
 	
@@ -567,12 +569,15 @@
 	
 			</div>
 
+<br>
+<br><br>
+<br><br>
+<br><br>
 
 
 
 
-
-<div class="row">
+<div>
 <?php  
  if(!$model->isNewRecord){
 $this->widget('zii.widgets.jui.CJuiTabs', array(
@@ -627,13 +632,16 @@ $this->widget('zii.widgets.jui.CJuiTabs', array(
  }
 ?>
 </div>
+</div>
+
+
 
 
 <?php $this->endWidget(); ?>
-</div>
-</div>
 
-</div>
+
+
+
 
 
 <?php

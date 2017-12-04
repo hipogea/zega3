@@ -3,7 +3,7 @@
 * gauge extention
 * author : pegel.linuxs@gmail.com
 */
-class Logauditor extends CWidget
+class Egauge extends CWidget
 {
 	
 	/*

@@ -21,12 +21,14 @@ class ConfiguracionController extends Controller
 		Yii::app()->user->loginUrl = array("/cruge/ui/login");
 		return array(
 			
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('editar','index','ver','creaconfig'),
+			array('allow',
+                            'actions'=>array('ajaxEditHidparentMenu',    'ajaxEditAliasMenu',   'ajaxActivate',     'menu',    'editar','index','ver','creaconfig'),
 				'users'=>array('@'),
 			),
 			
-			
+			array('deny',  // deny all users
+				'users'=>array('*'),
+			),
 		);
 	}
 
@@ -114,7 +116,8 @@ private function pasadatos($model){
 
 	public function actionIndex()
 	{
-		$model=New Configuraciongeneral();
+		$this->getActionsFromAll();die();
+            $model=New Configuraciongeneral();
 		
 		if(isset($_POST['Configuraciongeneral']))
 		{
@@ -265,5 +268,295 @@ public function actionver(){
             
         
              }
+       
+    //saca todos lsoc opntroladores  del a plaicaion 
+      public function enumControllers()
+    {
+       
+            $controladores = array();
+            $p = Yii::app()->getControllerPath();
+            foreach (scandir($p) as $f) {
+                if ($f == '.' || $f == '..') {
+                    continue;
+                }
+                if (strlen($f)) {
+                    if ($f[0] == '.') {
+                        continue;
+                    }
+                }
+                if ($pos = strpos(strtolower($f), "controller.php")) {
+                    
+                    $f=strrev(substr(strrev($f),strpos(strrev($f),'.')+1));
+                    //$controladores[$f]['name'] =  'application.controllers';
+                     $controladores[$f]['pathalias'] =  'application.controllers';
+                    $controladores[$f]['path'] =  yii::app()->baseUrl.DIRECTORY_SEPARATOR;
+                    $controladores[$f]['module'] =  'none';
+                }
+            }
+            $reton=array_merge($controladores,$this->getControllesPathsFromModules());
+        // VAR_DUMP( $reton);DIE();
+         return $reton;
         
+    }
+    
+     public  function getControllesPathsFromModules()
+	{
+	$controladores=array();	
+		
+                    $p=Yii::app()->getModulePath();
+                   foreach (scandir($p) as $f) 
+                       {
+                         $ruta=$p.DIRECTORY_SEPARATOR.$f;
+                            if ($f == '.' || $f == '..') {
+				continue;
+				}
+			     if (strlen($f)) {
+				if ($f[0] == '.') {
+						continue;
+				}
+				}
+                         foreach (scandir($ruta) as $f1) {
+				if($f1=="controllers"){
+                                                    foreach (scandir($ruta.DIRECTORY_SEPARATOR.$f1) as $f2) {
+                                                                if ($f2 == '.' || $f2 == '..') {
+                                                                    continue;
+                                                                    }
+                                                                if (strlen($f2)) {
+                                                                    if ($f2[0] == '.') {
+                                                                    continue;
+                                                                                    }
+                                                                                }
+                                                                                $f2=strrev(substr(strrev($f2),strpos(strrev($f2),'.')+1));
+                                                                               // $f2=substr($f2,strpos($f2,'Controller'));
+                                                                               // $controladores[$f2] = $f.'.'.$f1;
+                                                                                 $controladores[$f2]['pathalias'] = $f.'.'.$f1;;
+                                                                                $controladores[$f2]['path'] =yii::app()->baseUrl.DIRECTORY_SEPARATOR.$f.DIRECTORY_SEPARATOR;
+                                                                                 $controladores[$f2]['module'] =  $f;
+                                                                    }
+                                                }
+                                    }
+                                
+                         }
+                         return $controladores;
+	} 
+                
+         
+   public function enumActions($ruta,$archivo)
+    {
+        $acciones= array();
+        $className = $archivo;
+        $rutascalar=$ruta['pathalias'];
+        Yii::import($rutascalar.'.'.$archivo, true);  
+        //echo $ruta.'.'.$archivo."<br>";die();
+        $refx = new ReflectionClass($className);
+        foreach ($refx->getMethods() as $method) {
+            if ($method->name != 'actions') {
+               //$acciones[]
+                if (substr($method->name, 0, 6) == "action") {
+                    $acciones[]= substr($method->name, 6);
+                }
+            }
+        }
+        
+       // print_r($accionesT);
+        RETURN $acciones;
+    }
+    
+    public function  getActionsFromAll(){
+        $acciones=array();
+        //print_r(array_keys($this->enumControllers()));die();
+        foreach ($this->enumControllers() as $clave=>$valor){
+            $acciones[$clave]['actions']=$this->enumActions($valor, $clave);
+            $acciones[$clave]['path']=$valor['path'];
+             $acciones[$clave]['module']=$valor['module'];
+        }
+       // print_r($acciones);die();
+       return $acciones; 
+    }
+    
+    
+    public function refreshTable(){
+      // print_r($this->getActionsFromAll());die();
+        $this->createRoootsMenu();
+        foreach($this->getActionsFromAll() as $clave =>$valor){
+            // var_dump($clave);var_dump($valor);die();
+            $ruta=$valor['path'];
+            $modulo=$valor['module'];
+            
+            foreach($valor as $clave_ =>$valor_){
+               //var_dump($valor_);echo "<br><br>";
+               if(is_array($valor_))
+             foreach($valor_ as $clave__ =>$valor__){ 
+                  
+           if(!Menugeneral::existsMenu(str_replace('Controller','',$clave),$valor__)){
+                //echo $modulo."<br>";
+               $menu= New Menugeneral();
+                $menu->setAttributes(
+                        array(
+                            'activa'=>0,
+                            'codaccion'=>$valor__  ,
+                            'ruta'=>$ruta,
+                            'controlador'=>str_replace('Controller','',$clave),
+                           'modulo'=>$modulo,
+                        )
+                        );
+                        //var_dump($menu);
+             if( !$menu->save())
+                 print_r($menu->geterrors());
+                
+            }
+             }  
+                
+            }
+            }
+        }
+    
+   
+    public function actionMenu(){
+     if(!yii::app()->request->isAjaxRequest){   
+         $this->refreshTable();
+     }
+        
+        $model=New Menugeneral('search_by_active');
+        $model->unsetAttributes();  // clear any default values
+		if(isset($_GET['Menugeneral']))
+			$model->attributes=$_GET['Menugeneral'];
+                //print_r($model->attributes);
+        $this->render('tablamenu',array('model'=>$model));
+        
+    }
+    
+    PUBLIC function actionajaxEditAliasMenu(){
+        if(yii::app()->request->isAjaxRequest){ 
+            if(isset($_POST['name'])and 
+                   isset($_POST['value'])and
+                       isset($_POST['pk'])/*and
+                     //  isset($_POST['idlectura'])*/
+                     ){
+                   $value= MiFactoria::cleanInput(trim($_POST['value']));
+                   $value=preg_replace("/[\xA0\xC2]/", "",$value);
+                    $name= MiFactoria::cleanInput($_POST['name']);
+                     $pk= MiFactoria::cleanInput($_POST['pk']);
+                     // $idlectura= MiFactoria::cleanInput($_POST['idlectura']);
+                 
+                
+                $registro= Menugeneral::model()->findByPk($pk);  
+                if(is_null($registro))      
+                    throw new CHttpException(500,'NO se encontro el registro con el id '.$id); 
+                //$registro->setScenario('escalias');
+                $registro->{$name}=$value;
+                if($registro->save()){
+                    echo yii::t('ajax','Change success');
+                }else{
+                    echo yii::t('ajax','Change fails...!');
+                }
+                
+                }         
+            }
+    }
+    
+    
+    PUBLIC function actionajaxEditHidparentMenu(){
+        if(yii::app()->request->isAjaxRequest){ 
+            if(isset($_POST['name'])and 
+                   isset($_POST['value'])and
+                       isset($_POST['pk'])/*and
+                     //  isset($_POST['idlectura'])*/
+                     ){
+                   $value= MiFactoria::cleanInput(trim($_POST['value']));
+                   $value=preg_replace("/[\xA0\xC2]/", "",$value);
+                    $name= MiFactoria::cleanInput($_POST['name']);
+                     $pk= MiFactoria::cleanInput($_POST['pk']);
+                     // $idlectura= MiFactoria::cleanInput($_POST['idlectura']);
+                 
+                
+                $registro= Menugeneral::model()->findByPk($pk);  
+                if(is_null($registro))      
+                    throw new CHttpException(500,'NO se encontro el registro con el id '.$id); 
+                //$registro->setScenario('escalias');
+                $registro->{$name}=$value;
+                if($registro->save()){
+                    echo yii::t('ajax','Change success');
+                }else{
+                    echo yii::t('ajax','Change fails...!');
+                }
+                
+                }         
+            }
+    }
+    PUBLIC function actionajaxActivate(){
+        if(yii::app()->request->isAjaxRequest){ 
+            if(isset($_GET['id'])  ){                  
+                $id= (integer)MiFactoria::cleanInput($_GET['id']); 
+                
+                $registro= Menugeneral::model()->findByPk($id);  
+                if(is_null($registro))      
+                    throw new CHttpException(500,'NO se encontro el registro con el id '.$id); 
+                $registro->setScenario('status');
+                if($registro->activa==1){
+                   $registro->activa=0; 
+                }else{
+                     $registro->activa=1; 
+                }
+                //$registro->activa=($registro->activa==1)?0:1;
+                if($registro->save()){
+                    echo yii::t('ajax','Activation success');
+                }else{
+                    echo yii::t('ajax','Activation fails...!');
+                }
+                
+                }         
+            }
+    }
+     
+   private function createRoootsMenu(){
+       //creando el menu gneral general el id padre de todos los menus
+       if(
+                    !Menugeneral::existsMenu( 'root'  ,'root')
+                    ){
+        $menu= New Menugeneral();
+                $menu->setAttributes(
+                        array(
+                            'activa'=>1,
+                            'codaccion'=>'root',
+                            'ruta'=>'#',
+                            'controlador'=>'root',
+                           'modulo'=>'',
+                            'alias'=>'General-Root ',
+                            'hidpadre'=>0
+                        )
+                        );
+                $menu->save();$menu->refresh();
+                $idpadre=$menu->id;
+                    }
+       for( $i= 0 ; $i <= 9 ; $i++ ){
+            if(
+                    !Menugeneral::existsMenu( 'noneisroot'.$i  ,'noneisroot'.$i)
+                    ){
+          
+         $menu= New Menugeneral();
+                $menu->setAttributes(
+                        array(
+                            'activa'=>0,
+                            'codaccion'=>'noneisroot'.$i,
+                            'ruta'=>'#',
+                            'controlador'=>'noneisroot'.$i,
+                           'modulo'=>'',
+                            'alias'=>'Root '.$i,
+                            'hidpadre'=>$idpadre,
+                        )
+                        );
+                        //var_dump($menu);
+             if( !$menu->save())
+                 print_r($menu->geterrors());
+             }    
+       }
+       
+   } 
+   
+   
+   
+   
+   
+    
 }

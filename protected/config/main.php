@@ -15,8 +15,7 @@ return array(
 
 	//'theme'=>'super',
 	// preloading 'log' component
-	'preload'=>array('log',
-    'booster'
+	'preload'=>array('log','booster'
 	   ),
     
     'aliases' => array(
@@ -294,7 +293,11 @@ return array(
 
 		'clientScript'=>array(
 					///sobrescribo el estilo de jquery-ui con mi propio estilo en una carpeta aparte
-
+                                        'scriptMap' => array(
+                         /*'jquery-ui.css'=>false,  //desable any others default implementation
+                            'jquery.js'=>false, //disable
+                             'jquery-ui.min.js'=>false,*/
+                                ),
 
 			/*'packages'=>array(
 				'jquery'=>array(
@@ -327,6 +330,7 @@ return array(
 			'caseSensitive'=>true,
             'urlSuffix'=>'.jsp',
 			'rules'=>array(
+                                   
 				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
 				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
 				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
@@ -395,12 +399,12 @@ return array(
 					//'enabledParamLogging'=>true,
 				),
                             
-                            array(
+                           /* array(
                    'class'=>'CProfileLogRoute',
                    'levels'=>'info,error,rbac',
                    //'emails'=>'neotegnia@gmail.com',
                                 
-                                ),
+                                ),*/
                             
                            
 				// uncomment the following to show log messages on web pages
@@ -411,7 +415,7 @@ return array(
 				*/
 			),
 		),
-            'init'=>array('jquerymobile'),
+            //'init'=>array('jquerymobile'),
 	),
 
 	

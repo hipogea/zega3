@@ -656,7 +656,7 @@ class TbEditable extends CWidget
             $this->registerAssets();               
             $this->registerClientScript();
         }
-        
+       // var_dump($this->liveTarget);var_dump($this->apply);die();
         if($this->apply !== false) {
             $this->renderLink();
         } else {
@@ -666,6 +666,7 @@ class TbEditable extends CWidget
 
     public function renderLink()
     {
+       
         echo CHtml::openTag('a', $this->htmlOptions);
         $this->renderText();
         echo CHtml::closeTag('a');

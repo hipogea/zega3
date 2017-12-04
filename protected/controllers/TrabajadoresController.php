@@ -33,7 +33,7 @@ class TrabajadoresController extends Controller
 		return array(
 			
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('ajaxllenazonadeudas',    'deudas',   'ajaxcierracaja','prueba','create','update','actualizadetalle','creadetallecaja','rendicion','caja','admin','view','perfil'),
+				'actions'=>array('tomafoto','ajaxllenazonadeudas',    'deudas',   'ajaxcierracaja','prueba','create','update','actualizadetalle','creadetallecaja','rendicion','caja','admin','view','perfil'),
 				'users'=>array('@'),
 			),
 			
@@ -417,4 +417,32 @@ class TrabajadoresController extends Controller
                 } 
               }
     }
+    
+    public function actiontomafoto($id){
+        
+      $detalle= Trabajadores::model()->findByPk((integer)  MiFactoria::cleanInput($id));  
+      if($this->isMyProfile($detalle->cpdigotra)){
+         if(!is_null($detalle)){          
+                   
+                if (!empty($_GET['asDialog']))
+		$this->layout = '//layouts/iframe';
+		$this->render('//site/subefotos',array('model'=>$detalle));
+         
+            }else{
+         	throw new CHttpException(500,'No se encontro el item id del trabajador');  
+                } 
+      }else{
+          throw new CHttpException(500,'Está intentando editar datos de otro usuario');  
+               
+      }
+      
+    } 
+    
+    public function isMyProfile($codeWorker){
+        if(Trabajadores::getCodigoFromUsuario(yii::app()->user->id)==trim($codeWorker)){
+            return true;
+          }
+          return false;
+        }
+    
 }

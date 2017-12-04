@@ -25,11 +25,21 @@
 		<?php echo $form->error($model,'tipofacturacion'); ?>
 	</div>
 
-	
+	<?php
+   
+    $this->widget(
+    'booster.widgets.TbButton',
+    array(
+        'label' => 'Crear',
+        //'context' => 'success',
+        'context' => 'danger',
+        'htmlOptions'=>array('type'=>'input')
+    )
+); echo ' ';
 
-	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Actualizar'); ?>
-	</div>
+
+    ?>
+
 
 <?php $this->endWidget(); ?>
 
