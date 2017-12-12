@@ -412,12 +412,12 @@ return array(
 			'class'=>'CLogRouter',
 
 			'routes'=>array(
-				array(
+				/*array(
 					'class'=>'CFileLogRoute',
-					'levels'=>'error, info, rbac', // <--- agregar 'rbac'
-					'levels'=>'error,warning', //agreagamos aqui el mail para probar los correos en modo DEBUG 
+					'levels'=>'error', // <--- agregar 'rbac'
+					'levels'=>'error', //agreagamos aqui el mail para probar los correos en modo DEBUG 
 					//'enabledParamLogging'=>true,
-				),
+				),*/
                             
                            /* array(
                    'class'=>'CProfileLogRoute',

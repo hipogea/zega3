@@ -205,6 +205,10 @@ public static function getArrayMenu($id){
    }    
 }
 
+private static function getFavorites(){
+    
+}
+
         
 }
 /*
