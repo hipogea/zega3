@@ -36,7 +36,7 @@ $this->widget('ext.loaderpage.LoaderPage');
       'homeLink'=>CHtml::link('Main', Yii::app()->homeUrl), 
 )); ?>
 
-    <div style="float:left;clear:left;width:100%;background-color: #336600;">
+    <div class="barrasuperior">
         <?php 
                     $botones=array(
 
