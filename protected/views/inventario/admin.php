@@ -44,7 +44,7 @@ $('.search-form form').submit(function(){
     )
 ); */?>
 
-<DIV STYLE="float:right;">
+
  <?php $provedo=$model->search();
 /* print_r($provedo->getKeys());
  yii::app()->end();*/
@@ -57,6 +57,7 @@ $('.search-form form').submit(function(){
 	
  ?>
 
+    <div class="division">
  
 <?php $gridWidget=$this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'inventario-grid',
@@ -126,8 +127,9 @@ $('.search-form form').submit(function(){
 	),
 )); 
 ?>
+    </div>
 <?php //$this->endWidget(); ?>
-</DIV>
+
 <?php
 //Capture your CGridView widget on a variable
 //$gridWidget=$this->widget('bootstrap.widgets.TbGridView', array( . . .

@@ -1,5 +1,4 @@
 framework/
-protected/config
 assets/
 backup/
 carpeta/
@@ -23,6 +22,7 @@ protected/extensions/bootstrap/
 protected/extensions/bootstrap/
 protected/extensions/eflatmenu/
 protected/extensions/emenu/
+!themes/temita/css/
 # archivos no deseados  #
 ###################
 *.fdf

@@ -560,7 +560,7 @@ private function prepara() {
            echo "salio nuevo<br>";
        }
                                         if(isset($_GET['ajax'])){
-                                        print_r($modelin->attributes);die();}
+                                       }
         //$criterio->compare('codocu',$modelin->codocu,true);
 		$criterio->compare('hiddocu',$modelin->hiddocu,true);
 		$criterio->compare('enlace',$modelin->enlace,true);
