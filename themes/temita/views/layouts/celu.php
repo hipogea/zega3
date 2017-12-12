@@ -28,6 +28,14 @@ $this->widget('ext.loaderpage.LoaderPage');
            );
             ?>
 </div>
+    
+    
+<?php $this->widget('zii.widgets.CBreadcrumbs', array(
+      'links'=>$this->breadcrumbs,
+    'separator'=>'',
+      'homeLink'=>CHtml::link('Main', Yii::app()->homeUrl), 
+)); ?>
+
     <div style="float:left;clear:left;width:100%;background-color: #336600;">
         <?php 
                     $botones=array(

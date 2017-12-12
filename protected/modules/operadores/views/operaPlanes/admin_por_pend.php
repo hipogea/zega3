@@ -1,10 +1,10 @@
 <?php
 /* @var $this OperaPlanesController */
 /* @var $model OperaPlanes */
-
 $this->breadcrumbs=array(
-	'Opera Planes'=>array('index'),
-	'Manage',
+	'Planes'=>array('admin'),
+    'Pendientes'=>array(),
+	'Pendientes',
 );
 
 $this->menu=array(

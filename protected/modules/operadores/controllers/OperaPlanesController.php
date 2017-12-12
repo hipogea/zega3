@@ -6,7 +6,7 @@ class OperaPlanesController extends Controller
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
-	public $layout='//layouts/celu';
+	public $layout='//layouts/column2';
 
 	/**
 	 * @return array action filters
@@ -130,7 +130,7 @@ $this->layout='//layouts/column2';
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['OperaPlanes']))
 			$model->attributes=$_GET['OperaPlanes'];
-$this->layout='//layouts/celular';
+//$this->layout='//layouts/celular';
 		$this->render('admin',array(
 			'model'=>$model,
 		));

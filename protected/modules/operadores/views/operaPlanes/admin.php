@@ -3,7 +3,8 @@
 /* @var $model OperaPlanes */
 
 $this->breadcrumbs=array(
-	'Opera Planes'=>array('index'),
+	'Planes'=>array('admin'),
+    'Pendientes'=>array(),
 	'Manage',
 );
 

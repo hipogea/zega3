@@ -7,6 +7,7 @@ $this->breadcrumbs=array(
 	'Manage',
 );
 
+
 $this->menu=array(
 	//array('label'=>'List Inventario', 'url'=>array('index')),
 	array('label'=>'Crear Equipo', 'url'=>array('createBasic')),
@@ -28,6 +29,9 @@ $('.search-form form').submit(function(){
 });
 ");
 ?>
+
+
+
 
 <div class="division">
 
