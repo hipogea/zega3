@@ -9,19 +9,20 @@
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'action'=>Yii::app()->createUrl($this->route),
 	'method'=>'get',
+       'id'=>'buscasolpes-form'
 )); ?>
 
 
 	<div class="row">
 		<?php
 		$botones=array(
-			'search'=>array(
+			'binoculars'=>array(
 				'type'=>'A',
 				'ruta'=>array(),
 				'visiblex'=>array('10'),
 			),
-			'clear'=>array(
-				'type'=>'E',
+			'eraser'=>array(
+				'type'=>'B',
 				'ruta'=>array(),
 				'visiblex'=>array('10'),
 			),
@@ -30,6 +31,8 @@
 			array(
 				//'botones'=>MiFactoria::opcionestoolbar($model->id,$this->documento,$model->codestado),
 				'botones'=>$botones,
+                                 'font'=>true,
+                            'nameform'=>'buscasolpes-form',
 				'size'=>24,
 				'extension'=>'png',
 				'status'=>'10',

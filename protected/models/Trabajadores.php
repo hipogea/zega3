@@ -209,11 +209,16 @@ class Trabajadores extends ModeloGeneral
             }
         }
         
-        public static function getCodigoFromUsuario($id,$regi=false){
-            if(yii::app()->user->id==$id){
+        public static function getCodigoFromUsuario($id=null,$regi=false){
+            if(!is_null($id)){
+               if(yii::app()->user->id==$id){
                 $codi=Yii::app()->user->getField('codtra');
+               }else{
+                   $codi=Yii::app()->user->um->getFieldValue(Yii::app()->user->um->loadUserById($id,true),'codtra');
+                
+               }
             }else{
-                $codi=Yii::app()->user->um->getFieldValue(Yii::app()->user->um->loadUserById($id,true),'codtra');
+               $codi=Yii::app()->user->getField('codtra'); 
                 //yii::app()->user->um->getFieldValue(yii::app()->user->id,'codpro');
             }
             

@@ -195,7 +195,7 @@ class VwOtsimple extends CActiveRecord
 		return parent::model($className);
 	}
       
-        public  function findByPk($id){
+        public  function findByPk($id,$condition = '', $params = Array()){
             return self::model()->find("id=:xid",array(":xid"=>$id));
         }  
       

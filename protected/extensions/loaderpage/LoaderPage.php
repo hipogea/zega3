@@ -18,7 +18,7 @@ class LoaderPage extends CWidget
 	$cs=Yii::app()->clientScript;
     	$cs->registerCssFile($asset."/css/introLoader.min.css");
         $cs->registerScriptFile($asset."/js/jquery.introLoader.pack.min.js");	
-             
+             RETURN parent::init();
 	}
 	public function run()
 	{
@@ -27,7 +27,7 @@ class LoaderPage extends CWidget
                     $this->idWidget,"$(document).ready(function() {
                          $(\"#element\").introLoader();
                         });",
-			CClientScript::POS_HEAD
+			CClientScript::POS_END
 		);
 	}
 }

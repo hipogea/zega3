@@ -1,4 +1,5 @@
-<?php
+<?php 
+
 $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'detalle-grid',
 	'dataProvider'=>VwKardex::model()->search_porvale($idcabecera),
@@ -6,7 +7,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 	//'cssFile' => ''.Yii::app()->getTheme()->baseUrl.Yii::app()->params['rutatemagrid'].'grid_mediano.css',  // your version of css file
 	//'cssFile'=>Yii::app()->getTheme()->baseUrl.'/css/style-grid.css',  // your version of css file
 	//'summaryText'=>'',
-	'itemsCssClass'=>'table table-striped table-bordered table-hover',
+	//'itemsCssClass'=>'table table-striped table-bordered table-hover',
 
 	'columns'=>array(
 
@@ -22,39 +23,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 			),
 			// 'id'=>'cajita' // the columnID for getChecked
 		),
-
-		array(
-			'name'=>'.',
-			'type'=>'raw',
-			'value'=>'($data->codestado=="98")?CHtml::Image("'.Yii::app()->getTheme()->baseUrl.'/img/tacho1.png"):""',
-		),
-		//'item',
-		//array('name'=>'tipimputacion','header'=>'I'),
-		//	array('name'=>'tipsolpe','header'=>'T'),
-		//'tipsolpe',
-		// array('name'=>'st.','header'=>'st', 'type'=>'raw','value'=>'($data->est=="02")?CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."tacho.jpg"):""'),
-		//'n_hguia',
-		//'c_itguia',
-		'cant',
-		'codart',
-		'desum',
-		'descripcion',
-		//'um',
-		//array('name'=>'unidades.desum','header'=>'Um','htmlOptions'=>array('width'=>5)),
-
-		//'c_edgui',
-		//'maestro.descripcion',
-		//array('name'=>'texto', 'type'=>'raw','header'=>'t','value'=>'(!empty($data->m_obs))?"x":""' ),
-		array('name'=>'comentario', 'type'=>'raw','header'=>'t','value'=>'(!empty($data->textolargo))?CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."texto.png","hola"):""' ),
-
-		//'centro',
-		//	'codal',
-		//'fechacrea',
-		//'fechaent',
-		//'usuario',		//'estado',
-
-
-		array(
+            array(
 			'class'=>'CButtonColumn',
 			'buttons'=>array(
 
@@ -111,5 +80,38 @@ $this->widget('zii.widgets.grid.CGridView', array(
 
 			),
 		),
+
+		array(
+			'name'=>'.',
+			'type'=>'raw',
+			'value'=>'($data->codestado=="98")?CHtml::Image("'.Yii::app()->getTheme()->baseUrl.'/img/tacho1.png"):""',
+		),
+		//'item',
+		//array('name'=>'tipimputacion','header'=>'I'),
+		//	array('name'=>'tipsolpe','header'=>'T'),
+		//'tipsolpe',
+		// array('name'=>'st.','header'=>'st', 'type'=>'raw','value'=>'($data->est=="02")?CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."tacho.jpg"):""'),
+		//'n_hguia',
+		//'c_itguia',
+		'cant',
+		'codart',
+		'desum',
+		'descripcion',
+		//'um',
+		//array('name'=>'unidades.desum','header'=>'Um','htmlOptions'=>array('width'=>5)),
+
+		//'c_edgui',
+		//'maestro.descripcion',
+		//array('name'=>'texto', 'type'=>'raw','header'=>'t','value'=>'(!empty($data->m_obs))?"x":""' ),
+		array('name'=>'comentario', 'type'=>'raw','header'=>'t','value'=>'(!empty($data->textolargo))?CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."texto.png","hola"):""' ),
+
+		//'centro',
+		//	'codal',
+		//'fechacrea',
+		//'fechaent',
+		//'usuario',		//'estado',
+
+
+		
 	),
 )); ?>

@@ -7,7 +7,7 @@
 $this->menu=array(
 	//array('label'=>'List Solpe', 'url'=>array('index')),
 	array('label'=>'Crear solicitud', 'url'=>array('create')),
-	array('label'=>'Valores por defecto', 'url'=>$this->createUrl('Opcionescamposdocu/configurausuario',array('docu'=>CODIGO_DOC_SOLPE,'docuhijo'=>CODIGO_DOC_DESOLPE))),
+	array('label'=>'Valores por defecto', 'url'=>$this->createUrl('Opcionescamposdocu/configurausuario',array('docu'=>$this::CODIGO_DOC_SOLPE,'docuhijo'=>$this::CODIGO_DOC_DESOLPE))),
 
 );
 

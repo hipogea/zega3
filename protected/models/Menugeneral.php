@@ -128,7 +128,7 @@ class Menugeneral extends CActiveRecord
                         ":vcontrolador"=>$controllerName
                     ))->limit(1)->queryScalar();
             if($res!=false)
-                return true;
+                return $res;
             return false;
             }
             
@@ -139,10 +139,12 @@ class Menugeneral extends CActiveRecord
 		$criteria=new CDbCriteria;
 $criteria->compare('codaccion',$this->codaccion,true);
 		$criteria->compare('ruta',$this->ruta,true);
+                $criteria->compare('id',$this->id);
 		$criteria->compare('controlador',$this->controlador,true);
 		$criteria->compare('modulo',$this->modulo,true);
 		$criteria->compare('activa',$this->activa);
-                $criteria->compare('alias',$this->alias);
+                $criteria->compare('alias',$this->alias,true);
+                  $criteria->compare('hidpadre',$this->hidpadre);
 		//$criteria->addCondition("activa='1'");
                // $criteria->condition=array(":vcontrolador"=>$controlador);
 		return new CActiveDataProvider($this, array(
@@ -154,21 +156,33 @@ public static function getArrayFromTableMenu(){
   $opciones=yii::app()->db->
     createCommand()->  
    select('id,codaccion,ruta,controlador,modulo,alias,hidpadre')->from('{{menugeneral}}')->  
-      where("activa=1")->queryAll();
+      where("activa=1")->order("id asc")->queryAll();
  return $opciones; 
 }
 
 /*saca LOS HIJOS RECURSICAMENTE */
-public static function getChildsMenu($id){
- $id=(integer)$id;
+public static function getChildsMenu($id=null){
+ 
+ 
   $childs=array();
  // var_dump(self::getArrayFromTableMenu());die();
-  foreach (self::getArrayFromTableMenu() as $clave=>$valor){
+  $filas=self::getArrayFromTableMenu();
+     if(!is_null($id)){
+         $id=(integer)$id; 
+     }else{
+         if(count($filas)>0)
+             $id=$filas[0]['id']+0;
+         
+     }
+      
+  foreach ($filas as $clave=>$valor){
      if($valor['hidpadre']==$id){
        //$childs[$valor['id']]=$valor;  
       $acceso=yii::app()->user->checkAccess('action_'.$valor['controlador'].'_'.$valor['codaccion']);
         if($valor['ruta']=='#' or $acceso ){
       $childs[$valor['id']]['label']=$valor['alias'];
+      if(strlen(yii::app()->baseUrl)>0)$valor['ruta']=yii::app()->baseUrl.DIRECTORY_SEPARATOR.$valor['ruta'];
+        if(!in_array(substr($valor['ruta'],0,1),array('/','\\'))) $valor['ruta']=DIRECTORY_SEPARATOR.$valor['ruta'];
        $childs[$valor['id']]['url']=$valor['ruta'].$valor['controlador'].DIRECTORY_SEPARATOR.$valor['codaccion'];  
       $childs[$valor['id']]['items']=self::getChildsMenu($valor['id']);  
         /* $childs=[$valor['id']];  

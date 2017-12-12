@@ -22,7 +22,7 @@ class ConfiguracionController extends Controller
 		return array(
 			
 			array('allow',
-                            'actions'=>array('ajaxEditHidparentMenu',    'ajaxEditAliasMenu',   'ajaxActivate',     'menu',    'editar','index','ver','creaconfig'),
+                            'actions'=>array('RefreshMenu',   'ajaxEditHidparentMenu',    'ajaxEditAliasMenu',   'ajaxActivate',     'menu',    'editar','index','ver','creaconfig'),
 				'users'=>array('@'),
 			),
 			
@@ -289,7 +289,7 @@ public function actionver(){
                     $f=strrev(substr(strrev($f),strpos(strrev($f),'.')+1));
                     //$controladores[$f]['name'] =  'application.controllers';
                      $controladores[$f]['pathalias'] =  'application.controllers';
-                    $controladores[$f]['path'] =  yii::app()->baseUrl.DIRECTORY_SEPARATOR;
+                    $controladores[$f]['path'] =  '';
                     $controladores[$f]['module'] =  'none';
                 }
             }
@@ -330,7 +330,7 @@ public function actionver(){
                                                                                // $f2=substr($f2,strpos($f2,'Controller'));
                                                                                // $controladores[$f2] = $f.'.'.$f1;
                                                                                  $controladores[$f2]['pathalias'] = $f.'.'.$f1;;
-                                                                                $controladores[$f2]['path'] =yii::app()->baseUrl.DIRECTORY_SEPARATOR.$f.DIRECTORY_SEPARATOR;
+                                                                                $controladores[$f2]['path'] =DIRECTORY_SEPARATOR.$f.DIRECTORY_SEPARATOR;
                                                                                  $controladores[$f2]['module'] =  $f;
                                                                     }
                                                 }
@@ -426,6 +426,27 @@ public function actionver(){
         
     }
     
+    /*
+    * Esta funcion corrige la ruta de todos los controladoree
+    * en caso de que se migre a otras rutas 
+    * yii::app()->basPath
+    */   
+    public function actionRefreshMenu(){
+         $this->resetTable();
+         $this->refreshTable();    
+         MiFactoria::Mensaje('notice', yii::t('menajes','Se reseteo la tabla de Menu'));
+        $this->redirect('menu');
+        
+    }
+    
+    private function resetTable(){
+       yii::app()->db->createCommand()-> 
+             delete('{{menugeneral}}');
+    }
+    
+    
+    
+    
     PUBLIC function actionajaxEditAliasMenu(){
         if(yii::app()->request->isAjaxRequest){ 
             if(isset($_POST['name'])and 
@@ -511,9 +532,9 @@ public function actionver(){
      
    private function createRoootsMenu(){
        //creando el menu gneral general el id padre de todos los menus
-       if(
-                    !Menugeneral::existsMenu( 'root'  ,'root')
-                    ){
+       $idpadre=Menugeneral::existsMenu( 'root'  ,'root');
+                    
+       if(!$idpadre){
         $menu= New Menugeneral();
                 $menu->setAttributes(
                         array(
@@ -529,7 +550,7 @@ public function actionver(){
                 $menu->save();$menu->refresh();
                 $idpadre=$menu->id;
                     }
-       for( $i= 0 ; $i <= 9 ; $i++ ){
+       for( $i= 0 ; $i <= 30 ; $i++ ){
             if(
                     !Menugeneral::existsMenu( 'noneisroot'.$i  ,'noneisroot'.$i)
                     ){
@@ -554,9 +575,6 @@ public function actionver(){
        
    } 
    
-   
-   
-   
-   
+ 
     
 }

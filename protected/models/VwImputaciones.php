@@ -19,7 +19,7 @@ class VwImputaciones extends CActiveRecord
 		return 'vw_imputaciones';
 	}
 
-	public function findByPk($valor){
+	public function findByPk($valor,$condition = '', $params = Array()){
 		return self::model()->find("codc=:valore", array(":valore"=>$valor));
 
 	}

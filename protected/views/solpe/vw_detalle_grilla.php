@@ -1,4 +1,4 @@
-<?php
+<?php 
 $prove=Desolpe::model()->search_por_solpe($idcabecera);
 $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'detalle-grid',
@@ -22,52 +22,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
 		   ),
            // 'id'=>'cajita' // the columnID for getChecked
        ),
-
-		array('name'=>'item', 'htmlOptions'=>array('width'=>1)),
-			array('name'=>'tipimputacion','header'=>'I','htmlOptions'=>array('width'=>5)),
-			array('name'=>'tipsolpe','header'=>'T','htmlOptions'=>array('width'=>5)),
-			//'tipsolpe',
-	       array('name'=>'st.','header'=>'st', 'type'=>'raw','value'=>'CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"].$data->codocu.$data->est.".png")'),
-	   
-	      //array('name'=>'st.','header'=>'st', 'type'=>'raw','value'=>'($data->est=="02")?CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."tacho.jpg"):""'),
-		//'n_hguia',
-		//'c_itguia',
-		array('name'=>'cant','header'=>'Cant'),
-		array('name'=>'desolpe_um.desum','header'=>'Um','htmlOptions'=>array('width'=>5)),
-		//array('name'=>'codart','header'=>'Cod.','htmlOptions'=>array('width'=>5)),
-		array('name'=>'codart', 'type'=>'raw','value'=>'($data->codart==yii::app()->settings->get("materiales","materiales_codigoservicio"))?"":CHtml::link($data->codart,yii::app()->createUrl("/maestrocompo/ver/",array("id"=>$data->codart)) ,array("target"=>"_blank")  )','htmlOptions'=>array('width'=>5)),
-
-		//'c_edgui',	
-		array('name'=>'txtmaterial','header'=>'Descripcion','htmlOptions'=>array('width'=>600)),
-		//array('name'=>'texto', 'type'=>'raw','header'=>'t','value'=>'(!empty($data->m_obs))?"x":""' ),
-                 array('name'=>'textodetalle', 'type'=>'raw','header'=>'t','value'=>'(!empty($data->textodetalle))?CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."texto.png","hola"):""' ),
-
-		array('name'=>'imputacion','header'=>'Imp','htmlOptions'=>array('width'=>25)),
-		array('name'=>'centro','header'=>'Cent','htmlOptions'=>array('width'=>5)),
-		array('name'=>'codal','header'=>'Alm','htmlOptions'=>array('width'=>5)),
-		array('name'=>'solicitanet','header'=>'Solic','htmlOptions'=>array('width'=>225)),
-		/*array(
-			'name'=>'fechacrea',
-			'value'=>'date("d/m/Y", strtotime($data->fechacrea))',
-		  ),*/
-		array(
-			'name'=>'fechaent',
-			//array('name'=>'fechaent','header'=>'Para'),
-			'header'=>'Para',
-			//'value'=>'date("d/m/y", strtotime($data->fechaent))',
-                       'value'=>'$data->fechaent',
-			'htmlOptions'=>array('width'=>40),
-		),
-			'usuario',	
-			'desolpe_estado.estado',	//'estado',
-
-		array('name'=>'punitplan','header'=>'Plan','value'=>'MiFactoria::decimal($data->punitplan)','footer'=>MiFactoria::decimal(Desolpe::getTotal($prove)['plan'],2)),
-		array('name'=>'punitreal','header'=>'Real','value'=>'MiFactoria::decimal($data->punitreal)','footer'=>MiFactoria::decimal(Desolpe::getTotal($prove)['real'],2)),
-		//array('name'=>'punitreal','header'=>'Real','value'=>'MiFactoria::decimal($data->cc_gastos)'),
-          //'punitreal',
-
-		array(
-			'htmlOptions'=>array('width'=>320),
+array(
+			'htmlOptions'=>array('width'=>400),
 			'class'=>'CButtonColumn',
 			 'buttons'=>array(
 			 
@@ -83,12 +39,12 @@ $this->widget('zii.widgets.grid.CGridView', array(
 
 											)
 									    )',
-                                    'click'=>('function(){ 
-
-							    $("#cru-dialogdetalle").dialog("open");
-										$("#cru-detalle").attr("src",$(this).attr("href"));
-							     return false;
-							 }'),
+                                    'click'=>('function() {
+                                     url = $(this).attr("href");
+                                      
+                                    window.open(url,\'child\',\'status=no,resizable=yes,toolbar=no,menubar=no,scrollbars=yes,location=no,directories=no,top=0,left=0\');
+                                    return false;
+                                            }'),
 								'imageUrl'=>''.Yii::app()->getTheme()->baseUrl.Yii::app()->params['rutatemaimagenes'].'lapicito.png',
 								'label'=>'Actualizar Item', 
                                 ),
@@ -132,5 +88,48 @@ $this->widget('zii.widgets.grid.CGridView', array(
 
                             ),
 		),
+		array('name'=>'item', 'htmlOptions'=>array('width'=>1)),
+			//array('name'=>'tipimputacion','header'=>'I','htmlOptions'=>array('width'=>5)),
+			//array('name'=>'tipsolpe','header'=>'T','htmlOptions'=>array('width'=>5)),
+			 array('name'=>'st.','header'=>'st', 'type'=>'raw','value'=>'CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"].$data->codocu.$data->est.".png")'),
+	   
+	      //array('name'=>'st.','header'=>'st', 'type'=>'raw','value'=>'($data->est=="02")?CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."tacho.jpg"):""'),
+		//'n_hguia',
+		//'c_itguia',
+		array('name'=>'cant','header'=>'Cant','htmlOptions'=>array('width'=>1)),
+		array('name'=>'desolpe_um.desum','header'=>'Um','htmlOptions'=>array('width'=>5)),
+		//array('name'=>'codart','header'=>'Cod.','htmlOptions'=>array('width'=>5)),
+		array('name'=>'codart', 'type'=>'raw','value'=>'($data->codart==yii::app()->settings->get("materiales","materiales_codigoservicio"))?"":CHtml::link($data->codart,yii::app()->createUrl("/maestrocompo/ver/",array("id"=>$data->codart)) ,array("target"=>"_blank")  )','htmlOptions'=>array('width'=>5)),
+
+		//'c_edgui',	
+		array('name'=>'txtmaterial','header'=>'Descripcion','htmlOptions'=>array('width'=>600)),
+		//array('name'=>'texto', 'type'=>'raw','header'=>'t','value'=>'(!empty($data->m_obs))?"x":""' ),
+                 array('name'=>'textodetalle', 'type'=>'raw','header'=>'t','value'=>'(!empty($data->textodetalle))?CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."texto.png","hola"):""' ),
+
+		//array('name'=>'imputacion','header'=>'Imp','htmlOptions'=>array('width'=>25)),
+		array('name'=>'centro','header'=>'Cent','htmlOptions'=>array('width'=>5)),
+		array('name'=>'codal','header'=>'Alm','htmlOptions'=>array('width'=>5)),
+		//array('name'=>'solicitanet','header'=>'Solic','htmlOptions'=>array('width'=>225)),
+		/*array(
+			'name'=>'fechacrea',
+			'value'=>'date("d/m/Y", strtotime($data->fechacrea))',
+		  ),*/
+		array(
+			'name'=>'fechaent',
+			//array('name'=>'fechaent','header'=>'Para'),
+			'header'=>'Para',
+			//'value'=>'date("d/m/y", strtotime($data->fechaent))',
+                       'value'=>'$data->fechaent',
+			'htmlOptions'=>array('width'=>40),
+		),
+			'usuario',	
+			'desolpe_estado.estado',	//'estado',
+
+		array('name'=>'punitplan','header'=>'Plan','value'=>'MiFactoria::decimal($data->punitplan)','footer'=>MiFactoria::decimal(Desolpe::getTotal($prove)['plan'],2)),
+		array('name'=>'punitreal','header'=>'Real','value'=>'MiFactoria::decimal($data->punitreal)','footer'=>MiFactoria::decimal(Desolpe::getTotal($prove)['real'],2)),
+		//array('name'=>'punitreal','header'=>'Real','value'=>'MiFactoria::decimal($data->cc_gastos)'),
+          //'punitreal',
+
+		
 	),
-)); ?>
+));  ?>

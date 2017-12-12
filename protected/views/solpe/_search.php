@@ -8,30 +8,33 @@
 
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'action'=>Yii::app()->createUrl($this->route),
-	'method'=>'get',
+	'method'=>'get','id'=>'buscasolpes-form'
 )); ?>
 	<div class="row">
-		<?php $botones=array(
-		'search'=>array(
-		'type'=>'A',
-		'ruta'=>array(),
-		'visiblex'=>array('10'),
-		),
-		'clear'=>array(
-		'type'=>'E',
-		'ruta'=>array(),
-		'visiblex'=>array('10'),
-		),
+		<?php
+		$botones=array(
+			'binoculars'=>array(
+				'type'=>'A',
+				'ruta'=>array(),
+				'visiblex'=>array('10'),
+			),
+			'eraser'=>array(
+				'type'=>'E',
+				'ruta'=>array(),
+				'visiblex'=>array('10'),
+			),
 		);
 		$this->widget('ext.toolbar.Barra',
-		array(
-		//'botones'=>MiFactoria::opcionestoolbar($model->id,$this->documento,$model->codestado),
-		'botones'=>$botones,
-		'size'=>24,
-		'extension'=>'png',
-		'status'=>'10',
+			array(
+				//'botones'=>MiFactoria::opcionestoolbar($model->id,$this->documento,$model->codestado),
+				'botones'=>$botones,
+                                 'font'=>true,
+				'size'=>24,
+                            'nameform'=>'buscasolpes-form',
+				'extension'=>'png',
+				'status'=>'10',
 
-		)
+			)
 		); ?>
 	</div>
 	<DIV class="panelizquierdo">
@@ -43,7 +46,7 @@
 	</div>
 		<div class="row">
 			<?php echo $form->label($model,'txtmaterial'); ?>
-			<?php echo $form->textField($model,'txtmaterial',array('size'=>40,'maxlength'=>40)); ?>
+			<?php echo $form->textField($model,'txtmaterial',array('size'=>25,'maxlength'=>40)); ?>
 		</div>
 
 
@@ -51,7 +54,7 @@
 
 		<div class="row">
 			<?php echo $form->labelEx($model,'est'); ?>
-			<?php $datos111=CHTml::listData(Estado::model()->findAll("codocu=:vcodocu",array(":vcodocu"=>CODIGO_DOC_DESOLPE)),'codestado','estado'); ?>
+			<?php $datos111=CHTml::listData(Estado::model()->findAll("codocu=:vcodocu",array(":vcodocu"=>$this::CODIGO_DOC_DESOLPE)),'codestado','estado'); ?>
 
 			<?php echo $form->dropDownList($model,'est',$datos111,array('empty'=>'--Seleccione un estado--'));?>
 
@@ -294,7 +297,9 @@
 		
 	</div>
 	
-
+                                        <div class="row buttons">
+								<?php echo CHtml::submitButton('Buscarv ',array('style'=>'visibility:hidden;')); ?>
+					</div>
 
 
 <?php $this->endWidget(); ?>

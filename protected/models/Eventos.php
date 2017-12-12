@@ -151,7 +151,7 @@ public function Sepuedecambiarestado($docum,$estado1,$estado2) {
                                 
                                 
    public function afterfind(){
-       $this->descripcioncompleta="[".$this->codocu."]-".$this->docume->desdocu."-".$this->descripcion;
+      // $this->descripcioncompleta="[".$this->codocu."]-".$this->docume->desdocu."-".$this->descripcion;
    }                             
 
 }

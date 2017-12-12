@@ -713,34 +713,23 @@ public function actionpio() {
 	
 	public function actionDetalle($id)
 	{
-            
-            $modeloadjuntos=new Adjuntos('search');
-		$modeloadjuntos->unsetAttributes();  // clear any default values
+                $modeloadjuntos=new Adjuntos('search');
+                $modeloadjuntos->unsetAttributes();  // clear any default values
 		if(isset($_GET['Adjuntos'])){
-		//	$modeloadjuntos->attributes=$_GET['Adjuntos'];
-            //var_dump($_GET['Adjuntos']);
-                }
-            $datos=Machineswork::model()->search_por_activo(10);
+                    $modeloadjuntos->attributes=$_GET['Adjuntos'];
+                    }
+                $modelolog= new Loginventario;
+            if(isset($_GET['Loginventario'])){
+                    $modelolog->attributes=$_GET['Loginventario'];
+                    }    
+            $datos=Machineswork::model()->search_por_activo($id);
             //var_dump($datos->getdata());die();
 	   $model=$this->loadModel($id);
 		if(isset($id)) {
 		//$fot=new Fotos($model->idinventario,Yii::getPathOfAlias('webroot.fotosinv').DIRECTORY_SEPARATOR.$model->codpropietario.DIRECTORY_SEPARATOR,null ) ;
 		$model->agregacomportamientoarchivo('.jpg');
 		//$misfotos=$fot->devuelveFotos();
-                $nuevasfotos=$model->fotosparagaleria();
-                
-                //var_dump($nuevasfotos);die();
-		
-		/***********************************************************************************
-		*
-		*	ESTE FRAGEMENTO DE CODIGO SIRVE PARA SACCAR LOS DATOS QUE NCESITA ESTA ACCION 
-		*	PARA RENDERIZAR LA VISTA :    DATOS DEL LOG , DE LAS OBSERVACIONES ETC 
-		*
-		************************************************************************************
-		************************************************************************************
-		
-	  SACANDO EL LOG */
-	    $modelolog= new Loginventario;
+                $nuevasfotos=$model->fotosparagaleria();   
 		$criteriazo=new CDbCriteria;		
 		$criteriazo->addCondition('hidinventario = :phidinventario and codestado <> :pcodestado');								
 		$criteriazo->params = array(':phidinventario' => $model->idinventario,':pcodestado' => '01');	

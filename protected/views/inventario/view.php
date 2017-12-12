@@ -137,23 +137,3 @@ $this->widget('ext.imagegallery1.ImageGallery1',array(
  
 </div>
 
-<?php
-//--------------------- begin new code --------------------------
-   // add the (closed) dialog for the iframe
-    $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-    'id'=>'cru-dialog4',
-    'options'=>array(
-        'title'=>'Administrar fotografias',
-        'autoOpen'=>false,
-        'modal'=>true,
-        'width'=>600,
-        'height'=>600,
-    ),
-    ));
-?>
-<iframe id="cru-frame4" width="100%" height="100%"></iframe>
-<?php
- 
-$this->endWidget();
-//--------------------- end new code --------------------------
-?>

@@ -381,7 +381,7 @@ class TMonedaController extends Controller
                                     }else{
                                             $transaccion->rollback(); 
                                             MiFactoria::Mensaje('error',' NO Se grabaron los registros  ->  '.$mensaje);
-                                            $this->render('actualizalogcambio',array('items'=>$items));
+                                            $this->render('actualizalogcambio',array('items'=>$items,'fecha'=>$_GET['fecha']));
                                        
                                         }
                               

@@ -10,17 +10,23 @@ class Barra extends CWidget
 	public $extension;
 	public $status;	
         public $_idcache;
+        public $nameform;
+        public $contador=null;
+        public $font=false;
 	public function init()
 	{
 	$asset=Yii::app()->assetManager->publish(dirname(__FILE__).'/assets');
 	$this->ruta=$asset;
     	$cs=Yii::app()->clientScript;
     	$cs->registerCssFile($asset."/css/barra.css");
-        //$cs->registerCssFile($asset."/css/blockui.css");
+        $cs->registerCssFile($asset."/css/fontello-codes.css");
+         $cs->registerCssFile($asset."/css/fontello.css");
+         //$cs->registerCssFile($asset."/css/blockui.css");
 		//$cs->registerScriptFile($asset."/js/jQueryRotate.min.js");
 		$cs->registerScriptFile($asset."/js/barra.js");	
                 //$cs->registerScriptFile($asset."/js/blockuiplugin.js");
 		$script = 'assetUrl = "' . $asset . '";';
+                return parent::init();
 	}
 	private function iniciamarco(){
 		echo "<DIV CLASS='marco' >";
@@ -37,9 +43,94 @@ class Barra extends CWidget
 
 	public function run()
 	{
+                  if($this->font){
+                      
+                    foreach($this->botones as $clave=>$arreglo) {
+            //solo si sin son arrays no  vacios
+			if(count($this->botones[$clave])>0){
+                        if(!is_array($arreglo[ "visiblex" ]))throw new CHttpException(500,__CLASS__.'  '.__FUNCTION__.'  -   '.__LINE__.'    Te olidaste de colocar el arrayt de vixisbilidad e este boton.');
+			if (  $this->revisavisibilidad($arreglo[ "visiblex" ]) ) {
+                                $this->iniciamarco ();
+                               if(isset($arreglo[ "contador" ]))
+                                  if($arreglo[ "contador" ]>0)
+                                echo CHtml::openTag ("div",array("style"=>"position:relative")); //"<div style='position:relative;'>";
+				$rutaimagenes = $this->ruta . '/img/' . $this->size . '/' . $clave . '.' . strtolower ( $this->extension );
+				$rutaimagenes_bajo = $this->ruta . '/img/' . $this->size . '/' . $clave . '_.' . strtolower ( $this->extension );
+				$arrayestilolink="";
+                                $rutaapunta = "";
+				if ( count ( $arreglo[ "ruta" ] ) > 0 ) { //si se han especificado elemtnos en el parametro ruta
+					$rutaapunta = yii::app ()->createUrl ( $arreglo[ "ruta" ][ 0 ] , $arreglo[ "ruta" ][ 1 ] );
+				} else {
 
+				}
+				
+				switch ( $arreglo[ 'type' ] ) {
+					//creamos el link de la ruta
 
+					case "A": //Se trata de un boton simple POST
+						echo CHtml::link ( 
+                                                        CHtml::openTag("span",array("class"=>"barra-style  icon-".$clave)).CHtml::closeTag("span")
+                                                        ,
+							"#",
+                                                        array('onclick' => "$(\":submit\").click();")
+						);
+						break;
+					case "B":
+						echo CHtml::link ( 
+                                                        CHtml::openTag("span",array("class"=>"barra-style  icon-".$clave)).CHtml::closeTag("span")
+                                                        ,
+							$rutaapunta
+						);
+						break;
+					case "C":
+						echo CHtml::link ( 
+                                                CHtml::openTag("span",array("class"=>"barra-style  icon-".$clave)).CHtml::closeTag("span")
+                                                        , '#' ,
+							array ( 'onclick' => " $('#" . $arreglo[ "frame" ] . "').attr('src','" . $rutaapunta . "');$('#" . $arreglo[ "dialog" ] . "').dialog('open');" )
 
+						);
+						break;
+
+					case "D":
+						echo CHtml::AjaxLink ( 
+                                                CHtml::openTag("span",array("class"=>"barra-style  icon-".$clave)).CHtml::closeTag("span")
+                                                
+                                                        , $rutaapunta ,
+							$arreglo[ "opajax" ]
+						);
+						break;
+
+					case "E":
+						echo CHtml::link (
+                                                       CHtml::openTag("span",array("class"=>"barra-style  icon-".$clave)).CHtml::closeTag("span")
+                                                 , '#' ,
+							//array ( 'onclick' => " $(this).closest('form').find('input[type=text], input[type=select],textarea').val('');" )
+                                                          array ( 'onclick' => " $(this).closest('form')[0].reset();" ) 
+                                                        //array ( 'onclick' => " $(this).closest('form').find('input[type=text], input[type=select],textarea').reset();" )
+						);
+						break;
+					case "F":
+						echo CHtml::link ( CHtml::openTag("span",array("class"=>"barra-style icon-".$clave)).CHtml::closeTag("span")
+                                                ,
+							yii::app()->request->url
+						);
+						break;
+				}
+                                 if(isset($arreglo[ "contador" ]))
+                                      if($arreglo[ "contador" ]>0)
+                                     {
+                                   echo CHtml::openTag ("div",array("class"=>"absolute")).$arreglo[ "contador" ].CHtml::closeTag ("div"); //"<div style='position:relative;'>";
+                                   $this->cierradiv();
+                                 }
+				
+				$this->cierradiv ();
+				
+			  }
+			}
+		}
+             }  
+                                            
+             else{
 	    foreach($this->botones as $clave=>$arreglo) {
             //solo si sin son arrays no  vacios
 			if(count($this->botones[$clave])>0){
@@ -152,7 +243,7 @@ class Barra extends CWidget
 			  }
 			}
 		}
-
+             }
 	}
 
 	///Revisa si en la matriz de visibildad hay bun booleano  y lo respeta
@@ -181,6 +272,12 @@ class Barra extends CWidget
   return $retorno;
 	}
         
-      
+   public function mapNames(){
+      return  array(
+          'mail'=>'mail',
+          'print'=>'print',
+          'tacho'=>'trash-empty',
+      );
+   }   
 
 }

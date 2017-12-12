@@ -1,21 +1,13 @@
-
-
-    
-            <div class="wide form">
-
+      <div class="wide form">
                 	<?php $form=$this->beginWidget('CActiveForm', array(
 	                              'id'=>'solpe-form',
 	                              'enableAjaxValidation'=>false,
-                                               )); ?>
-
-
-
-
-
+                                               ));                         
+                        
+                        ?>
                 <BR>
-
 				<div class="row">
-					<?php
+					<?php                                        
 					$botones=array(
 						'go'=>array(
 							'type'=>'A',
@@ -25,33 +17,31 @@
 						'save'=>array(
 							'type'=>'A',
 							'ruta'=>array(),
-							'visiblex'=>array(ESTADO_CREADO,ESTADO_PREVIO),
+							'visiblex'=>array($this::ESTADO_CREADO,$this::ESTADO_PREVIO),
 						),
-
-
 						'ok'=>array(
 							'type'=>'B',
 							'ruta'=>array($this->id.'/procesarsolpe',array('id'=>$model->id,'ev'=>60)),
-							'visiblex'=>array(ESTADO_CREADO),
+							'visiblex'=>array($this::ESTADO_CREADO),
 
 						),
 						'print'=>array(
 							'type'=>'B',
 							'ruta'=>array($this->id.'/imprimir2',array('id'=>$model->id)),
-							'visiblex'=>array(ESTADO_AUTORIZADO,ESTADO_CREADO),
+							'visiblex'=>array($this::ESTADO_AUTORIZADO,$this::ESTADO_CREADO),
 
 						),
 						'tacho'=>array(
 							'type'=>'B',
 							'ruta'=>array($this->id.'/procesarsolpe',array('id'=>$model->id,'ev'=>61)),
-							'visiblex'=>array(ESTADO_CREADO),
+							'visiblex'=>array($this::ESTADO_CREADO),
 
 						),
 
 						'pack'=>array(
 							'type'=>'B',
 							'ruta'=>array($this->id.'/reservaautomatica',array('id'=>$model->id)),
-							'visiblex'=>array(ESTADO_AUTORIZADO),
+							'visiblex'=>array($this::ESTADO_AUTORIZADO),
 
 						),
 						'listfav'=>array(
@@ -65,7 +55,7 @@
 							),
 							'dialog'=>'cru-dialogfavorito',
 							'frame'=>'cru-detallefav',
-							'visiblex'=>array(ESTADO_CREADO,ESTADO_AUTORIZADO),
+							'visiblex'=>array($this::ESTADO_CREADO,$this::ESTADO_AUTORIZADO),
 
 						),
 
@@ -74,7 +64,7 @@
 						'out'=>array(
 							'type'=>'B',
 							'ruta'=>array($this->id.'/admin',array('id'=>$model->id)),
-							'visiblex'=>array(ESTADO_PREVIO,ESTADO_CREADO,ESTADO_AUTORIZADO,ESTADO_ANULADO,NULL),
+							'visiblex'=>array($this::ESTADO_PREVIO,$this::ESTADO_CREADO,$this::ESTADO_AUTORIZADO,$this::ESTADO_ANULADO,NULL),
 						),
 
 					);
@@ -95,7 +85,7 @@
 							'status'=>$model->estado,
 
 						)
-					);?>
+					); ?>
 
 				</div>
 
@@ -113,7 +103,9 @@
 
 	<div class="panelizquierdo">
 	<div class="row">
-		<?php if (!$model->isNewRecord) {?>
+		<?php 
+               
+                if (!$model->isNewRecord) {?>
 		<?php echo $form->labelEx($model,'numero'); ?>
 		<?php echo $form->textField($model,'numero',array('size'=>10,'maxlength'=>10,'disabled'=>'disabled')); ?>
 		<?php echo $form->error($model,'numero'); ?>
@@ -173,12 +165,13 @@
 				<?php
 
 				if ( !$model->isNewRecord )  {
+                                    
 					$this->renderpartial('vw_detalle_solpe',array('modelcabecera'=>$model,'eseditable'=>$this->eseditable($model->estado)));
 				}
 				?>
 
 
-<?php $this->endWidget(); ?>
+<?php $this->endWidget();   ?>
     <div class="row"></div>
     <div id="zona"></div>
  </div><!-- form -->

@@ -38,11 +38,11 @@
 	
   <div class="row">
 		<?php echo $form->labelEx($model,'tipsolpe'); ?>
-		<?php echo $form->textField($model,'tipsolpe',array('size'=>1,'maxlength'=>1, 'disabled'=>(!$model->isNewRecord)?'Disabled' :$habilitado)); ?>
+		<?php echo $form->textField($model,'tipsolpe',array('size'=>1,'maxlength'=>1, 'disabled'=>(!$model->isNewRecord)?'Disabled' :'')); ?>
 		<?php echo $form->error($model,'tipsolpe'); ?>
 	</div><div class="row">
 		<?php echo $form->labelEx($model,'tipimputacion'); ?>
-		<?php echo $form->textField($model,'tipimputacion',array('size'=>1,'maxlength'=>1, 'disabled'=>(!$model->isNewRecord)?'Disabled' :$habilitado)); ?>
+		<?php echo $form->textField($model,'tipimputacion',array('size'=>1,'maxlength'=>1, 'disabled'=>(!$model->isNewRecord)?'Disabled' :'')); ?>
 		<?php echo $form->error($model,'tipimputacion'); ?>
 	</div>
 
@@ -50,7 +50,7 @@
 
 <div class="row">
 		<?php echo $form->labelEx($model,'fechaent'); ?>
-		<?php if ($habilitado=='')
+		<?php if (''=='')
 		
 		{
 		
@@ -69,7 +69,7 @@
 															'style'=>'width:120px;vertical-align:top',
 															'readonly'=>'readonly',
 															'size'=>12,
-															'disabled'=>$habilitado,
+															'disabled'=>'',
 															),
 															));
 
@@ -88,14 +88,14 @@
 	<div class="row">
 		<?php echo $form->labelEx($model,'centro'); ?>
 		<?php  $datos1 = CHtml::listData(Centros::model()->findAll(array('order'=>'nomcen')),'codcen','nomcen');
-		  echo $form->DropDownList($model,'centro',$datos1, array('empty'=>'--Seleccione una referencia--',  'disabled'=>$habilitado,
+		  echo $form->DropDownList($model,'centro',$datos1, array('empty'=>'--Seleccione una referencia--',  'disabled'=>'',
 													    ) ) ;
 		?>
 		<?php echo $form->error($model,'centro'); ?>
 	</div>
 <div class="row">
 		<?php echo $form->labelEx($model,'codal'); ?>
-		<?php echo $form->textField($model,'codal',array('size'=>3,'maxlength'=>3, 'disabled'=>$habilitado)); ?>
+		<?php echo $form->textField($model,'codal',array('size'=>3,'maxlength'=>3, 'disabled'=>'')); ?>
 		<?php echo $form->error($model,'codal'); ?>
 	</div>
 
@@ -134,7 +134,7 @@
 
 	
 	<div class="row buttons">
-		<?php echo ($habilitado=='')?CHtml::submitButton(($model->isNewRecord)?'Agregar' : 'Actualizar'):''; ?>
+		<?php echo (''=='')?CHtml::submitButton(($model->isNewRecord)?'Agregar' : 'Actualizar'):''; ?>
 	</div>
 
 

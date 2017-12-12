@@ -68,7 +68,7 @@ class VwLugares extends CActiveRecord
 /**
 	 * @return array customized attribute labels (name=>label)
 	 */
-	public function findByPk($valor)
+	public function findByPk($valor, $condition = '', $params = Array())
 	{
 		return $this->find("codlugar='".$valor."'");
 

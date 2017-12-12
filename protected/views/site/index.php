@@ -1,9 +1,5 @@
-
-
-
-
 <div class="division">
-<?php echo CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params['rutatemaimagenes'].'home.png',"hola");?>
+<?php echo "hola";die(); echo CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params['rutatemaimagenes'].'home.png',"hola");?>
 Datos maestros
 <li>
 <ul>

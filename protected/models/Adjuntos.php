@@ -134,7 +134,7 @@ class Adjuntos extends CActiveRecord
             return parent::beforeSave();
         }
         
-         public function rutaCorta($rutaabsoluta){
+     public  function rutaCorta($rutaabsoluta){
        return $cad=yii::app()->baseUrl.str_replace(Yii::getPathOfAlias('webroot') , '', $rutaabsoluta);
        
        
@@ -147,5 +147,23 @@ class Adjuntos extends CActiveRecord
                 "texto"=>$textos,  
                 );
        $registro->save();
+   }
+   
+   public static function findByDocu($codocu,$idocu,$id=null){
+       if(is_null($id)){
+          $cri=New CDbCriteria;
+       $cri->addCondition("codocu =:vcodocu and hiddocu=:vhiddocu");
+       $cri->params=array(":vcodocu"=>$codocu,":vhiddocu"=>$idocu); 
+       $cri->order='subido DESC';
+       $filas=self::model()->findAll($cri);
+       if(count($filas)>0)
+       return $filas[0];
+       return null;
+       } else{
+           return self::model()->findByPk($id);
+       }
+       
+       
+        
    }
 }

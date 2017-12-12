@@ -504,7 +504,7 @@ public function checkvalores1($attribute,$params) {
 									$this->cantaten = 0;
 									//$this->codobjeto='001';
 								}
-											$this->est=(empty($this->est))?ESTADO_PREVIO:$this->est; //para que no lo agarre la vista VW-GUIA  HASTA QUE GRABE TODO EL DETALLE
+											$this->est=(empty($this->est))?self::ESTADO_PREVIO:$this->est; //para que no lo agarre la vista VW-GUIA  HASTA QUE GRABE TODO EL DETALLE
 
                                                 ///el item
 								

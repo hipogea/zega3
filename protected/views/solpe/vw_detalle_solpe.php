@@ -1,11 +1,13 @@
-
- <?php  $this->renderPartial('vw_detalle_grilla', array("idcabecera"=>$modelcabecera->id,'eseditable'=>$eseditable),false, true);
+ <?php 
+ $this->renderPartial('vw_detalle_grilla', 
+         array("idcabecera"=>$modelcabecera->id,
+             'eseditable'=>$eseditable));
  ?>
 
 
 
  <div class="row">
-	 <?php
+	 <?php  
 	 $botones1=array(
 		 'add'=>array(
 			 'type'=>'C',
@@ -21,7 +23,7 @@
 			 ),
 			 'dialog'=>'cru-dialogdetalle',
 			 'frame'=>'cru-detalle',
-			 'visiblex'=>array(ESTADO_CREADO,ESTADO_PREVIO),
+			 'visiblex'=>array($this::ESTADO_CREADO,$this::ESTADO_PREVIO),
 
 		 ),
 
@@ -38,7 +40,7 @@
 			 ),
 			 'dialog'=>'cru-dialogdetalle',
 			 'frame'=>'cru-detalle',
-			 'visiblex'=>array(ESTADO_CREADO,ESTADO_PREVIO),
+			 'visiblex'=>array($this::ESTADO_CREADO,$this::ESTADO_PREVIO),
 
 		 ),
 
@@ -63,7 +65,7 @@
  										}
  								',
 			 					),
-			 'visiblex'=>array(ESTADO_CREADO,ESTADO_AUTORIZADO,ESTADO_PREVIO),
+			 'visiblex'=>array($this::ESTADO_CREADO,$this::ESTADO_AUTORIZADO,$this::ESTADO_PREVIO),
 		 				),
 
 		 'adddoc'=>array(
@@ -77,7 +79,7 @@
 			 ),
 			 'dialog'=>'cru-dialogdetalle',
 			 'frame'=>'cru-detalle',
-			 'visiblex'=>array(ESTADO_CREADO,ESTADO_PREVIO),
+			 'visiblex'=>array($this::ESTADO_CREADO,$this::ESTADO_PREVIO),
 
 		 ),
 
@@ -93,7 +95,7 @@
 			 ),
 			 'dialog'=>'cru-dialogdetalle',
 			 'frame'=>'cru-detalle',
-			 'visiblex'=>array(ESTADO_CREADO,ESTADO_AUTORIZADO,ESTADO_PREVIO),
+			 'visiblex'=>array($this::ESTADO_CREADO,$this::ESTADO_AUTORIZADO,$this::ESTADO_PREVIO),
 
 		 ),
 
@@ -104,7 +106,7 @@
 		 UNSET($botones1['adddoc']);
 
 	 }
-
+  
 
 	 $this->widget('ext.toolbar.Barra',
 		 array(
@@ -115,7 +117,7 @@
 			 'status'=>$modelcabecera->estado,
 
 		 )
-	 );?>
+	 );   ?>
 
  </div>
 

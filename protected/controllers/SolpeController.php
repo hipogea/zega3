@@ -139,15 +139,12 @@ const ESTADO_DESOLPE_ANULADO='20';
 
 				   }//fin del For
 			if(strlen($mensa)==0)  { //Si s epudo actualziar
-									$estoes=yii::app()->mensajes->hayerrores('340');
-									if(is_null($estoes)){
+									
 										$transaccion->commit();
 										Yii::app()->user->setFlash('success', "Se hizo la reserva automatica del Documento ".$mensa);
 										$this->render('update',array('model'=>$model));
 										yii::app()->end();
-									}else{
-										print_r($estoes);
-									}
+									
 
 							}     else   {
 								$transaccion->rollback();
@@ -198,7 +195,7 @@ const ESTADO_DESOLPE_ANULADO='20';
 				$arrayvalores[$autoId]='Desolpe';
 
 			}
-			yii::app()->maletin->ponervalores($arrayvalores,CODIGO_DOC_DESOLPE);
+			yii::app()->maletin->ponervalores($arrayvalores,$this::CODIGO_DOC_DESOLPE);
 		}
 
       /*  if(!isset( $_SESSION['350']))
@@ -352,7 +349,7 @@ const ESTADO_DESOLPE_ANULADO='20';
 		$id=(int)MiFactoria::cleanInput($id);
 		$registro=Alreserva::model()->findByPK($id);
 
-		$registro->estadoreserva=ESTADO_RESERVA_CERRADO;
+		$registro->estadoreserva=$this::ESTADO_RESERVA_CERRADO;
 		$registro->setScenario('cambiaestado');
 		$mensaje=$registro->detener();
 		if($mensaje=="" and $registro->save()){
@@ -735,10 +732,12 @@ public function actionstock() {
 	 */
 	public function actionUpdate($id)
 	{
-		//$this->layout='//layouts/prueba_layout';
+	
+
 		$ahora=time();
 		$model=$this->loadModel($id);
-		if($model->estado==ESTADO_PREVIO and ($ahora-strtotime($model->fechadoc.'')>24*60*60))
+            
+		if($model->estado==$this::ESTADO_PREVIO and ($ahora-strtotime($model->fechadoc.'')>24*60*60))
 		{
 			$model->delete();
 			$this->redirect(array('admin'));yii::app()->end();
@@ -758,7 +757,9 @@ public function actionstock() {
 				//$this->redirect(array('view','id'=>$model->id));
 			                }
 		}
+              
 		$this->render('update', array('model'=>$model));
+                
 	}
 
 
@@ -1290,13 +1291,12 @@ public function borraitem($autoId) //Borra un registro de solpe
 			$model->attributes=$_POST['Desolpe'];
 			if($model->save())
 					  if (!empty($_GET['asDialog']))
-												{
-													Yii::app()->user->setFlash('success', "..Se agrego el item!");
-													//Close the dialog, reset the iframe and update the grid
-													echo CHtml::script("window.parent.$('#cru-dialogdetalle').dialog('close');
-													                    window.parent.$('#cru-detalle').attr('src','');																		
-																		window.parent.$.fn.yiiGridView.update('detalle-grid');
-																		");
+						{
+						Yii::app()->user->setFlash('success', "..Se agrego el item!");
+					//Close the dialog, reset the iframe and update the grid
+					echo CHtml::script("window.close();
+								window.opener.$.fn.yiiGridView.update('detalle-grid');
+								");
 
 														Yii::app()->end();
 												}
@@ -1562,7 +1562,7 @@ public function actionprocesarsolpe($id)
 		$modelocabeza=Solpe::model()->findbypk($idcabeza);
 		if(is_null($modelocabeza))
 			throw new CHttpException(500,'No existe esta solicitud con este ID');
-		if($modelocabeza->estado==ESTADO_CREADO OR $modelocabeza->estado==ESTADO_PREVIO) {
+		if($modelocabeza->estado==$this::ESTADO_CREADO OR $modelocabeza->estado==$this::ESTADO_PREVIO) {
 
 
 			$model=new Desolpe;
@@ -1576,7 +1576,7 @@ public function actionprocesarsolpe($id)
 				$model->attributes=$_POST['Desolpe'];
 				$model->codocu='350'; ///detalle guia
 				$model->tipsolpe='S';  //SERVICIO
-				$model->codart=CODIGO_MATERIAL_SERVICIO;
+				$model->codart=$this::CODIGO_MATERIAL_SERVICIO;
 				/*var_dump($model->codart);
 				yii::app()->end();*/
 				if($model->save())

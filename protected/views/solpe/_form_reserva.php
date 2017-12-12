@@ -33,7 +33,7 @@
 			'save'=>array(
 				'type'=>'A',
 				'ruta'=>array(),
-				'visiblex'=>array(ESTADO_CREADO),
+				'visiblex'=>array($this::ESTADO_CREADO),
 			),
 
 				'tacho'=>array(
@@ -51,7 +51,7 @@
                                							 }
                                					',
 				),
-					'visiblex'=>array(  (($model->cantidad_atendida+0) ==0)?ESTADO_CREADO :''  ),
+					'visiblex'=>array(  (($model->cantidad_atendida+0) ==0)?$this::ESTADO_CREADO :''  ),
 
 			),
 
@@ -70,7 +70,7 @@
                                							 }
                                					',
 				),
-				'visiblex'=>array(  (($model->cantidad_atendida+0) >0)?ESTADO_CREADO:''   ),
+				'visiblex'=>array(  (($model->cantidad_atendida+0) >0)?$this::ESTADO_CREADO:''   ),
 
 			),
 
@@ -81,7 +81,7 @@
 				'botones'=>$botones,
 				'size'=>24,
 				'extension'=>'png',
-				'status'=>ESTADO_CREADO,
+				'status'=>$this::ESTADO_CREADO,
 
 			)
 		);?>

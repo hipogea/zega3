@@ -607,20 +607,20 @@ public function detectaerrores(){
 
 
 
-  public function loadModel($nombreclase,$id){
+ /* public function loadModel($nombreclase,$id){
 
 	return  Mifactoria::Cargamodelo($nombreclase,$id);
   }
+*/
 
-
-	protected function performAjaxValidation($model,$nombreclase)
+	/*protected function performAjaxValidation($model,$nombreclase)
 	{
 		if(isset($_POST['ajax']) && $_POST['ajax']===$nombreclase.'-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
-	}
+	}*/
 
 /*Funcio que te dice si el objeto $modelo corresponde a una tabla en buffer o a una tabla en
   persistente */

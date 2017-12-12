@@ -1,4 +1,6 @@
 <?php
+//echo dirname(__FILE__).DIRECTORY_SEPARATOR.'grid.css';die();
+//ECHO dirname(__FILE__).'/../css/grid.css'; DIE();
 //Yii::setPathOfAlias('bootstrap', dirname(__FILE__).'/../extensions/bootstrap');
 // uncomment the following to define a path alias
 // Yii::setPathOfAlias('local','path/to/local-folder');
@@ -66,7 +68,7 @@ return array(
     
 		//'backup'=> array('path' => __DIR__.'/../_backup/'  ),
 		'backup'=> array('path' =>'backup/' ),
-		'ayuda'=>array(),
+		'ayuyyda'=>array(),
             'clientes'=> array(),
 		'contabilidad'=> array(
                    
@@ -109,14 +111,14 @@ return array(
 				// manejo del layout con cruge.
 				//
 				'loginLayout'=>'//layouts/inicio',
-				'registrationLayout'=>'//layouts/column1',
-				'activateAccountLayout'=>'//layouts/column1',
-				'editProfileLayout'=>'//layouts/column1',
+				'registrationLayout'=>'//layouts/column2',
+				'activateAccountLayout'=>'//layouts/column2',
+				'editProfileLayout'=>'//layouts/column2',
 				// en la siguiente puedes especificar el valor "ui" o "column2" para que use el layout
 				// de fabrica, es basico pero funcional.  si pones otro valor considera que cruge
 				// requerir� de un portlet para desplegar un menu con las opciones de administrador.
 				//
-				'generalUserManagementLayout'=>'ui',
+				'generalUserManagementLayout'=>'//layouts/column2',
 
 				// permite indicar un array con los nombres de campos personalizados, 
 				// incluyendo username y/o email para personalizar la respuesta de una consulta a: 
@@ -151,6 +153,14 @@ return array(
 
 	// application components
 	'components'=>array(
+            
+            'mobileDetect' => array(
+        'class' => 'ext.MobileDetect.MobileDetect'
+                ),
+            
+            
+            
+            
            /* 'jquerymobile'=>array(
 			'class'=>'ext.jquerymobile.JQueryMobileComponent',
 			// any available in extensions/jquerymobile/themes
@@ -340,17 +350,27 @@ return array(
 
 		'widgetFactory' => array(
 			'widgets' => array(
-                                            'JTimePicker'=>array(
-                                                             'theme'=>'temita',
-                                                            'cssFile'=>dirname(__FILE__).'/themes/temita/jquery.ui.timepicker.css',
+                                      'JTimePicker'=>array(
+                                                'theme'=>'temita',
+                                                 'cssFile'=>dirname(__FILE__).'/../themes/temita/jquery.ui.timepicker.css',
                                                                 ),
-				'CCGridView' => array(
-					'cssFile'=>dirname(__FILE__).'/css/estilogrid.css',
-				),
-			),
+				
+			'CGridView' => array(
+                                        'htmlOptions' => array(
+                                                            'class' => 'table-responsive'
+                                                                ),
+                                            //'pagerCssClass' => 'dataTables_paginate paging_bootstrap',
+                                            'itemsCssClass' => 'table table-striped table-hover',
+                                            'cssFile' => false,
+                                            'summaryCssClass' => 'dataTables_info',
+                                            'summaryText' => 'Showing {start} to {end} of {count} entries',
+                                            'template' => '{items}<div class="row"><div class="col-md-5 col-sm-12">{summary}</div><div class="col-md-7 col-sm-12">{pager}</div></div><br />',
+                                            ),  
+                            
+                                    ),
 		),
 
-
+               
 
 
 		
@@ -362,7 +382,7 @@ return array(
         'charset' => 'utf8',
         ),*/
 		'db'=>array(
-			'connectionString' => 'mysql:host=localhost;dbname=redtek_crc',
+			'connectionString' => 'mysql:host=localhost;dbname=redtek_crc;port=3306',
 			'emulatePrepare' => true,
 			'username' => 'redtek_julian',
 			'password' => 'geronimo',

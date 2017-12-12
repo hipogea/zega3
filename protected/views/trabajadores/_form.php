@@ -17,7 +17,7 @@
                
 		$botones=array(
 
-			'save'=>array(
+			'floppy'=>array(
 				'type'=>'A',
 				'ruta'=>array(),
 				'visiblex'=>array('10'),
@@ -36,9 +36,46 @@
                             )
                             ),
                             'dialog' => 'cru-dialog3',
+                        
                             'frame' => 'cru-frame3',
                            'visiblex'=>array($this->isMyProfile($model->codigotra),  '10'),
 
+
+                        ),
+                    
+                    'wrench' => array(
+                            'type' => 'C',
+                            'ruta' => array($this->id . '/agregaritemsolpe', array(
+                                'idguia' => 3,
+                            )
+                            ),
+                            'dialog' => 'cru-dialogdetalle',
+                            'frame' => 'cru-detalle',
+                            'visiblex' => array(true),
+
+                        ),
+
+                        'minus' => array(
+                            'type' => 'D',
+                            'ruta' => array($this->id . '/borraitems', array()),
+
+                            'opajax' => array(
+                                'type' => 'POST',
+                                'url' => Yii::app()->createUrl($this->id . '/borraitems', array()),
+                                'success' => "function(data) {
+										$('#AjFlash').html(data).fadeIn().animate({opacity: 1.0}, 3000).fadeOut('slow');
+                                              $.fn.yiiGridView.update('detalle-grid');
+                                               $.fn.yiiGridView.update('resumenoc-grid');
+                                               return false;
+                                        }",
+                                'beforeSend' => 'js:function(){
+                                  				 var r = confirm("Esta seguro de Eliminar estos Items?");
+                          						 if(!r){return false;}
+                               							 }
+                               					',
+
+                            ),
+                            'visiblex' => array(true),
 
                         ),
 
@@ -50,10 +87,177 @@
 				//'botones'=>MiFactoria::opcionestoolbar($model->id,$this->documento,$model->codestado),
 				'botones'=>$botones,
 				'size'=>24,
+                            'font'=>true,
+                            'nameform'=>'trabajadores-form',
 				'extension'=>'png',
 				'status'=>'10',
 			)
 		);?>
+    
+    
+      <?php
+                /*if($this->estasEnsesion($model->idguia)) {
+                    $botones = array(
+                        'add' => array(
+                            'type' => 'C',
+                            'ruta' => array($this->id . '/creadetalle', array(
+                                'idcabeza' => $model->idguia,
+                                'cest' => $model->{$this->campoestado},
+                                //"id"=>$model->n_direc,
+                                "asDialog" => 1,
+                                "gridId" => 'detalle-grid',
+                            )
+                            ),
+                            'dialog' => 'cru-dialogdetalle',
+                            'frame' => 'cru-detalle',
+                            'visiblex' => array(self::ESTADO_CREADO),
+
+                        ),
+
+                        'tool' => array(
+                            'type' => 'C',
+                            'ruta' => array($this->id . '/agregaritemsolpe', array(
+                                'idguia' => $model->idguia,
+                            )
+                            ),
+                            'dialog' => 'cru-dialogdetalle',
+                            'frame' => 'cru-detalle',
+                            'visiblex' => array(self::ESTADO_CREADO),
+
+                        ),
+
+                        'minus' => array(
+                            'type' => 'D',
+                            'ruta' => array($this->id . '/borraitems', array()),
+
+                            'opajax' => array(
+                                'type' => 'POST',
+                                'url' => Yii::app()->createUrl($this->id . '/borraitems', array()),
+                                'success' => "function(data) {
+										$('#AjFlash').html(data).fadeIn().animate({opacity: 1.0}, 3000).fadeOut('slow');
+                                              $.fn.yiiGridView.update('detalle-grid');
+                                               $.fn.yiiGridView.update('resumenoc-grid');
+                                               return false;
+                                        }",
+                                'beforeSend' => 'js:function(){
+                                  				 var r = confirm("Esta seguro de Eliminar estos Items?");
+                          						 if(!r){return false;}
+                               							 }
+                               					',
+
+                            ),
+                            'visiblex' => array(self::ESTADO_CREADO, self::ESTADO_AUTORIZADO, self::ESTADO_ANULADO, self::ESTADO_CONFIRMADO, self::ESTADO_FACTURADO),
+
+                        ),
+
+
+                        'checklist' => array(
+                            'type' => 'C',
+                            'ruta' => array($this->id . '/agregardespacho', array(
+                                'id' => $model->idguia,
+                                //"id"=>$model->n_direc,
+                                "asDialog" => 1,
+                                "gridId" => 'detalle-grid',
+                            )
+                            ),
+                            'dialog' => 'cru-dialogdetalle',
+                            'frame' => 'cru-detalle',
+                            'visiblex' => array(self::ESTADO_CREADO),
+                        ),
+                        'pack2' => array(
+                            'type' => 'B',
+                            'ruta' => array($this->id . '/procesardocumento', array('id' => $model->idguia, 'ev' => 35)),
+                            'visiblex' => array(self::ESTADO_CREADO),
+
+                        ),
+
+
+                        'briefcase' => array(
+                            'type' => 'D',
+                            'ruta' => array($this->id . '/Agregardelmaletin', array()),
+                            'opajax' => array(
+                                'type' => 'GET',
+                                'data' => array('id' => $model->idguia),
+                                'url' => Yii::app()->createUrl($this->id . '/Agregardelmaletin', array()),
+                                'success' => 'js:function(data) {
+                            $("#AjFlash").html(data).fadeIn().animate({opacity: 1.0}, 3000).fadeOut("slow");
+                            $.fn.yiiGridView.update("detalle-grid"); alert(data);}',
+                                'beforeSend' => 'js:
+                               					 function(){
+                                  				 var r = confirm("¿Esta seguro de agregar los items del maletin ?");
+                          						 if(!r){return false;}
+                               							 }
+                               					',
+                            ),
+                            'visiblex' => array(self::ESTADO_CREADO, self::ESTADO_AUTORIZADO, self::ESTADO_ANULADO, self::ESTADO_CONFIRMADO, self::ESTADO_FACTURADO),
+
+                        ),
+
+
+                        'join' => array(
+                            'type' => 'C',
+                            'ruta' => array($this->id . '/agregaritemsolpe', array(
+                                'idguia' => $model->idguia,
+                                //"id"=>$model->n_direc,
+                                "asDialog" => 1,
+                                "gridId" => 'detalle-grid',
+                            )
+                            ),
+                            'dialog' => 'cru-dialogdetalle',
+                            'frame' => 'cru-detalle',
+                            'visiblex' => array(self::ESTADO_CREADO),
+
+                        ),
+
+                        'pack' => array(
+                            'type' => 'C',
+                            'ruta' => array($this->id . '/agregarmasivamente', array(
+                                'idguia' => $model->idguia,
+                                //"id"=>$model->n_direc,
+                                "asDialog" => 1,
+                                "gridId" => 'detalle-grid',
+                            )
+                            ),
+                            'dialog' => 'cru-dialogdetalle',
+                            'frame' => 'cru-detalle',
+                            'visiblex' => array(self::ESTADO_CREADO),
+
+                        ),
+
+
+                    );
+
+
+                    $this->widget('ext.toolbar.Barra',
+                        array(
+                            //'botones'=>MiFactoria::opcionestoolbar($model->id,$this->documento,$model->codestado),
+                            'botones' => $botones,
+                            'size' => 24,
+                            'extension' => 'png',
+                            'status' => $model->{$this->campoestado},
+
+
+                        )
+                    );
+                }*/
+                ?>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 	</div>
     
 	<p class="note">Campos con  <span class="required">*</span> Son obligatorios.</p>
@@ -214,8 +418,14 @@
                 //$lastName = Yii::app()->user->um->getFieldValue($user,'lastname');
                 $comboList[$user->primaryKey] = $user->username;
                     }
-    echo $form->dropDownList($model,'iduser',$comboList, array('empty'=>'--Seleccione usuario--'));
+          if(Yii::app()->user->isSuperAdmin){
+              echo $form->dropDownList($model,'iduser',$comboList, array('empty'=>'--Seleccione usuario--'));
 
+          }else{
+             echo $form->textField($model,'iduser',array('value'=>yii::app()->user->um->LoadUserbyId(Yii::app()->user->id)->userName,'disabled'=>'disabled','size'=>8,'maxlength'=>8)); 
+        
+          }
+    
 
 
         ?>

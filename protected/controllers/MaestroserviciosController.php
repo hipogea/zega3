@@ -22,7 +22,7 @@ const ESTADO_PREVIO='99';
 
 	public function __construct() {
 		parent::__construct($id='maestroservicios',Null);
-		$this->documento=CODIGO_DOC_VALE_ALMACEN;
+		$this->documento=self::CODIGO_DOC_VALE_ALMACEN;
 		$this->modelopadre='Almacendocs';
 		$this->modeloshijos=array('Alkardex'=>'Tempalkardex');
 		$this->documentohijo='460';
@@ -405,9 +405,9 @@ const ESTADO_PREVIO='99';
 	public function actionCreaConformidad()
 	{
 		$model=new Almacendocs;
-		$model->valorespordefecto(CODIGO_DOC_VALE_ALMACEN);
-		$this->Verificamov(CODIGO_MOVIMIENTO_INGRESO_ACTIVIDAD);
-		$model->codmovimiento=CODIGO_MOVIMIENTO_INGRESO_ACTIVIDAD;
+		$model->valorespordefecto(self::CODIGO_DOC_VALE_ALMACEN);
+		$this->Verificamov(self::CODIGO_MOVIMIENTO_INGRESO_ACTIVIDAD);
+		$model->codmovimiento=self::CODIGO_MOVIMIENTO_INGRESO_ACTIVIDAD;
 		$model->setEscenarioMov();
 		$model->setScenario($model->getEscenarioMov());
 		$model->codocuref=Almacenmovimientos::model()->findByPk($model->codmovimiento)->codocu;

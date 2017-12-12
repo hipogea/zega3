@@ -14,5 +14,7 @@ $this->menu=array(
 <h1> <?php echo ($model->estado=='99')?'Crear':'Actualizar';  ?> Solicitud de material 
 <?php ECHO ($model->estado=='99')?' 2 de 3':''; ?> <?php ECHO '  '.$model->numero; ?> </h1>
 
-<?php echo $this->renderPartial('_form', array('model'=>$model)); ?>
+<?php echo $this->renderPartial('_form', array('model'=>$model));
+  
+?>
 

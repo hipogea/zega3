@@ -421,7 +421,7 @@ class TrabajadoresController extends Controller
     public function actiontomafoto($id){
         
       $detalle= Trabajadores::model()->findByPk((integer)  MiFactoria::cleanInput($id));  
-      if($this->isMyProfile($detalle->cpdigotra)){
+      if($this->isMyProfile($detalle->codigotra)){
          if(!is_null($detalle)){          
                    
                 if (!empty($_GET['asDialog']))
