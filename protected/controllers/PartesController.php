@@ -5,12 +5,9 @@ class PartesController extends Controller
 		public $layout='//layouts/column2';
      
 	public function codigobarco() {
-				if (isset(Yii::app()->user->um)) { //si tiene cruge 
-				  return Yii::app()->user->getField('codep');; 
-					}
-						 else { //si tienen el modeulo user 
-							return Yii::app()->getModule('user')->user()->profile->codep;
-						} 
+           // var_dump(OperaCodep::getEp());die();
+	   return OperaCodep::getEp()['barco'];			
+            
 	 }
 	 
 	 public function verificaidentidad($codigobarco) {
@@ -68,9 +65,10 @@ class PartesController extends Controller
 	 */
 	public function actionMismateriales($codigobarco)
 	{
+            //$codigobarco=$_GET['codigobarco'];
 	  if ($this->verificaidentidad($codigobarco)) {
 	   
-	   $this->layout="";
+	   //$this->layout="";
 						$modeloguia= new VwGuia;					
 						$criteriazo=new CDbCriteria;	
 		$criteriazo->compare('distpartida',$modeloguia->distpartida,true);
@@ -88,21 +86,20 @@ class PartesController extends Controller
 		$criteriazo->compare('c_codsap',$modeloguia->c_codsap,true);
 									$criteriazo->addCondition('c_codep = :codigobarco');
 									$criteriazo->addCondition('codocu = :codocu');
-									$criteriazo->addCondition('d_fectra  > :d_fectra');
+									//$criteriazo->addCondition('d_fectra  > :d_fectra');
 									//$criteriazo->addCondition('c_rsguia =:c_rsguia');
-									$criteriazo->addCondition('c_estgui = :c_estgui'); //primero que las guias deben de star confirmmadas '02' 
-									$criteriazo->addCondition('c_estado = :c_estado'); //segundo que el detalle debe de ser '02' aceptadas no hay otra opcion 
 									$criteriazo->addCondition('c_coclig = :c_cliente'); //es para EXALMAR 
-									$criteriazo->addCondition('c_edgui = :c_barco'); ///ES USO EMBARCACION 
+									//$criteriazo->addCondition('c_edgui = :c_barco'); ///ES USO EMBARCACION 
 									//$fechita=date()-20;
 									$fecha=date("Y-m-d");
 									$fechita=date("Y-m-d", strtotime("$fecha -120 day"));  
 
-							$criteriazo->params = array(':c_barco'=>'01', ':c_cliente' => 'R00001',     ':codigobarco' => $codigobarco,':codocu'=>'001', ':d_fectra'=>" ".$fechita."",':c_estado'=>'02',':c_estgui'=>'02');					
+							$criteriazo->params = array( ':c_cliente' => '970008',     ':codigobarco' => $codigobarco,':codocu'=>'100');					
 							
 											$proveedor = new CActiveDataProvider($modeloguia, array(
 											'criteria'=>$criteriazo,
-									));	
+									));
+               // VAR_DUMP($proveedor->getData());DIE();
 		$this->render('vw_materiales',array(
 			'model'=>$modeloguia,'proveedor'=>$proveedor,
 		));

@@ -336,7 +336,7 @@ $this->render('index');
 	 */
 	public function actionError()
 	{
-		$this->layout="//layouts/iframe";
+		$this->layout="//layouts/column2";
             if($error=Yii::app()->errorHandler->error)
 		{
 			if(Yii::app()->request->isAjaxRequest)

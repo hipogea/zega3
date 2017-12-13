@@ -20,7 +20,7 @@ class Barra extends CWidget
     	$cs=Yii::app()->clientScript;
     	$cs->registerCssFile($asset."/css/barra.css");
         $cs->registerCssFile($asset."/css/fontello-codes.css");
-         $cs->registerCssFile($asset."/css/fontello.css");
+        $cs->registerCssFile($asset."/css/fontello.css");
          //$cs->registerCssFile($asset."/css/blockui.css");
 		//$cs->registerScriptFile($asset."/js/jQueryRotate.min.js");
 		$cs->registerScriptFile($asset."/js/barra.js");	

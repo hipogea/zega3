@@ -3,7 +3,7 @@
 
 <div style=" width:680px; style">
 <?php 
-$this->renderpartial("vw_ficha_general");
+//$this->renderpartial("vw_ficha_general");
 ?>
 
 <p>
@@ -16,7 +16,7 @@ $this->renderpartial("vw_ficha_general");
 	'dataProvider'=>$proveedor,
 	//'summaryText' => '',
 	//'filter'=>$model,
-	'cssFile' => ''.Yii::app()->getTheme()->baseUrl.Yii::app()->params['rutatemagrid'].'style_gridpartes.css',  // your version of css file
+	//'cssFile' => ''.Yii::app()->getTheme()->baseUrl.Yii::app()->params['rutatemagrid'].'style_gridpartes.css',  // your version of css file
 	
 	'columns'=>array(
 	    /* array(
@@ -61,7 +61,7 @@ $this->renderpartial("vw_ficha_general");
                            
 									 array(
                                     'url'=>'$this->grid->controller->createUrl("/partes/Confirmamateriales",
-																					array("id"=>$data->n_detgui,																					        
+																					array("id"=>$data->id,																					        
 																							"asDialog"=>1,
 																								"gridId"=>$this->grid->id
 																							)

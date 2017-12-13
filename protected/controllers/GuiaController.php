@@ -195,7 +195,7 @@ const CODIGO_ESTADO_DETALLE_ANULADO='40';
 		ECHO isset($_GET['ajax'])?"<BR> ES UN  GET(ajax) ":"<BR> NO  ES UN  GET(ajax)";
 		//ECHO isset($_GET['ajax'])?"<BR> ES UN  GET(ajax) ":"<BR> NO  ES UN  GET(ajax)";
 		echo ($this->estasEnSesion($id))?"<BR> ESTAS EN SESION  ":"<BR> NO NO ESTAS EN SESION ";*/
-		$this->ClearBuffer($id);
+		$this->ClearBuffer();
 
 		//  echo "Ni identidad :". $this->Id;
 		$model=new $this->modelopadre;
