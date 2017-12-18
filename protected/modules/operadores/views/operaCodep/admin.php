@@ -3,7 +3,7 @@
 /* @var $model OperaCodep */
 
 $this->breadcrumbs=array(
-	'Opera Codeps'=>array('index'),
+	'Crear'=>array('create'),
 	'Manage',
 );
 
@@ -28,30 +28,34 @@ $('.search-form form').submit(function(){
 
 <h1>Manage Opera Codeps</h1>
 
-<p>
-You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
-or <b>=</b>) at the beginning of each of your search values to specify how the comparison should be done.
-</p>
 
-<?php echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
+<?php echo CHtml::link('Filtrar','#',array('class'=>'search-button')); ?>
 <div class="search-form" style="display:none">
 <?php $this->renderPartial('_search',array(
 	'model'=>$model,
 )); ?>
 </div><!-- search-form -->
 
-<?php $this->widget('zii.widgets.grid.CGridView', array(
-	'id'=>'opera-codep-grid',
+<?php 
+
+$this->widget('ext.groupgridview.GroupGridView', array(
+     // 'id' => 'grid1',      
+      'mergeColumns' => array('codep'),
+    'id'=>'opera-codep-grid',
 	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+     'itemsCssClass'=>'table table-striped table-bordered table-hover',	
+	//'filter'=>$model,
 	'columns'=>array(
-		'codep',
-            array('name'=>'codep','value'=>'$data->embarcaciones->nomep'),
-		'codtra',
-              'trabajadores.ap',
-		'id',
+		//'codep',
+            array('name'=>'codep','value'=>'$data->embarcaciones->nomep','htmlOptions'=>array("width"=>350)),
+		array('name'=>'codtra','type'=>'html','value'=>'($data->fotoprimera()=="")?"":CHtml::link(CHtml::image($data->fotoprimera(),"#",array("class"=>"imgRedonda100")),yii::app()->createurl("/operadores/operaCodep/createDailyReport",array("codep"=>$data->codep,"codof"=>$data->codof) ))','htmlOptions'=>array("width"=>50)),
+           // 'codtra',
+            array('name'=>'codtra','value'=>'$data->trabajadores->ap."-".$data->trabajadores->am."-".$data->trabajadores->nombres','htmlOptions'=>array("width"=>500)),
+           
+             
+		//'id',
 		'finicio',
-		'codof',
+		array('name'=>'codof','type'=>'raw','value'=>'CHtml::link($data->oficios->oficio,yii::app()->createUrl("/operadores/operaCodep/update",array("id"=>$data->id)))','htmlOptions'=>array("width"=>200)),
 		array(
 			'class'=>'CButtonColumn',
 		),

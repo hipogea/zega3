@@ -260,5 +260,11 @@ class Trabajadores extends ModeloGeneral
            $comportamiento->_id=$this->codigotra; 
            $this->attachbehavior('adjuntador',$comportamiento );  
     }
-  
+  public static function getIdFromCodigo($codigo){
+     $registro= Trabajadores::model()->find("codigotra=:codigotra",array(":codigotra"=>$codigo));
+    if(is_null($registro))
+        return null;
+     return $registro->id;
+     
+  }
 }

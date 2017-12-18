@@ -61,7 +61,7 @@ class Detgui extends ModeloGeneral
 			array('docrefext', 'length', 'max'=>15), */
 			array('n_hguia,m_obs,modo,codocu,c_itguia,c_codactivo,c_um,modo,c_codgui,hidref,
 			c_um,c_itguia,n_cangui,c_descri,c_estado,c_edgui,c_codep,n_hconformidad,docref,c_af,
-			cargodevolucion,codlugar', 'safe','on'=>'buffer' ),
+			cargodevolucion,codlugar,n_idconformidad', 'safe','on'=>'buffer' ),
 		 /*
 			//array('c_codsap', 'checkplaca','on'=>'insert,update'),
 			array('c_codgui', 'checkcodigo','on'=>'insert,update'),

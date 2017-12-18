@@ -50,6 +50,7 @@ class OperaCodep extends CActiveRecord
 		return array(
 			'trabajadores' => array(self::BELONGS_TO, 'Trabajadores', 'codtra'),
 			'embarcaciones' => array(self::BELONGS_TO, 'Embarcaciones', 'codep'),
+                    'oficios' => array(self::BELONGS_TO, 'Oficios', 'codof'),
 		);
 	}
 
@@ -125,4 +126,21 @@ class OperaCodep extends CActiveRecord
                 }
             
         }
+        
+     public function agregacomportamientoarchivo($extension){
+         $comportamiento=new TomaFotosBehavior();
+        $comportamiento->_codocu='346';
+         $comportamiento->_ruta=yii::app()->settings->get('general','general_directorioimg');
+         $comportamiento->_numerofotosporcarpeta=yii::app()->settings->get('general','general_nregistrosporcarpeta')+0;
+          $comportamiento->_extensionatrabajar=$extension;
+           $comportamiento->_id=$this->codtra; 
+           $this->attachbehavior('adjuntador',$comportamiento );
+           return $this;
+    }
+    public function fotoprimera(){
+        $this->agregacomportamientoarchivo(".jpg");
+        return $this->sacaprimerafoto()['relativo'];
+    }
+      
+        
 }

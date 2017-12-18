@@ -28,17 +28,17 @@
         'jquery.ui.tooltip.css' =>  $baseUrl.'/css/jquery.ui.tooltip.css',*/
                  );
     
-	  $cs->registerCssFile($baseUrl.'/css/bootstrap-responsive.min.css');
+	 // $cs->registerCssFile($baseUrl.'/css/bootstrap-responsive.min.css');
 	 $cs->registerCssFile($baseUrl.'/css/abound.css');
-          $cs->registerCssFile($baseUrl.'/css/iconosfuentes.css'); 
-         $cs->registerCssFile($baseUrl.'/css/miestilo.css');        
+         // $cs->registerCssFile($baseUrl.'/css/iconosfuentes.css'); 
+        // $cs->registerCssFile($baseUrl.'/css/miestilo.css');        
             $cs->scriptMap=array(
                     // 'jquery-ui.css' => $baseUrl.'/css/jquery-ui.css',
-                    'styles.css' => $baseUrl.'/css/styles.css',
+                   // 'styles.css' => $baseUrl.'/css/styles.css',
                     'pager.css' => $baseUrl.'/css/pager.css',
                                  );
           
-      $cs->registerCssFile($baseUrl.'/css/bootstrap.min.css');
+      //$cs->registerCssFile($baseUrl.'/css/bootstrap.min.css');
     
     
 

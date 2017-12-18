@@ -59,6 +59,10 @@ return array(
 	
 	
 	'modules'=>array(
+            'cal' => array(
+            'debug' => true, // For first run only!
+                //'layout'=>'//layouts/celu',
+                ),
 		// uncomment the following to enable the Gii tool
           'ventas'=>array(),   
             'operadores'=>array(),
@@ -69,7 +73,7 @@ return array(
     
 		//'backup'=> array('path' => __DIR__.'/../_backup/'  ),
 		'backup'=> array('path' =>'backup/' ),
-		'ayuyyda'=>array(),
+		'ayuda'=>array(),
             'clientes'=> array(),
 		'contabilidad'=> array(
                    

@@ -13,10 +13,7 @@ class OperaCodepController extends Controller
 	 */
 	public function filters()
 	{
-		return array(
-			'accessControl', // perform access control for CRUD operations
-			'postOnly + delete', // we only allow deletion via POST request
-		);
+		return array('accessControl',array('CrugeAccessControlFilter'));
 	}
 
 	/**
@@ -26,19 +23,15 @@ class OperaCodepController extends Controller
 	 */
 	public function accessRules()
 	{
+		Yii::app()->user->loginUrl = array("/cruge/ui/login");
 		return array(
-			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
-				'users'=>array('*'),
-			),
+			
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+				'actions'=>array('createEvent',    'PickDate',   'updateMeasure','createMeasure',    'Measures',   'updateDailyReport',   'admin','create','update','createDailyReport'),
 				'users'=>array('@'),
-			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
-			),
+			), 
+			
+			
 			array('deny',  // deny all users
 				'users'=>array('*'),
 			),
@@ -134,10 +127,10 @@ class OperaCodepController extends Controller
 	public function actionAdmin()
 	{
 		$model=new OperaCodep('search');
-		$model->unsetAttributes();  // clear any default values
+               // var_dump($model->fotoprimera());die();
+               $model->unsetAttributes();  // clear any default values
 		if(isset($_GET['OperaCodep']))
-			$model->attributes=$_GET['OperaCodep'];
-
+			$model->attributes=$_GET['OperaCodep'];   
 		$this->render('admin',array(
 			'model'=>$model,
 		));
@@ -170,4 +163,277 @@ class OperaCodepController extends Controller
 			Yii::app()->end();
 		}
 	}
+        
+      
+     public function actioncreateDailyReport(){
+         $this->isOwner();
+         $this->filterfecha();
+         
+            $model=new Dailywork('parte');
+                 //$model->valorespordefecto();
+                 $model->fecha=$_GET['fecha'];
+                 //$model->codestado=$model::ESTADO_PREVIO;
+                 $model->codep=$_GET['codep'];
+                 //$model->codproyecto=ot::
+                 $turnoid= Dailywork::getIdShift();
+               //  $turnoid=1;
+                 if($turnoid <0)
+                  throw new CHttpException(500,'Registre turnos  ');
+	//var_dump($turnoid);die();
+                 $model->hidturno=$turnoid;
+                 $model->codresponsable= Trabajadores::getCodigoFromUsuario(yii::app()->user->id);
+		
+			if($model->save()){                            
+                            $model->refresh();
+                            //$this->isOwnerParte($model->id,$model->codep);                           
+                            $this->creaeventos($model->id,$model->codep);
+                            
+                             MiFactoria::Mensaje('success', 'Daily woksheet, created. Please Now, fill detail data');
+		             $this->redirect(array('updateDailyReport','id'=>$model->id));                           
+                                        }
+				
+                  $criterio=new CDbCriteria();
+                                
+                if(is_null($model->codproyecto)){
+                    $criterio->addCondition("1=1");
+                }else{
+                     $criterio->addCondition("codproyecto=:vcodproyecto");
+                      $criterio->params=array(":vcodproyecto"=>$model->codproyecto);
+                }
+		$this->render('create_parte',array(
+			'model'=>$model,
+                         'criterio'=>$criterio,
+                        		));
+     }   
+     
+     
+     public function actionupdateDailyReport($id){
+         
+         $id= MiFactoria::cleanInput($id);
+         $model=$this->loadParte($id);
+         //var_dump($model);die();
+         $this->isOwnerParte($id,$model->codep);
+         if(!($model->neventos > 0))
+         $this->creaeventos($id,$model->codep);
+         $this->render('create_parte',array(
+			'model'=>$model,
+                         //'criterio'=>$criterio,
+                        		));
+         
+     }
+     
+     private function loadParte($id){
+        $registro= Dailywork::model()->findByPk($id);
+        if(is_null($registro))
+            throw new CHttpException(404,'no existe el registro ');
+        return $registro;
+     }
+     
+     
+     public function isOwner(){
+         if(!(isset($_GET['codep']) and isset($_GET['codof'])))
+            throw new CHttpException(404,'Especifique parametros');
+	  
+         $codep= MiFactoria::cleanInput($_GET['codep']);
+         $codof= MiFactoria::cleanInput($_GET['codof']);
+         $valores=OperaCodep::getEp();
+       if(is_null($valores)){
+           throw new CHttpException(500,'NO se encuentra registrado en esta instancia ');
+		
+       }else{
+          if($valores['barco'] ==$codep and $valores['ofic']==$codof){
+              return true;
+         
+              
+          }else{
+              throw new CHttpException(500,'Intenta ingresa a una instancia que no es suya');
+	 
+          }
+       }
+          
+     }
+     
+     //crewa los evnetows minimos para el parte diario 
+     private function creaeventos($id,$codep){
+         $filas=Operamedidas::model()->findAll();
+         foreach($filas as $fila){
+            // var_dump($fila);die();
+             
+             if($fila->obligatorio=='1'){
+                 //echo "die();";die();
+                 $regevento=new Dailyevents('medida');
+                            $regevento->setAttributes(
+                                ARRAY(
+                                        'codcriticidad'=>'C',
+                                        'hidparte'=>$id,
+                                       // 'hidequipo'=>$equipo->idinventario,
+                                        'descripcion'=>$fila->descripcion,
+                                         'hidmedida'=>$fila->id,
+                                            )
+                                            );
+                             if(!$regevento->save()){print_r($regevento->geterrors());die();}
+                 //unset($regevento);
+                 continue;
+             }
+             if($fila->requireid=='1'){
+                // echo "salio ";die();
+                 //si requiere un equipo 
+                // var_dump($codep);die();
+                 $equipos= Inventario::equipmentsForShip($codep);
+                 foreach($equipos as $equipo){
+                    
+                     if($equipo->hasPoints()){ //si el equipo tiene horometros u otro punto de meidad 
+                        //echo "salio ";die();
+                         $regevento=new Dailyevents('medida');
+                            $regevento->setAttributes(
+                                ARRAY(
+                                        'codcriticidad'=>'C',
+                                        'hidparte'=>$id,
+                                        'hidequipo'=>$equipo->idinventario,
+                                        'descripcion'=>$fila->descripcion,
+                                         'hidmedida'=>$fila->id,
+                                            )
+                                            );
+                             $regevento->save();
+                     }
+                     
+                 }
+             }
+             
+         }
+         
+     }
+     
+     
+     private function isOwnerParte($id,$codep){
+         $valores= OperaCodep::getEp();
+          if(is_null($valores)){
+           throw new CHttpException(500,'NO se encuentra registrado en esta instancia ');
+		
+       }else{
+           //var_dump($valores['barco']);var_dump($codep);die();
+          if($valores['barco'] ==$codep ){
+             $parte=$this->loadParte($id);
+             
+              if($parte->codep==$valores['barco']){
+                  
+              }else{
+                 throw new CHttpException(500,'Intenta modificar un parte de otra instancia ');
+	  
+              }
+         
+              
+          }else{
+              throw new CHttpException(500,'Intenta ingresa a una instancia que no es suya');
+	 
+          }
+       }
+     }
+     
+     
+    public function actionMeasures(){
+       $model=new Operamedidas ('search');
+               // var_dump($model->fotoprimera());die();
+               $model->unsetAttributes();  // clear any default values
+		if(isset($_GET['Operamedidas']))
+			$model->attributes=$_GET['Operamedidas'];   
+		$this->render('admin_medidas',array(
+			'model'=>$model,
+		));
+    } 
+     
+     public function actioncreateMeasure(){
+       $model=new Operamedidas ('insert');
+               // var_dump($model->fotoprimera());die();
+               //$model->unsetAttributes();  // clear any default values
+		if(isset($_POST['Operamedidas'])){
+                    $model->attributes=$_POST['Operamedidas']; 
+                    $model->save();
+                    MiFactoria::Mensaje('success', 'Se creo la medida');
+                    $this->redirect(array('measures'));
+                }
+			  
+		$this->render('_form_medidas',array(
+			'model'=>$model,
+		));
+    }
+    public function actionupdateMeasure($id){
+       $model= Operamedidas::model()->findByPk($id);
+       if(is_null($model))
+         throw new CHttpException(500,'No existe esta medida');
+	    
+               // var_dump($model->fotoprimera());die();
+               //$model->unsetAttributes();  // clear any default values
+		if(isset($_POST['Operamedidas'])){
+                    $model->attributes=$_POST['Operamedidas']; 
+                    $model->save();
+                    MiFactoria::Mensaje('success', 'Se Modifico la medida');
+                    $this->redirect(array('measures'));
+                }
+			  
+		$this->render('_form_medidas',array(
+			'model'=>$model,
+		));
+    }
+    
+    public function actionPickDate(){
+        $valores= OperaCodep::getEp();
+        if($valores){
+            $this->render('calendario',array('barco'=>$valores['barco'],'oficio'=>$valores['ofic']));
+        }else{
+            throw new CHttpException(500,'Intenta ingresa a una instancia que no es suya');
+	  
+        }
+        
+    }
+    private function filterfecha(){
+        if(isset($_GET['fecha'])){
+            $fecha=$_GET['fecha'];
+           if(!preg_match ('/[0-3]{1}[0-9]{1}\-[0-1]{1}[0-9]{1}\-[1-2]{1}[0|9]{1}[0-9]{2}$/', $fecha))
+            if(!preg_match ('/[1-2]{1}[0|9]{1}[0-9]{2}\-[0-1]{1}[0-9]{1}\-[0-3]{1}[0-9]{1}$/',$fecha))
+                   throw new CHttpException(500,'El formato de fecha no es valido');      
+        }
+    }
+    private function isMotorista(){
+        $valores= OperaCodep::getEp();
+          if($valores===false){
+              
+          }else{
+              return $valores;
+          }
+           	
+    }
+    
+  public function actionCreateEvent(){
+       $id=$_GET['id'];
+       $padre=$this->loadParte($id);
+       //$padre=Dailywork::model()->findByPk(MiFactoria::cleanInput($id));
+              // $cata= Dailywork::model()->findByPk(MiFactoria::cleanInput($id));
+          $cata=New Dailyevents('parte'); 
+         
+               if(isset($_POST[get_class($cata)])){
+                   $cata->attributes=$_POST[get_class($cata)];
+			if($cata->save()){
+                          echo CHtml::script("window.parent.$('#cru-dialog4').dialog('close');
+									window.parent.$('#cru-frame4').attr('src','');
+									window.parent.$.fn.yiiGridView.update('cuentas-grid');
+					");
+					Yii::app()->user->setFlash('success', " Se grabaron los datos  ");
+					yii::app()->end();  
+                        }else{
+                            echo yii::app()->mensajes->getErroresItem($cata->geterrors());
+                        
+                            die();
+                        }
+                            	
+                            
+			
+               }
+               if(isset($_GET['asDialog']))
+               $this->layout = '//layouts/iframe';
+               $this->render('_form_evento',array(
+                   'idpadre'=>$padre->id,'codep'=>$padre->codep,
+                'model'=>$cata      ));
+             
+  }
 }

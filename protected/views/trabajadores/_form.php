@@ -39,7 +39,7 @@
                         
                             'frame' => 'cru-frame3',
                            'visiblex'=>array($this->isMyProfile($model->codigotra),  '10'),
-
+//'visiblex'=>array('10'),
 
                         ),
                     

@@ -32,9 +32,17 @@ class Dailyevents extends ModeloGeneral
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-                    array('hidet,hinicio,hfinal,tipmanoobra,codresponsable,tiempopasado,descripcion,abierto', 'safe', 'on'=>'insert,update'),
+                array('valor,hidequipo,hidmedida,hinicio,hfinal,tipmanoobra,codresponsable,tiempopasado,descripcion,abierto', 'safe', 'on'=>'incidencia,medida'),
+		array('hidparte,codcriticidad,descripcion,hidmedida', 'required', 'on'=>'medida'),
+                array('hidparte,hinicio, hfinal,codcriticidad,descripcion,codocu,fechahora', 'required', 'on'=>'evento'),
+                      
+		
+                    
+                    
+                    
+                    array('hidet,valor,hinicio,hfinal,tipmanoobra,codresponsable,tiempopasado,descripcion,abierto', 'safe', 'on'=>'insert,update'),
 			 array('hidet,hinicio,hfinal,tipmanoobra,codresponsable,descripcion', 'required', 'on'=>'insert,update'),
-		array('codresponsable','exist','allowEmpty' => false, 'attributeName' => 'codigotra', 'className' => 'Trabajadores','message'=>yii::t('errvalid','This value doesn\'t exists')),
+		array('codresponsable','exist','allowEmpty' => false, 'attributeName' => 'codigotra', 'className' => 'Trabajadores','message'=>yii::t('errvalid','This value doesn\'t exists'),'on'=>'insert,update'),
 		                    array('hfinal', 'checkhoras', 'on'=>'insert,update'),
 		    array('hidet, fechahora', 'length', 'max'=>20),
 			array('codcriticidad', 'length', 'max'=>2),
@@ -42,8 +50,9 @@ class Dailyevents extends ModeloGeneral
 			array('detalle', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, hidet, codcriticidad, fechahora, descripcion, detalle', 'safe', 'on'=>'search'),
-		);
+			array('id, hidet, codcriticidad, fechahora, descripcion, detalle,valor', 'safe', 'on'=>'search'),
+		  array('id,valor','safe','on'=>'search_por_parte'),
+                    );
 	}
 
 	/**
@@ -118,6 +127,7 @@ class Dailyevents extends ModeloGeneral
 	}
         
         public function beforesave(){
+            if(!empty($this->hinicio) and !empty($this->hfinal))
             $this->tiempopasado=yii::app()->periodo->diferenciahoras($this->hinicio,$this->hfinal,true);
             
             return parent::beforeSave();
@@ -125,7 +135,7 @@ class Dailyevents extends ModeloGeneral
         
           public function aftersave(){
             //$this->tiempopasado=yii::app()->periodo->diferenciahoras($this->hinicio,$this->hfinal,true);
-            
+            if(!is_null($this->dailydet))
              $this->dailydet->save();
             return parent::afterSave();
             }   
@@ -275,6 +285,21 @@ class Dailyevents extends ModeloGeneral
 		));
 	}
         
+        
+        public function search_por_parte($id)
+	{
+		// @todo Please modify the following code to remove attributes that should not be searched.
+
+		$criteria=new CDbCriteria;
+		
+		$criteria->addCondition("hidparte=:vhidet");
+                $criteria->params=array(":vhidet"=>$id);
+
+		return new CActiveDataProvider($this, array(
+			'criteria'=>$criteria,
+		));
+	}
+        
         private function fechamin($fecha){
            return strtotime($fecha)+(strtotime($this->hinicio)-strtotime(date('Y-m-d')));
            // $horafin=strtotime($fecha)+(strtotime($this->hfinal)-strtotime(date('Y-m-d')));
@@ -286,5 +311,22 @@ class Dailyevents extends ModeloGeneral
            return  strtotime($fecha)+(strtotime($this->hfinal)-strtotime(date('Y-m-d')));
                         
         }
-           
+   
+public function getEquipment(){
+    if(!$this->isNewRecord){
+         $trno= yii::app()->db->createCommand()-> 
+           select("descripcion,marca,modelo")->from('{{inventario}} a')->
+      where("idinventario=:vhid",array(":vhid"=>$this->hidequipo))->queryAll();
+    if(count($trno)>0){
+        return $trno[0]['descripcion'].'-'.$trno[0]['marca'].'-'.$trno[0]['modelo'];
+    }
+    }else{
+        return '';
+    }
+}
+   
+
+
+        
+
 }

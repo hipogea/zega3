@@ -399,6 +399,8 @@ $mo=New Alinventario();
 
 public $layout='//layouts/column2';
 	public function actionPio() {
+            var_dump(Inventario::getPicturesFromAssets('100'));die();
+            
             var_dump(Adjuntos::findByDocu('346',7001));die();
             var_dump(Yii::app()->user->checkAccess('action_dailywork_popucho'));die();
             var_dump(Yii::app()->authManager->getAuthItems(null, 9)['Demo']);

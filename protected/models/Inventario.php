@@ -870,4 +870,22 @@ public static function canttransporte(){
   public function hasPoints(){
       return($this->nhorometros >0 )?true:false;
   }
+  
+  public static function equipmentsForShip($codep){
+     return  self::model()->findAll("codep=:codep",array(":codep"=>$codep));
+  }
+  
+  //CEVUEKLVE UNA MATRIZ FE LAS PRIMERAS GOTOS DE UNA CTIVO 
+public static function getPicturesFromAssets($codep){
+    $fotos=array();
+    if(!empty($codep)){
+        $equipos=self::equipmentsForShip($codep);
+        foreach($equipos as $equipo){
+            $equipo->agregacomportamientoarchivo('.jpg');
+            $fotos[]=$equipo->sacaprimerafoto()['relativo'];
+        }
+    }
+    return $fotos;
+    
+}
 }

@@ -1,4 +1,4 @@
-<div class="form">
+
 <div class="division">
 	<div class="wide form">
 <?php $form=$this->beginWidget('CActiveForm', array(

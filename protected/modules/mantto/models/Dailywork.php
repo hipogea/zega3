@@ -50,8 +50,13 @@ class Dailywork extends ModeloGeneral implements IDocumentsDaily
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('codresponsable, fecha,  hidturno,codproyecto', 'required'),
-			array('numero,codresponsable,mes,anno,dia,semana, fecha,   codproyecto','safe', 'on'=>'insert,update'),
+                       // array('codresponsable, fecha, codproyecto', 'required', 'on'=>'parte'),
+			//array('numero,codresponsable,mes,anno,dia,semana, fecha,   codproyecto','safe', 'on'=>'insert,update'),
+                    array('codresponsable, fecha,  hidturno,codep', 'required', 'on'=>'parte'),
+                    
+                    
+			array('codresponsable, fecha,  hidturno,codproyecto', 'required', 'on'=>'insert,update'),
+			array('numero,codresponsable,mes,anno,dia,semana, fecha,hidturno,codproyecto','safe', 'on'=>'insert,update,parte'),
                     array('codresponsable', 'length', 'max'=>6),
 			array('fecha', 'length', 'max'=>10),
 			array('codturno, codocu', 'length', 'max'=>3),
@@ -85,7 +90,8 @@ class Dailywork extends ModeloGeneral implements IDocumentsDaily
                     'avgutil' => array(self::STAT, 'Dailydet', 'hidparte','select'=>"avg(t.util)"),
                     'avgdispo' => array(self::STAT, 'Dailydet', 'hidparte','select'=>"avg(t.dispo)"),
 			'nparadastotales'=> array(self::STAT, 'Dailydet', 'hidparte','select'=>"sum(t.ntt)"),
-			
+			///para el caso de eventos hijos directos "partes deoperatividad"
+                     'neventos'=>array(self::STAT, 'Dailyevents', 'hidparte'),
                     );
 	}
 
@@ -485,4 +491,16 @@ public function initFields() {
         //asi no tuviera segundo horometro el equipo se conserva el orden y el tamaño del array
         );
 }
+
+//saca el id de un turno cualquiera para evadir los
+//eroroes de la clave foranea
+public static function getIdShift(){
+    $trno= yii::app()->db->createCommand()-> 
+           select("id")->from('{{regimen}} a')
+      ->queryScalar();
+    if($trno!=false)return $trno;
+    return -1;
+}
+
+
 }
