@@ -11,7 +11,32 @@
 			'action'=>Yii::app()->createUrl($this->route),
 			'method'=>'get',
 		)); ?>
+<div class="row">
+		<?php
+		$botones=array(
+			'search'=>array(
+				'type'=>'A',
+				'ruta'=>array(),
+				'visiblex'=>array('10'),
+			),
+			'clear'=>array(
+				'type'=>'E',
+				'ruta'=>array(),
+				'visiblex'=>array('10'),
+			),
+		);
+		$this->widget('ext.toolbar.Barra',
+			array(
+				//'botones'=>MiFactoria::opcionestoolbar($model->id,$this->documento,$model->codestado),
+				'botones'=>$botones,
+				'size'=>24,
+				'extension'=>'png',
+				'status'=>'10',
 
+			)
+		); ?>
+
+	</div>
 		<div class="panelizquierdo">
 
 		<div style="float: left; ">
@@ -34,9 +59,9 @@
 	<div class="row">
 		<?php echo $form->label($model,'c_salida'); ?>
 		
-		
-		<?php echo $form->checkBox($model,'c_salida', ARRAY('checked'=>'checked'));?>
-		
+		<?php  $datos = ARRAY('1'=>'Salida','0'=>'Ingreso');
+					echo $form->DropDownList($model,'c_salida',$datos, array('empty'=>'--Modo --')  )
+					?>
 	</div>
 	
 	<div class="row">
@@ -116,8 +141,8 @@
 					<?php  
                                         $existefiltro=ISSET($_SESSION['sesion_Clipro']);
                                           if($existefiltro){
-                                              $datosm = CHtml::listData(ObjetosCliente::model()->findAll($criterio),'codobjeto','nombreobjeto');
-					
+                                             // $datosm = CHtml::listData(ObjetosCliente::model()->findAll($criterio),'codobjeto','nombreobjeto');
+					  $datosm=ARRAY();
                                           }else{
                                               $datosm=array();
                                           }
@@ -258,9 +283,7 @@
 	</div>
 
 		</div>
-	<div class="row buttons">
-		<?php echo CHtml::submitButton('Buscar'); ?>
-	</div>
+	
 
 <?php $this->endWidget(); ?>
 	</div>

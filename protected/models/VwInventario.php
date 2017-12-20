@@ -1,7 +1,7 @@
 <?php
 
 
-class VwInventario extends CActiveRecord
+class VwInventario extends ModeloGeneral
 {
 	/**
 	 * Returns the static model of the specified AR class.
@@ -12,7 +12,8 @@ class VwInventario extends CActiveRecord
 	{
 		return parent::model($className);
 	}
-
+    public $imagen;
+    public $imagen2;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -66,7 +67,7 @@ class VwInventario extends CActiveRecord
 			array('idinventario, comentario, fecha, codorden', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('rocoto, coddocu, posicion, codlugar, codep, idinventario, codigo, c_estado, modificadopor, modificadoel, codigosap, codigoaf, descripcion, marca, modelo, comentario, fecha, serie, clasefoto, codigopadre, adicional, numerodocumento, codorden, codeporiginal, codepanterior, baja, tipo, desdocu, nomep, nombreepanterior, nombreeporiginal, deslugar, nomcen, despro', 'safe', 'on'=>'search'),
+			array('rocoto,c_direc, coddocu, posicion, codlugar, codep, idinventario, codigo, c_estado, modificadopor, modificadoel, codigosap, codigoaf, descripcion, marca, modelo, comentario, fecha, serie, clasefoto, codigopadre, adicional, numerodocumento, codorden, codeporiginal, codepanterior, baja, tipo, desdocu, nomep, nombreepanterior, nombreeporiginal, deslugar, nomcen, despro', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -141,7 +142,7 @@ class VwInventario extends CActiveRecord
 		$criteria->compare('codlugar',$this->codlugar,true);
 		$criteria->compare('codep',$this->codep,true);
 		$criteria->compare('idinventario',$this->idinventario,true);
-		$criteria->compare('codigoaf',$this->codigoaf,true);
+		//$criteria->compare('codigoaf',$this->codigoaf,true);
 		$criteria->compare('c_estado',$this->c_estado,true);
 		$criteria->compare('codigosap',$this->codigosap,true);
 		$criteria->compare('codigoaf',$this->codigoaf,true);
@@ -165,8 +166,20 @@ class VwInventario extends CActiveRecord
 		$criteria->compare('nombreepanterior',$this->nombreepanterior,true);
 		$criteria->compare('nombreeporiginal',$this->nombreeporiginal,true);
 		$criteria->compare('deslugar',$this->deslugar,true);
-		$criteria->compare('nomcen',$this->nomcen,true);
-		
+		$criteria->compare('despro',$this->despro,true);
+		$criteria->compare('c_direc',$this->c_direc,true);
+                
+                if(isset($_SESSION['sesion_Clipro'])) {
+			$criteria->addInCondition('codpro', $_SESSION['sesion_Clipro'], 'AND');
+		} ELSE {
+			$criteria->compare('codpro',$this->codpro,true);
+		}
+                
+                if(isset($_SESSION['sesion_Inventario'])) {
+			$criteria->addInCondition('codigoaf', $_SESSION['sesion_Inventario'], 'AND');
+		} ELSE {
+			$criteria->compare('codigoaf',$this->codigoaf,true);
+		}
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -185,4 +198,20 @@ class VwInventario extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+        
+        public function fotoprimera(){
+        $this->agregacomportamientoarchivo(".jpg");
+        return $this->sacaprimerafoto();
+       }
+       
+       public function agregacomportamientoarchivo($extension){
+         $comportamiento=new TomaFotosBehavior();
+        $comportamiento->_codocu='390';
+         $comportamiento->_ruta=yii::app()->settings->get('general','general_directorioimg');
+         $comportamiento->_numerofotosporcarpeta=yii::app()->settings->get('general','general_nregistrosporcarpeta')+0;
+          $comportamiento->_extensionatrabajar=$extension;
+           $comportamiento->_id=$this->idinventario; 
+           $this->attachbehavior('adjuntador',$comportamiento );  
+    }
+    
 }

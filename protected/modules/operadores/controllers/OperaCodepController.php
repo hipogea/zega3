@@ -27,7 +27,7 @@ class OperaCodepController extends Controller
 		return array(
 			
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('createEvent',    'PickDate',   'updateMeasure','createMeasure',    'Measures',   'updateDailyReport',   'admin','create','update','createDailyReport'),
+				'actions'=>array('MyConsole',    'createEvent',    'PickDate',   'updateMeasure','createMeasure',    'Measures',   'updateDailyReport',   'admin','create','update','createDailyReport'),
 				'users'=>array('@'),
 			), 
 			
@@ -436,4 +436,12 @@ class OperaCodepController extends Controller
                 'model'=>$cata      ));
              
   }
+  
+  //Panel de control del motorista 
+  public function actionMyConsole(){
+     $this->render('consola'); 
+  }
+  
+  
+  
 }

@@ -13,7 +13,6 @@ $this->menu=array(
 );
 ?>
 <div>
-<h1><?php echo CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params['rutatemaimagenes'].'caja.png',"hola",array('width'=>'50','height'=>'50')); ?>Recepcion</h1>
 
 </div>
 <?php echo $this->renderPartial('_form', array('model'=>$model)); ?>

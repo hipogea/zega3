@@ -11,14 +11,14 @@
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'lugares-grid',
 	'dataProvider'=>$model->search(),
-	'cssFile' => Yii::app()->getTheme()->baseUrl.'/css/grilla_naranja.css',
+	//'cssFile' => Yii::app()->getTheme()->baseUrl.'/css/grilla_naranja.css',
 
 	'filter'=>$model,
 	'columns'=>array(
 						array(
 									'class'=>'CCheckBoxColumn',
 									'selectableRows' => 1,
-									'value'=>'$data->id."_".$data->descripcion',
+									'value'=>'$data->codigo."_".$data->descripcion',
 									'checkBoxHtmlOptions' => array(                
 																'name' => 'checkselected[]',
 																	),

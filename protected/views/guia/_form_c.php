@@ -107,10 +107,11 @@
 	
 	<div class="row">
 				<?php echo $form->labelEx($model,'modo'); ?>
-				<?php echo $model->getScenario(); ?>
+				<?php //echo $model->getScenario(); ?>
 					<?php
 							//$opciones=array();
-							if( $esembaracable=$model->guia->direccionesllegada->esembarque=='1'){
+                                                            
+							if( $esembaracable=Guia::model()->findbypk($idcabeza)->direccionesllegada->esembarque=='1'){
 							      $opciones=array('1'=>'Retorno','2'=>'Embarque','3'=>'Definitivo');
 
 							} else {

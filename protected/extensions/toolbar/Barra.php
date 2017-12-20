@@ -7,8 +7,11 @@ class Barra extends CWidget
 	// O ENLACE  			array['print'=>array( '/recurso/', array('id'=>23))  ]   SE DEBE DE ESPECIFICAR LE ENELACE CON UN ARRAY
 	public $size; ///pixeles para el tamaño de los botones
 	public $ruta;
+        public $style='style';
 	public $extension;
 	public $status;	
+        
+        public $vertical=false;
         public $_idcache;
         public $nameform;
         public $contador=null;
@@ -29,7 +32,12 @@ class Barra extends CWidget
                 return parent::init();
 	}
 	private function iniciamarco(){
-		echo "<DIV CLASS='marco' >";
+                 if($this->vertical){
+                     echo "<DIV CLASS='marcovertical' >";
+                 }else{
+                    echo "<DIV CLASS='marco' >"; 
+                 }
+		
 	}
 	private function cierradiv(){
 		echo "</div>";
@@ -69,7 +77,7 @@ class Barra extends CWidget
 
 					case "A": //Se trata de un boton simple POST
 						echo CHtml::link ( 
-                                                        CHtml::openTag("span",array("class"=>"barra-style  icon-".$clave)).CHtml::closeTag("span")
+                                                        CHtml::openTag("span",array("class"=>"barra-".$this->style."  icon-".$clave)).CHtml::closeTag("span")
                                                         ,
 							"#",
                                                         array('onclick' => "$(\":submit\").click();")
@@ -77,14 +85,14 @@ class Barra extends CWidget
 						break;
 					case "B":
 						echo CHtml::link ( 
-                                                        CHtml::openTag("span",array("class"=>"barra-style  icon-".$clave)).CHtml::closeTag("span")
+                                                        CHtml::openTag("span",array("class"=>"barra-".$this->style."  icon-".$clave)).CHtml::closeTag("span")
                                                         ,
 							$rutaapunta
 						);
 						break;
 					case "C":
 						echo CHtml::link ( 
-                                                CHtml::openTag("span",array("class"=>"barra-style  icon-".$clave)).CHtml::closeTag("span")
+                                                CHtml::openTag("span",array("class"=>"barra-".$this->style."  icon-".$clave)).CHtml::closeTag("span")
                                                         , '#' ,
 							array ( 'onclick' => " $('#" . $arreglo[ "frame" ] . "').attr('src','" . $rutaapunta . "');$('#" . $arreglo[ "dialog" ] . "').dialog('open');" )
 
@@ -93,7 +101,7 @@ class Barra extends CWidget
 
 					case "D":
 						echo CHtml::AjaxLink ( 
-                                                CHtml::openTag("span",array("class"=>"barra-style  icon-".$clave)).CHtml::closeTag("span")
+                                                CHtml::openTag("span",array("class"=>"barra-".$this->style."   icon-".$clave)).CHtml::closeTag("span")
                                                 
                                                         , $rutaapunta ,
 							$arreglo[ "opajax" ]
@@ -102,7 +110,7 @@ class Barra extends CWidget
 
 					case "E":
 						echo CHtml::link (
-                                                       CHtml::openTag("span",array("class"=>"barra-style  icon-".$clave)).CHtml::closeTag("span")
+                                                       CHtml::openTag("span",array("class"=>"barra".$this->style."   icon-".$clave)).CHtml::closeTag("span")
                                                  , '#' ,
 							//array ( 'onclick' => " $(this).closest('form').find('input[type=text], input[type=select],textarea').val('');" )
                                                           array ( 'onclick' => " $(this).closest('form')[0].reset();" ) 
@@ -110,7 +118,7 @@ class Barra extends CWidget
 						);
 						break;
 					case "F":
-						echo CHtml::link ( CHtml::openTag("span",array("class"=>"barra-style icon-".$clave)).CHtml::closeTag("span")
+						echo CHtml::link ( CHtml::openTag("span",array("class"=>"barra".$this->style."  icon-".$clave)).CHtml::closeTag("span")
                                                 ,
 							yii::app()->request->url
 						);
@@ -122,6 +130,12 @@ class Barra extends CWidget
                                    echo CHtml::openTag ("div",array("class"=>"absolute")).$arreglo[ "contador" ].CHtml::closeTag ("div"); //"<div style='position:relative;'>";
                                    $this->cierradiv();
                                  }
+                                 
+                                 //Si debe de poner labels 
+                                if(isset($arreglo[ "label" ])){
+                                    echo CHtml::openTag ("div",array("class"=>"barralabel")).$arreglo[ "label" ].CHtml::closeTag ("div"); //"<div style='position:relative;'>";
+                                   //$this->cierradiv();
+                                }                                 
 				
 				$this->cierradiv ();
 				

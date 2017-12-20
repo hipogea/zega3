@@ -89,13 +89,21 @@ CONST ESTADO_CONFIRMADA='20';
 	}
 
 	public static function hayactivoentransporte($codigoaf,$id=null){
+             
+                $barco=yii::app()->db->createCommand()->select('numerodocumento')
+                        ->from('{{inventario}}')->where("rocoto='1' and codigoaf=:vcodigoaf",array(":vcodigoaf"=>$codigoaf))
+                        ->limit(1)->queryScalar();
+                if($barco!=false){
+                    return $barco;
+                }else{
+                    return null;
+                }
 		//$registro=self::model()->find("c_codactivo=:vcodactivo and c_estgui=:vestado AND ",array(":vcodactivo"=>$codigoaf,":vestado"=>ESTADO_GUIA_APROBADA));
-	$criteria=New CDBCriteria();
+	/*$criteria=New CDBCriteria();
 		
 		if(!is_null($id))
 		{
-                        $criteria->addCondition("c_codactivo=:vcodactivo  and n_hguia <> :id ");
-			//$criteria->addCondition(" n_hguia <> :id ");
+                        $criteria->addCondition("c_codactivo=:vcodactivo and c_salida='1'  and n_hguia <> :id ");
 			$criteria->params=array(":vcodactivo"=>$codigoaf,":id"=>$id);
                         $criteria->addInCondition( "c_estgui",array(self::ESTADO_CONFIRMADA,self::ESTADO_CONFIRMADA));
 
@@ -111,7 +119,7 @@ CONST ESTADO_CONFIRMADA='20';
 			return $registro->c_numgui."   -   ".$registro->c_itguia;
 		} else {
 			return null;
-		}
+		}*/
 
 	}
 
@@ -208,7 +216,7 @@ CONST ESTADO_CONFIRMADA='20';
 		
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('ptopartida',$this->ptopartida,true);
+		/*$criteria->compare('ptopartida',$this->ptopartida,true);
 		$criteria->compare('distpartida',$this->distpartida,true);
 		$criteria->compare('provpartida',$this->provpartida,true);
 		$criteria->compare('dptopartida',$this->dptopartida,true);
@@ -218,28 +226,28 @@ CONST ESTADO_CONFIRMADA='20';
 		$criteria->compare('dptollegada',$this->dptollegada,true);
 		$criteria->compare('direccionformaldes',$this->direccionformaldes,true);
 		$criteria->compare('direcciontransportista',$this->direcciontransportista,true);
-		$criteria->compare('c_numgui',$this->c_numgui,true);
+		*/$criteria->compare('c_numgui',$this->c_numgui,true);
 		$criteria->compare('c_coclig',$this->c_coclig,true);
-		$criteria->compare('d_fecgui',$this->d_fecgui,true);
+		//$criteria->compare('d_fecgui',$this->d_fecgui,true);
 		$criteria->compare('c_estgui',$this->c_estgui,true);
 		$criteria->compare('c_rsguia',$this->c_rsguia,true);
 		$criteria->compare('c_codtra',$this->c_codtra,true);
-		$criteria->compare('c_trans',$this->c_trans,true);
-		$criteria->compare('c_motivo',$this->c_motivo,true);
-		$criteria->compare('c_placa',$this->c_placa,true);
+		//$criteria->compare('c_trans',$this->c_trans,true);
+		//$criteria->compare('c_motivo',$this->c_motivo,true);
+		//$criteria->compare('c_placa',$this->c_placa,true);
 		$criteria->compare('c_licon',$this->c_licon,true);
 	//	$criteria->compare('d_fectra',$this->d_fectra,true);
 		//$criteria->compare('c_descri',$this->c_descri,true);
 
 		$criteria->compare('n_guia',$this->n_guia,true);
-		$criteria->compare('c_texto',$this->c_texto,true);
-		$criteria->compare('c_dirsoc',$this->c_dirsoc,true);
+		//$criteria->compare('c_texto',$this->c_texto,true);
+		//$criteria->compare('c_dirsoc',$this->c_dirsoc,true);
 		$criteria->compare('c_serie',$this->c_serie,true);
 		//$criteria->compare('c_salida',$this->c_salida,true);
 		$criteria->compare('razondestinatario',$this->razondestinatario,true);
 		$criteria->compare('rucdestinatario',$this->rucdestinatario,true);
-		$criteria->compare('ructrans',$this->ructrans,true);
-		$criteria->compare('razontransportista',$this->razontransportista,true);
+		//$criteria->compare('ructrans',$this->ructrans,true);
+		//$criteria->compare('razontransportista',$this->razontransportista,true);
 		$criteria->compare('c_estado',$this->c_estado,true);
 		$criteria->compare('n_direc',$this->n_direc);
 		$criteria->compare('n_direcformaldes',$this->n_direcformaldes);
@@ -249,7 +257,7 @@ CONST ESTADO_CONFIRMADA='20';
 
 
 
-		$criteria->compare('rucsoc',$this->rucsoc,true);
+		//$criteria->compare('rucsoc',$this->rucsoc,true);
 		$criteria->compare('estado',$this->estado,true);
 		$criteria->compare('n_hguia',$this->n_hguia,true);
 		$criteria->compare('c_itguia',$this->c_itguia,true);
@@ -257,7 +265,7 @@ CONST ESTADO_CONFIRMADA='20';
 		$criteria->compare('c_codgui',$this->c_codgui,true);
 		$criteria->compare('c_edgui',$this->c_edgui,true);
 		$criteria->compare('c_descri',$this->c_descri,true);
-		$criteria->compare('m_obs',$this->m_obs,true);
+		//$criteria->compare('m_obs',$this->m_obs,true);
 		$criteria->compare('c_codactivo',$this->c_codactivo,true);
 		$criteria->compare('c_um',$this->c_um,true);
 		$criteria->compare('c_codep',$this->c_codep,true);

@@ -78,7 +78,7 @@
 
 		<div class="row">
 		<?php echo $form->label($model,'descripcion'); ?>
-		<?php echo $form->textField($model,'descripcion',array('size'=>40,'maxlength'=>40)); ?>
+		<?php echo $form->textField($model,'descripcion',array('size'=>25,'maxlength'=>25)); ?>
 		</div>
          
 	
@@ -98,27 +98,22 @@
 
 			<div class="row">
 		<?php echo $form->label($model,'idinventario'); ?>
-		<?php
+                            <?php
 				$this->widget('ext.matchcode1.Seleccionavarios',array(		
-												'nombrecampo'=>'idinventario',												
-												//'ordencampo'=>1,
-												'controlador'=>'Inventario',
-												'relaciones'=>$model->relations(),
-												'tamano'=>4,
-												'model'=>$model,
-												'nombremodelo'=>'Inventario',
-												'form'=>$form,
-												'nombredialogo'=>'cru-dialog3',
-												'nombreframe'=>'cru-frame3',
-												//'nombrearea'=>'fehdfj',
-													)
-													
-								);  
-
-						
-			   ?>
-		
-	   </div>
+							'nombrecampo'=>'idinventario',												
+						//'ordencampo'=>1,
+							'controlador'=>'Inventario',
+						'relaciones'=>$model->relations(),
+						'tamano'=>4,
+						'model'=>$model,
+						'nombremodelo'=>'Inventario',
+						'form'=>$form,
+						'nombredialogo'=>'cru-dialog3',
+						'nombreframe'=>'cru-frame3',
+						//'nombrearea'=>'fehdfj',
+						));  
+			   ?>		
+	                     </div>
 
 		
 		<div class="row">
@@ -129,9 +124,22 @@
 
 	   <div class="row">
 		<?php echo $form->label($model,'codigoaf'); ?>
-		
-		<?php echo $form->textField($model,'codigoaf',array('size'=>30,'maxlength'=>14)); ?>
-	 </div>
+                            <?php
+				$this->widget('ext.matchcode1.Seleccionavarios',array(		
+							'nombrecampo'=>'codigoaf',												
+						//'ordencampo'=>1,
+							'controlador'=>'VwInventario',
+						'relaciones'=>$model->relations(),
+						'tamano'=>4,
+						'model'=>$model,
+						'nombremodelo'=>'Inventario',
+						'form'=>$form,
+						'nombredialogo'=>'cru-dialog3',
+						'nombreframe'=>'cru-frame3',
+						//'nombrearea'=>'fehdfj',
+						));  
+			   ?>		
+	                     </div>
 	 
          <div class="row">
 		<?php //echo $form->label($model,'rocoto'); ?>
@@ -167,8 +175,8 @@
 
 	
 	<div class="row">
-			<?php echo $form->label($model,'lugares_lugar'); ?>
-			<?php echo $form->textField($model,'lugares_lugar',array('size'=>25,'maxlength'=>40)); ?>
+			<?php echo $form->label($model,'deslugar'); ?>
+			<?php echo $form->textField($model,'deslugar',array('size'=>25,'maxlength'=>40)); ?>
 	</div>
 	
 	<div class="row">
@@ -177,7 +185,26 @@
 					echo $form->DropDownList($model,'codlugar',$datos, array('empty'=>'--Seleccione un lugar --')  );
 						?>					
 	</div>
-	
+	 <div class="row">
+		<?php echo $form->label($model,'codpro'); ?>
+                            <?php
+				$this->widget('ext.matchcode1.Seleccionavarios',array(		
+							'nombrecampo'=>'codpro',												
+						//'ordencampo'=>1,
+							'controlador'=>'VwInventario',
+						'relaciones'=>$model->relations(),
+						'tamano'=>4,
+						'model'=>$model,
+						'nombremodelo'=>'Clipro',
+						'form'=>$form,
+						'nombredialogo'=>'cru-dialog3',
+						'nombreframe'=>'cru-frame3',
+						//'nombrearea'=>'fehdfj',
+						));  
+			   ?>		
+	                     </div>
+	 
+         <div class="row">
 	
             <br>
             <BR>

@@ -40,7 +40,9 @@ class Lugares extends ModeloGeneral
 		// will receive user inputs.
 		return array(
 			array('deslugar, codpro,n_direc', 'required'),
-			array('deslugar, codpro,n_direc','safe'),
+			array('deslugar, codpro,n_direc,esabordo','safe'),
+                    array('esabordo','checkLugares','on'=>'insert,update'),
+                    
 			array('n_direc', 'numerical', 'integerOnly'=>true),
 			array('codpro', 'length', 'max'=>6),
 			array('deslugar', 'length', 'max'=>50),
@@ -133,4 +135,36 @@ class Lugares extends ModeloGeneral
 			'criteria'=>$criteria,
 		));
 	}
+        
+        public function checkLugares($attribute,$params){
+            
+            
+              /* if((!is_null(self::consultaAbordo()))){
+                   $this->addError ('esabordo', 'Ya existe un lugar general compartido');
+                  // yii::app()->end();
+               }
+                  */
+               
+              }
+  
+
+public static function getLugarABordo(){
+   return self::consultaAbordo();
+    
 }
+
+
+private static function consultaAbordo(){
+   $valor= yii::app()->db->createCommand()-> 
+             select("codlugar")->from("{{lugares}}")->where(
+                  " esabordo='1' " )-> 
+             limit(1)->queryScalar(); 
+   if($valor!=false)
+      return $valor;
+   
+   return null;
+   
+}
+
+}
+     ?>      

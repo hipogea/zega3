@@ -49,8 +49,8 @@
 				<?php echo $model->getScenario(); ?>
 					<?php
 							//$opciones=array();
-							if( $esembaracable=$model->guia->direccionesllegada->esembarque=='1'){
-							      $opciones=array('1'=>'Retorno','2'=>'Embarque','3'=>'Definitivo');
+							if( $esembaracable=Guia::model()->findbypk($idcabeza)->direccionesllegada->esembarque=='1'){
+							        $opciones=array('1'=>'Retorno','2'=>'Embarque','3'=>'Definitivo');
 
 							} else {
 								$opciones=array('1'=>'Retorno','3'=>'Definitivo');

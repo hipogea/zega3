@@ -69,6 +69,12 @@
 		<?php //echo $form->hiddenField($model,'codpro',array('value'=>$codpro)); ?>
 		
 	</div>
+        
+        <div class="row">
+		<?php echo $form->labelEx($model,'esabordo'); ?>
+		<?php echo $form->checkBox($model,'esabordo'); ?>
+		<?php echo $form->error($model,'esabordo'); ?>
+	</div>
 
 	<div class="row">
 	     

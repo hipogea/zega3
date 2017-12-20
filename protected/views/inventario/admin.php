@@ -65,7 +65,7 @@ $('.search-form form').submit(function(){
  
 <?php $gridWidget=$this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'inventario-grid',
-	//'filter'=>$model,
+	'filter'=>$model,
 	'dataProvider'=>$provedo,
 	'itemsCssClass'=>'table table-striped table-bordered table-hover',
 	'columns'=>array(
@@ -104,28 +104,29 @@ $('.search-form form').submit(function(){
 			 ),*/
 		//array('name'=>'barcooriginal','header'=>'Origen',
 		//array('name'=>'barcoactual.nomep','header'=>'Actual','value'=>'$data->barcoactual->nomep'),
-		array('name'=>'.','header'=>'.','type'=>'raw','value'=>'CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."estado".$data->codestado.".png","",array("width"=>30,"height"=>30))'),
+		//array('name'=>'.','header'=>'.','type'=>'raw','value'=>'CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."estado".$data->codestado.".png","",array("width"=>30,"height"=>30))'),
 		//array('name'=>'codigosap','header'=>'C. Sap','type'=>'raw','value'=>'CHtml::link($data->codigosap,array("inventario/detalle","id"=>$data->idinventario),array("onClick"=>"Loading.show(); return true;"))'), 
 		 array(
             'name'=>'imagen',
             'type'=>'html',
           'value'=>'(is_file($data->fotoprimera()["absoluto"]))?
-						CHtml::image($data->fotoprimera()["relativo"],$data->codigosap,array(\'width\'=>120,\'height\'=>160)):
+						CHtml::link(CHtml::image($data->fotoprimera()["relativo"],$data->codigosap,array(\'width\'=>60,\'height\'=>70)),yii::app()->createUrl("Inventario/detalle",array("id"=>$data->idinventario))):
 						"--"'
                      //'value'=>'$data->fotoprimera()["absoluto"]',
 		           ),
 		array('name'=>'codigoaf','header'=>'Cod','type'=>'raw','value'=>'CHtml::link($data->codigoaf,array("inventario/basicupdate","id"=>$data->idinventario),array("onClick"=>"Loading.show(); return true;"))'), 
-		array('name'=>'idinventario','header'=>'Id','type'=>'raw','value'=>'CHtml::link($data->idinventario,array("inventario/basicupdate","id"=>$data->idinventario),array("onClick"=>"Loading.show(); return true;"))'), 
+		//array('name'=>'idinventario','header'=>'Id','type'=>'raw','value'=>'CHtml::link($data->idinventario,array("inventario/basicupdate","id"=>$data->idinventario),array("onClick"=>"Loading.show(); return true;"))'), 
 		
 		array('name'=>'descripcion','header'=>'Descripcion','value'=>'$data->descripcion'),
-		'marca',
-		'modelo',
-		'serie',
-		//array('name'=>'.','header'=>'.','type'=>'raw','value'=>'(!$data->rocoto=="1")?CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."ancla.png","",array("width"=>15,"height"=>15)):CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."truck.png","",array("width"=>25,"height"=>25))','htmlOptions'=>array('width'=>'30')),
+		array('name'=>'nomep'),
+              array('name'=>'c_direc'),
+		array('name'=>'.','header'=>'.','type'=>'raw','value'=>'(!$data->rocoto=="1")?CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."ancla.png","",array("width"=>15,"height"=>15)):CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."truck.png","",array("width"=>25,"height"=>25))','htmlOptions'=>array('width'=>'30')),
 		//array('name'=>'lugares_lugar','header'=>'Lugar','value'=>'$data->lugares->deslugar'),
-            array('name'=>'imagen2','header'=>'Ubicac','value'=>'$data->lugares->empresa->despro'),
-             array('name'=>'direcci','header'=>'Pto Dir','value'=>'$data->lugares->direcciones->c_direc'),
-		array('name'=>'fecha','value'=>'date("d/m/Y",strtotime($data->fecha))'),
+            array('name'=>'despro','header'=>'Ubicac','value'=>'$data->despro'),
+             array('name'=>'deslugar','header'=>'Pto Dir','value'=>'$data->deslugar'),
+		array('name'=>'numerodocumento','header'=>'Num Doc'),
+                array('name'=>'desdocu','header'=>'Doc'),
+            array('name'=>'fecha','value'=>'date("d/m/Y",strtotime($data->fecha))'),
             // array('name'=>'numerodocumento','header'=>'N° Docum','value'=>'$data->numerodocumento'),
 		
 	),
@@ -140,7 +141,7 @@ $('.search-form form').submit(function(){
 $this->renderExportGridButton($gridWidget,'Exportar resultados',array('class'=>'btn btn-info pull-right'));
  ?>
  
- <div style="float:left; width=200px height=200px ; border 1px #000 solid;">
+ <div style="float:left; width:200px; height:200px ; border 1px #000 solid;">
 							<?php $gridWidget=$this->widget('zii.widgets.grid.CGridView', array(
 							'id'=>'estados-grid',
 							'summaryText'=>'',

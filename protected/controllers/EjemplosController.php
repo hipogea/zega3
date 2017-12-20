@@ -399,6 +399,9 @@ $mo=New Alinventario();
 
 public $layout='//layouts/column2';
 	public function actionPio() {
+            print_r(array_values(array_unique(array(0=>'12',1=>'13',2=>'12',3=>'15',4=>'12',5=>'13'))));
+            die();
+            
             var_dump(Inventario::getPicturesFromAssets('100'));die();
             
             var_dump(Adjuntos::findByDocu('346',7001));die();

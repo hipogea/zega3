@@ -90,7 +90,11 @@
 		<?php echo $form->error($model,'n_direc'); ?>
 	</div>
 
-
+<div class="row">
+		<?php echo $form->labelEx($model,'esabordo'); ?>
+		<?php echo $form->checkBox($model,'esabordo'); ?>
+		<?php echo $form->error($model,'esabordo'); ?>
+	</div>
 
 
 

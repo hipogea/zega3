@@ -9,6 +9,9 @@ class Guia extends ModeloGeneral
 	 */
     
  CONST ESTADO_DETALLE_ANULADO='40';
+  CONST ESTADO_DETALLE_ENTREGADO='20';
+ CONST ESTADO_ANULADO='50';
+  CONST ESTADO_ENTREGADO='80';
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
@@ -549,4 +552,48 @@ class Guia extends ModeloGeneral
         public function getNextItem(){
             return str_pad($this->numeroitemsvalidos+1,3,"0",STR_PAD_LEFT); 
         }
+     /*Esta funcion permite actualizar el estado 
+      * de la guisa dfe remision, solamente verificando 
+      * el estado de los items; es decir 
+      * Si una guia solo esta autorizada 
+      * Puede hacer un refresh y segun el esado de sus items puedfe
+      * actualizar su estatus de la cabecera verificando cada el status de
+      * cadfa iemn del detalle
+      * Ejmplo: Si todos los items estan anulados , anualar al guia
+      *     si todos los items estan enregados  , confirmar entrega , solo
+      * par aestos status     
+      */   
+    public function  refreshStatus(){
+         $estados=array_values(array_unique($this->getDetailStatus())); 
+         IF(count($estados)==1){//si solo hya anulados
+             if($estados[0]==self::ESTADO_DETALLE_ANULADO){
+                $this->c_estgui=self::ESTADO_ANULADO; 
+             }
+             if($estados[0]==self::ESTADO_DETALLE_ENTREGADO){
+                 $this->c_estgui=self::ESTADO_ENTREGADO; 
+             }
+           }
+           //si solo hay entregdos y anulados 
+         IF(count($estados)==2 
+                 and in_array(self::ESTADO_DETALLE_ANULADO,$estados)
+                 and in_array(self::ESTADO_DETALLE_ENTREGADO,$estados)
+              ){
+             $this->c_estgui=self::ESTADO_ENTREGADO;
+           }
+         $escenarioant=$this->getScenario();
+         $this->setScenario('cambiaestado');
+         $this->save();
+         $this->setScenario($escenarioant);
+    }  
+    
+    
+    public function getDetailStatus(){
+        return yii::app()->db->createCommand()->select('c_estado')
+                        ->from('{{detgui}}')
+                        ->where("n_hguia=:idguia",
+                         array(":idguia"=>$this->id))->queryColumn();
+        
+    }
+        
+        
 }

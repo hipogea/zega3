@@ -1148,7 +1148,9 @@ public function actionVerdetalle($id)
      case 2: ///APROBAR GUIA
      $filas=Guia::model()->findByPk($id)->detalle;
         foreach($filas as $row ) {
+            
             if(!is_null($row->c_codactivo)){
+                if($row->c_estado !=self::CODIGO_ESTADO_DETALLE_ANULADO){
                   $recInventario=Inventario::recordByPlate(trim($row->c_codactivo));
 
                   if(!is_null( $recInventario))
@@ -1156,11 +1158,13 @@ public function actionVerdetalle($id)
                         /*$recInventario->setScenario('cambiaestado');
                         $recInventario->rocoto='1';
                          $recInventario->save();*/
-						 $guiaocupada=VwGuia::hayactivoentransporte($row->c_codactivo,$row->n_hguia);
+                    $guiaocupada=VwGuia::hayactivoentransporte($row->c_codactivo,$row->n_hguia);
+                    
 						if(!is_null($guiaocupada))
 							$mensaje.=" El activo ".$row->c_codactivo." ya esta registrado en la guia ".$guiaocupada;
 					 }
                 unset($recInventario);
+            }
             }
           }
      break;
@@ -1193,6 +1197,12 @@ public function actionVerdetalle($id)
                        $recInventario->setScenario('cambiaestado');
                        $recInventario->rocoto='1';
                        $recInventario->save();
+                       if($row->c_codep!=$recInventario->codep){
+                       $recInventario->setScenario('cambiaep');
+                        $recInventario->codep=$row->c_codep;
+                       $recInventario->save();
+                       
+                       }
                    }
                    unset($recInventario);
                }
@@ -1248,17 +1258,39 @@ public function actionVerdetalle($id)
 						$recInventario->setScenario('BATCH_UPD_INVENTARIO_FISICO');
 						$recInventario->fecha=$filaguia->d_fectra;
 						$recInventario->numerodocumento=$filaguia->c_numgui;
-                        $recInventario->rocoto='0';
+                                                $recInventario->rocoto='0';
 						$recInventario->iddocu=$filaguia->id;
 						$recInventario->coddocu=$filaguia->codocu;
+                                                $recInventario->coddocu=$filaguia->codocu;
 							/***************************************************
 							*    AQUI LA CLAVE PARA ACTUALIZACION AUTOMATICA DEL LUGAR
 							*****************************************************/
 							 $filaslugares= $filaguia->direccionesllegada->lugares;
+                                                         IF(COUNT($filaslugares)==0 AND $row->modo=='2'){
+                                                         $recInventario->codlugar= Lugares::getLugarABordo();
+                                                         
+                                                         }else{//en otro caso 
+                                                             //crear e lugar para esta direccion
+                                                            if(COUNT($filaslugares)==0){
+                                                             $lugarnuevo=New Lugares();
+                                                             $lugarnuevo->setAttributes(array(
+                                                                 'codlugar'=>'100000',
+                                                                 'codpro'=>$filaguia->c_coclig,
+                                                                 'n_direc'=>$filaguia->direccionesllegada->n_direc,
+                                                                 'deslugar'=>$filaguia->destinatario->despro,
+                                                             ));
+                                                             $lugarnuevo->save(); unset($lugarnuevo);
+                                                              $recInventario->codlugar=$filaguia->destinatario->despro;
+                                                            }
+                                                            
+                                                         }
+                                                         /*Si esta cambiando de direccion */
+                                                         
+                                                         
 							  foreach($filaslugares as $filalugar ){
 								    ///aqui debemos  de tener en cuenta el modo de envio 
 									    if($row->modo=='2') {///EMBARQUE
-										$recInventario->codlugar=CODIGO_LUGAR_A_BORDO;
+										$recInventario->codlugar= Lugares::getLugarABordo();
 										}
 										 ELSE {///RETIORNO O DEFINITIVO 
 										    $recInventario->codlugar=$filalugar->codlugar;
@@ -1270,8 +1302,8 @@ public function actionVerdetalle($id)
 							/****************************************************/
 							
                          
-						if(!$recInventario->save())
-							print_r($recInventario->geterrors());
+						if(!$recInventario->save()){
+                                                print_r($recInventario->geterrors());DIE();}
 						//echo " el documento ".$recInventario->coddocu. "  el docu de la guia ".$filaguia->codocu;
 						//yii::app()->end();
 							//$mensaje="No se pudo grabar el inventario ";

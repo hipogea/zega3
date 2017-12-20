@@ -41,6 +41,12 @@
 		<?php echo $form->textField($model,'claselugar',array('size'=>3,'maxlength'=>3)); ?>
 		<?php echo $form->error($model,'claselugar'); ?>
 	</div>
+        
+        <div class="row">
+		<?php echo $form->labelEx($model,'esabordo'); ?>
+		<?php echo $form->checkBox($model,'esabordo'); ?>
+		<?php echo $form->error($model,'esabordo'); ?>
+	</div>
 
 	<div class="row">
 		

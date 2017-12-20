@@ -528,10 +528,10 @@ public function actionpio() {
 	 */
 	public function actionAdmin()
 	{
-		$model=new Inventario('search');
+		$model=new VwInventario('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Inventario']))
-			$model->attributes=$_GET['Inventario'];		
+		if(isset($_GET['VwInventario']))
+			$model->attributes=$_GET['VwInventario'];		
 		
 		    if ($this->isExportRequest()) { //<==== [[ADD THIS BLOCK BEFORE RENDER]]
             //set_time_limit(0); //Uncomment to export lage datasets

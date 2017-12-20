@@ -1,5 +1,8 @@
 <?php
-
+$this->breadcrumbs=array(
+	'Crear'=>array('creadocumento'),
+	'Listado',
+);
 
  //echo Tipozarpe::model()->findByPk('05')->cuentahoras;
 
@@ -67,7 +70,7 @@ $('.search-form form').submit(function(){
 		'n_cangui',
 		'c_codgui',
 		'c_descri',
-            'nombreobjeto',
+            'nomep',
 		//array('name'=>'nomep', 'header'=>'Ref','value'=>'$data->nomep'),
 		'c_codactivo',
 		//'desmotivo',

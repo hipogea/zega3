@@ -116,7 +116,7 @@ private function pasadatos($model){
 
 	public function actionIndex()
 	{
-		$this->getActionsFromAll();die();
+		//$this->getActionsFromAll();die();
             $model=New Configuraciongeneral();
 		
 		if(isset($_POST['Configuraciongeneral']))

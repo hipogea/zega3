@@ -66,6 +66,7 @@ class Inventario extends ModeloGeneral
 			   
 			  //atribuitos seguros en los escenarios 
 			  //BATCH_INS_BASICO
+                        array('codep','safe','on'=>'cambiaep'),
                          array('codep,tienecarter, codepanterior,codeporiginal,coddocu,fecha,numerodocumento,codlugar,tipo,codpropietario,codarea,codigosap,codigoaf,descripcion,marca,modelo,serie,comentario','safe','on'=>'muybasico'),
                           array('codep, tipo,codpropietario,codarea,codigosap,codigoaf,descripcion,marca,modelo,serie,comentario','safe','on'=>'muybasicoupdate'),
                     array('tipo,codpropietario,codarea,descripcion,marca,modelo','required','on'=>'muybasicoupdate'),
@@ -233,7 +234,7 @@ class Inventario extends ModeloGeneral
                     'documentos'=>array(self::BELONGS_TO, 'Documentos', 'coddocu'),
 		'area'=>array(self::BELONGS_TO, 'Areas', 'codarea'),
 		//'estado'=>array(self::BELONGS_TO, 'Estado', array('codestado','codigodoc')),
-                'estado' => array(self::BELONGS_TO, 'Estado', array('codestado'=>'codestado','codigodoc'=>'codocu')),
+                'estado' => array(self::BELONGS_TO, 'Estado', array('codestado'=>'codestado','coddocu'=>'codocu')),
 
 			'master'=>array(self::BELONGS_TO, 'Masterequipo','codmaster'),
 		'fisicodetalle'=>array(self::HAS_MANY, 'Inventariofisicodetalle', 'idinventario'),
@@ -390,7 +391,7 @@ public static function canttransporte(){
 		$modelog->codep=$vcodep; //7COn que barco 
 		$modelog->comentario=$this->comentario;
 		$modelog->fecha=$this->fecha;
-		$modelog->coddocu=$this->codocu;
+		$modelog->coddocu=$this->coddocu;
 		$modelog->codocumov=$codigodoc; ///el codigo del doc de trabnsporte no dle invnetairo 
 		$modelog->codestado='20';
 		$modelog->codlugar=$this->codlugar;		

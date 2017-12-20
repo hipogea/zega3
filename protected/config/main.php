@@ -59,10 +59,7 @@ return array(
 	
 	
 	'modules'=>array(
-            'cal' => array(
-            'debug' => true, // For first run only!
-                //'layout'=>'//layouts/celu',
-                ),
+           
 		// uncomment the following to enable the Gii tool
           'ventas'=>array(),   
             'operadores'=>array(),

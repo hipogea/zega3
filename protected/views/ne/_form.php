@@ -57,7 +57,7 @@
 
 					'pack1'=>array(
 						'type'=>'B',
-						'ruta'=>array($this->id.'/procesardocumento',array('id'=>$model->id,'ev'=>37)), //confirma entrega
+						'ruta'=>array($this->id.'/procesardocumento',array('id'=>$model->id,'ev'=>83)), //confirma entrega
 						'visiblex'=>array($this::ESTADO_CONFIRMADO),
 
 					),
@@ -495,7 +495,7 @@ echo $form->DropDownList($model,'cod_cen',$datos, array('empty'=>'--Llene el cen
 
  if ( !$model->isNewRecord )  {
 				  
-				$this->renderpartial('vw_detalle_guia',array('modelcabecera'=>$model,'eseditable'=>$this->eseditable($model->c_estgui)));  
+				$this->renderpartial('vw_detalle_guia',array('model'=>$model,'modelcabecera'=>$model,'eseditable'=>$this->eseditable($model->c_estgui)));  
 				  
 				}
 

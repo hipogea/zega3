@@ -63,9 +63,9 @@ class CentrosController extends Controller
 
 							}
 		}
-
+                    $modeloconf=New Configuracion('search');
 		$this->render('create',array(
-			'model'=>$model,
+			'model'=>$model,'modeloconf'=>$modeloconf
 		));
 	}
 
