@@ -27,7 +27,7 @@ class OperaCodepController extends Controller
 		return array(
 			
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('MyConsole',    'createEvent',    'PickDate',   'updateMeasure','createMeasure',    'Measures',   'updateDailyReport',   'admin','create','update','createDailyReport'),
+				'actions'=>array('confirmMaterials',   'MyMaterials',   'MyConsole',    'createEvent',    'PickDate',   'updateMeasure','createMeasure',    'Measures',   'updateDailyReport',   'admin','create','update','createDailyReport'),
 				'users'=>array('@'),
 			), 
 			
@@ -442,6 +442,33 @@ class OperaCodepController extends Controller
      $this->render('consola'); 
   }
   
+  public function actionMyMaterials(){
+       $valores= OperaCodep::getEp();
+          if(is_null($valores))
+           throw new CHttpException(500,'NO se encuentra registrado en esta instancia ');
+     $modelo=New VwGuia('search_opera');
+          $proveedor= $modelo->search_opera($valores['barco'],
+              $modelo::ESTADO_DETALLE_CREADA);
+          //$pr=$proveedor->getdata();
+      $this->render('materiales',array('proveedor'=>$proveedor));
+  }
+  
+  public function actionConfirmMaterials($id){
+      $id= (integer)MiFactoria::cleanInput($id);
+      $registro=Detgui::model()->findByPk($id);
+      if(!is_null($registro)){
+         if($registro->delete()){
+             echo "Se confirmo la recepción del material : ".$registro->c_descri;
+         }else{
+            echo "Hubo errores :".yii::app()->mensajes->getErroresItem($registro->geterrors()); 
+         }
+             
+      }else{
+          echo "No se encontro el registro con el Id ".$id;
+      }
+      
+      
+  }
   
   
 }

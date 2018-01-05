@@ -34,9 +34,10 @@ class OperaCodep extends CActiveRecord
 			array('codep, codof', 'length', 'max'=>3),
 			array('codtra', 'length', 'max'=>4),
 			array('finicio', 'length', 'max'=>10),
+                      array('motivo','safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('codep, codtra, finicio, codof', 'safe', 'on'=>'search'),
+			array('codep, codtra, finicio, motivo,codof', 'safe', 'on'=>'search'),
 		);
 	}
 

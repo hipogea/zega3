@@ -881,18 +881,33 @@ public function actionVerdetalle($id)
 
 						$tempito= Tempdetgui::model()->findByPk($autoId);
                                                 if(!is_null($tempito)){
-                                                    $tempito->setScenario('cambioestado');
-                                                    $tempito->c_estado=self::CODIGO_ESTADO_DETALLE_ANULADO;
-                                                    if($tempito->save()){
-                                                       
-                                                        yii::app()->user->setFlash('success',' OK, Se borro la linea ');
-                                                    }else{
-                                                       yii::app()->user->setFlash('error','ERROR-  se pudo  borrar la linea '.yii::app()->mensajes->getErroresItem($tempito->geterrors())); 
+                                                    if(self::ESTADO_PREVIO==$estado){
+                                                         if($tempito->delete()){
+                                                          yii::app()->user->setFlash('success',' Se elimino  el Item '.$tempito->c_descri);
+                                                             }else{
+                                                               yii::app()->user->setFlash('error',' No se pudo eliminar el Item '.$tempito->c_descri);
+                                                           
+                                                             }
                                                     }
+                                                       
+                                                     if(self::ESTADO_CREADO==$estado){
+                                                         $tempito->setScenario('cambioestado');
+                                                         $tempito->c_estado=self::CODIGO_ESTADO_DETALLE_ANULADO;
+                                                         if($tempito->save()){
+                                                          yii::app()->user->setFlash('success',' Se elimino  el Item '.$tempito->c_descri);
+                                                             }else{
+                                                               yii::app()->user->setFlash('error',' No se pudo eliminar el Item '.$tempito->c_descri);
+                                                           
+                                                             }
+                                                         
+                                                     }
+                                                    
+                                                    
+                                                    
                                                 }
-                                 
+                                 $tempito->guia->arreglaOrdenItems(self::CODIGO_ESTADO_DETALLE_ANULADO);
 					}
-                                         $tempito->guia->arreglaOrdenItems(self::CODIGO_ESTADO_DETALLE_ANULADO);
+                                         
 			} ELSE {
 			 yii::app()->user->setFlash('error',' El estado del documento no permite borrar el Item');
 		   }

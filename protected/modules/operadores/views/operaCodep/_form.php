@@ -61,8 +61,9 @@
 
 
         <?php //echo $form->textField($model,'codpuesto',array('size'=>3,'maxlength'=>3)); ?>
-        <?php echo $form->error($model,'codof'); ?>
-	</div>
+        <?php echo $form->error($model,'motivo'); ?>
+            
+            
 
 	
 

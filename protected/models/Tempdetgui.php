@@ -225,7 +225,7 @@ class Tempdetgui extends ModeloGeneral
 	public function beforeSave() {
 		if ($this->isNewRecord){
                     if(is_null($this->c_estado))
-			$this->c_estado='99';
+			$this->c_estado='10';
 			$this->idusertemp=yii::app()->user->id;
                         if(!(yii::app()->settings->get('transporte','transporte_objenguia')=='1')
                                 and is_null($this->codob)){
@@ -237,7 +237,10 @@ class Tempdetgui extends ModeloGeneral
                         }
                         
 
-		}
+		}ELSE{
+                    if($this->c_estado=='99')
+			$this->c_estado='10';
+                }
 
 
 

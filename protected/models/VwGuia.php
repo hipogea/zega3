@@ -4,6 +4,9 @@ class VwGuia extends CActiveRecord
 {
 CONST ESTADO_AUTORIZADA='30';	
 CONST ESTADO_CONFIRMADA='20';	
+CONST MOTIVO_EP='100';
+CONST ESTADO_DETALLE_CREADA='10';
+CONST MOTIVO_DETALLE_EP='13';
     /**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -73,7 +76,8 @@ CONST ESTADO_CONFIRMADA='20';
 			      rucsoc,  estado, n_hguia, c_itguia,
 			       n_cangui, c_codgui, c_edgui, c_descri, m_obs, c_codactivo,
 			        c_um, c_codep, n_detgui, l_libre, nomep, motivo, estadodetalle,
-			         c_af, cod_cen, c_codsap, hidref, docref, codocu', 'safe', 'on'=>'search'),
+			         c_af, cod_cen, c_codsap, hidref, docref, codocu', 'safe', 'on'=>'search,search_opera'),
+                    //array('c_numgui,c_estgui,c_edgui,c_motivo,c_estado,c_codep,c_descri','safe','on'=>'search_opera'),
 		);
 	}
 
@@ -557,4 +561,39 @@ CONST ESTADO_CONFIRMADA='20';
 		return $suggest;
 	}
     
+     private function criterioOpera($codigoep=null,$estado=null){
+         $criteria=new CDbCriteria;
+                $criteria->compare('c_estgui',$this->c_estgui);
+		$criteria->compare('c_motivo',$this->c_motivo,true);
+		$criteria->compare('c_edgui',$this->c_edgui,true);
+                $criteria->addCondition(
+                        "c_estgui=:vc_estgui and "
+                        . "c_motivo=:vc_motivo and "
+                        . "c_edgui=:vc_edgui");		
+               $criteria->params=array(
+                   ":vc_estgui"=>self::ESTADO_CONFIRMADA,
+                    ":vc_motivo"=>self::MOTIVO_EP,
+                    ":vc_edgui"=>self::MOTIVO_DETALLE_EP,
+                   
+               );
+               if(!is_null($codigoep)){
+                    $criteria->addCondition("c_codep=:vc_codep");
+                     $criteria->params[":vc_codep"]=$codigoep;
+               }
+               
+               if(!is_null($estado)){
+                    $criteria->addCondition("c_estado=:vc_estado");
+                     $criteria->params[":vc_estado"]=$estado;
+               }
+             RETURN $criteria;
+     }  
+     public function search_opera($codigoep=null,$estado=null)
+	{
+         $crite=$this->criterioOpera($codigoep,$estado);
+	return new CActiveDataProvider($this, array(
+			'criteria'=>$crite,
+           // 'order'=>'d_fectra,c_itguia desc'
+		));
+	}    
+        
 }

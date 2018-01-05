@@ -40,8 +40,7 @@ array(
 											)
 									    )',
                                     'click'=>('function() {
-                                     url = $(this).attr("href");
-                                      
+                                     url = $(this).attr("href");                                      
                                     window.open(url,\'child\',\'status=no,resizable=yes,toolbar=no,menubar=no,scrollbars=yes,location=no,directories=no,top=0,left=0\');
                                     return false;
                                             }'),

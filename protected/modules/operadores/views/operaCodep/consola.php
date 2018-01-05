@@ -10,7 +10,7 @@ $botones=array(
 
 'th-list'=>array(
 	'type'=>'B',
-	'ruta'=>array('/procesardocumento',array('id'=>3,'ev'=>83)),//apreuba guia
+	'ruta'=>array('/operadores/OperaCodep/MyMaterials',array()),//apreuba guia
 	'visiblex'=>array(true),
     'label'=>'Mis materiales',
 	),

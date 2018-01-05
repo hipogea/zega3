@@ -394,7 +394,7 @@ public function actionver(){
                 $menu->setAttributes(
                         array(
                             'activa'=>0,
-                            'codaccion'=>$valor__  ,
+                            'codaccion'=>$valor__,
                             'ruta'=>$ruta,
                             'controlador'=>str_replace('Controller','',$clave),
                            'modulo'=>$modulo,

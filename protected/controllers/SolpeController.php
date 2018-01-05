@@ -1295,11 +1295,11 @@ public function borraitem($autoId) //Borra un registro de solpe
 						Yii::app()->user->setFlash('success', "..Se agrego el item!");
 					//Close the dialog, reset the iframe and update the grid
 					echo CHtml::script("window.close();
-								window.opener.$.fn.yiiGridView.update('detalle-grid');
+							window.opener.$.fn.yiiGridView.update('detalle-grid');
 								");
 
-														Yii::app()->end();
-												}
+						Yii::app()->end();
+						}
 		}
 		 if (!empty($_GET['asDialog']))
 		$this->layout = '//layouts/iframe';

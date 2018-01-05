@@ -4,7 +4,6 @@
    <meta name="viewport" content="width=device-width, initial-scale=1">
    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
 
-
 <title>Nautilus Solver</title>
     <?php       
 	  $baseUrl = Yii::app()->theme->baseUrl;
@@ -12,13 +11,36 @@
            $cs->registerCssFile($baseUrl.'/css/menu.css');
             $cs->registerScriptFile($baseUrl.'/js/menu.js');
             $cs->registerCssFile($baseUrl.'/css/abound.css');
+            $cs->registerScriptFile($baseUrl.'/js/plugins/blockuiplugin.js',CClientScript::POS_HEAD); 
+        
            ?>   
+
+<link rel="shortcut icon" href="<?php echo $baseUrl; ?>/img/icons/favicon.png" type="image/png" />
 
 </head> 
 <?php
 $this->widget('ext.loaderpage.LoaderPage');
 ?>
 <body>
+    
+    <?php  
+echo CHtml::script("$(document).ajaxStart(function () {
+  $.blockUI({ 
+  message: ' Procesando...',
+  css: { border: 'none',
+                backgroundColor: '#5bc0de',
+                color:'white',
+                width:'9em',
+                padding:'0.8em',                
+                'border-radius':'0.5em',
+                opacity: '0.8'}
+}
+  ); 
+}).ajaxStop($.unblockUI);"       
+        
+        );  ?>
+    
+    
 <div id="cssmenu"> 
    <?php  
    //var_dump(yii::app()->mobileDetect->isSmallDevice());die();

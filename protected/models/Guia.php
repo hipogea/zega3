@@ -12,6 +12,7 @@ class Guia extends ModeloGeneral
   CONST ESTADO_DETALLE_ENTREGADO='20';
  CONST ESTADO_ANULADO='50';
   CONST ESTADO_ENTREGADO='80';
+  const ESTADO_DETALLE_CREADO='10';
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
@@ -405,6 +406,7 @@ class Guia extends ModeloGeneral
 									{
 										  IF ($this->c_estgui=='99' and $this->numeroitems >0) //SI SE TRATA DE UNA GUIA NUEVA COLOCARLE 'PREVIO'
 												$this->c_estgui='10';
+                                                                                                // $this->updateStatusDetalle(self::ESTADO_DETALLE_CREADO);
 												  
 										//$this->ultimares=" ".strtoupper(trim($this->usuario=Yii::app()->user->name))." ".date("H:i")." :".$this->ultimares;
 									}
@@ -458,12 +460,12 @@ class Guia extends ModeloGeneral
 		$criteria->compare('c_serie',$this->c_serie,true);
 		$criteria->compare('n_direcformaldes',$this->n_direcformaldes);
 		$criteria->compare('n_directran',$this->n_directran);
-		$criteria->compare('c_creado',$this->c_creado,true);
+		//$criteria->compare('c_creado',$this->c_creado,true);
 		$criteria->compare('n_guia',$this->n_guia,true);
 		$criteria->compare('c_estado',$this->c_estado,true);
 		$criteria->compare('n_dirsoc',$this->n_dirsoc);
-		$criteria->compare('c_modificado',$this->c_modificado,true);
-		$criteria->compare('n_agencia',$this->n_agencia);
+		//$criteria->compare('c_modificado',$this->c_modificado,true);
+		//$criteria->compare('n_agencia',$this->n_agencia);
 
 
 
@@ -595,5 +597,10 @@ class Guia extends ModeloGeneral
         
     }
         
-        
+    public function updateStatusDetalle($estado){
+        yii::app()->db->createCommand()->update('{{tempdetgui}}', array(
+             'c_estado'=>$estado,
+           ), 'n_hguia=:n_hguia and c_estado!=:vestado',
+                array(':n_hguia'=>$this->id,':vestado'=>self::ESTADO_DETALLE_ANULADO));
+    }
 }

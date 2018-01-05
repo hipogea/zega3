@@ -33,6 +33,8 @@ class Detgui extends ModeloGeneral
 
 
 		$reglas=array(
+                    
+                    array('c_estado','safe','on'=>'opera'),
 			array('otref,cantot', 'safe','on'=>'imputaciones'),
                     array('cantot', 'numerical','min'=>0,'on'=>'imputaciones'),
                         array('cantot', 'chkcantidadot','on'=>'imputaciones'),
@@ -413,5 +415,5 @@ public function search()
             unset($registroorden);
         }
          
-                
+              
 }

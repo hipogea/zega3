@@ -101,7 +101,7 @@ $this->endWidget();
 				'opajax'=>array(
 					'type'=>'POST',
 					'url'=>Yii::app()->createUrl($this->id.'/borraitems',array()),
-					'success'=>'js:function(data) { $.fn.yiiGridView.update("detalle-grid"); alert(data);}',
+					'success'=>'js:function(data) { $.fn.yiiGridView.update("detalle-grid");   $.notify(data, "info");}',
 					'beforeSend' => 'js:
                                					 function(){
                                   				 var r = confirm("¿Esta seguro de Eliminar estos Items?");
