@@ -399,6 +399,12 @@ $mo=New Alinventario();
 
 public $layout='//layouts/column2';
 	public function actionPio() {
+            $maes=new Maestrocompo;
+            var_dump($maes->getModelParentByField('codtipo'));
+            die();
+          $registro=new Embarcaciones;
+          $columnas=$registro->getMetaData()->columns;
+          var_dump($columnas);die();
             yii::app()->imagen->putImage('/imagenes/hola.jpg','il',array('width'=>100,'height'=>100),2);die();
             var_dump(Yii::getPathOfAlias('webroot').yii::app()->settings->get('general','general_directorioimg'));
             var_dump(is_dir(Yii::getPathOfAlias('webroot').yii::app()->settings->get('general','general_directorioimg')));

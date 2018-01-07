@@ -240,13 +240,8 @@ print_r($_SESSION['sesion_Maestrocompo']);
 		// collect user input data
 		if(isset($_POST['cargainForm']))
 		{
-           // Yii::app()->end();
-			$modelito->attributes=$_POST['cargainForm'];
-			// validate user input and redirect to the previous page if valid
-            //obtenemos la matriz de datos del maestro de materiales que no esta ampliado en ese centro y almacen
-           // $prefix="public_";
-
-			$matriz2=Yii::app()->db->createCommand(" SELECT *from {{maestrocomponentes}} where codigo not in (
+           $modelito->attributes=$_POST['cargainForm'];
+	$matriz2=Yii::app()->db->createCommand(" SELECT *from {{maestrocomponentes}} where codigo not in (
                    select codart from {{alinventario}} where codalm='".$modelito->almacen."'  and codcen='".$modelito->centro."'
                  ) ")->queryAll();
 
@@ -254,13 +249,8 @@ print_r($_SESSION['sesion_Maestrocompo']);
 				$cadena="INSERT INTO {{alinventario}} ( CODCEN,CODALM,CODART, CANTLIBRE,CANTTRAN,CANTRES) VALUES ('".$modelito->centro."','".$modelito->almacen."','".$matriz2[$i]['codigo']."',0,0,0)";
 				$command = Yii::app()->db->createCommand($cadena);
 				$command->execute();
-				/* $cadena2="select codart from ".$prefix."alinventario where codalm='".$modelito->almacen."'  and codcen='".$modelito->centro."'";
-                     $command1 = Yii::app()->db->createCommand($cadena2)->queryScalar();
-                     if($command1) { ///si no encontro un registro en el inventario entonces
-
-                     }*/
+				
 			}
-
 
              $matriz=Yii::app()->db->createCommand(" SELECT *from {{maestrocomponentes}} where codigo not in (
                     SELECT codart from {{maestrodetalle}} where codcentro='".trim($modelito->centro)."' and  codal ='".trim($modelito->almacen)."'
@@ -305,11 +295,13 @@ print_r($_SESSION['sesion_Maestrocompo']);
 					->where($crit->condition,$crit->params)
 					->queryAll();
 				$faltan=count($data);
-				MiFactoria::Mensaje('notice',' En este almacen  '.$faltan.' registros de materiales que no tienen datos de valoracion contable');
+                                if($faltan >0 )
+				MiFactoria::Mensaje('notice',' En este almacen  faltan '.$faltan.' registros de materiales que no tienen datos de valoracion contable');
 
 			}
-
-				  $this->render("vw_procesado");
+                // $this->layout='//layouts/column2';
+                MiFactoria::Mensaje('success', 'Se ampliaron '.$i.'  Materiales');
+                $this->redirect('admin');
 		}
 		// display the login form
 		$this->render('cargamat',array('model'=>$modelito));

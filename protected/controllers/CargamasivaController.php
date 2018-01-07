@@ -21,7 +21,7 @@ class CargamasivaController extends ControladorBase
 		return array(
 
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('borrafilacampo',   'index','view','admin','create','borracarga','cargaescenario','carga','update','modificadetalle','borradetalle','import'),
+				'actions'=>array('AjaxRefreshChildFields',   'AjaxAddChild','borrafilacampo',   'index','view','admin','create','borracarga','cargaescenario','carga','update','modificadetalle','borradetalle','import'),
 				'users'=>array('@'),
 			),
 
@@ -640,4 +640,42 @@ $camposclave=array();
                 }
                 
         }
+        
+        public function actionAjaxAddChild(){
+            //var_dump($_POST);DIE();
+            if(yii::app()->request->isAjaxRequest){
+                if(isset($_POST['Cargamasiva']['id'])){   
+                    $id= (integer)MiFactoria::cleanInput($_POST['Cargamasiva']['id']);
+                    $registro= Cargamasiva::model()->findByPk($id);  
+                    if(is_null($registro))   
+                        throw new CHttpException(500,'NO se encontro el registro con el id '.$id); 
+                    } 
+                if(isset($_POST['Cargamasiva']['idcampoadicional'])){   
+                    $campo= MiFactoria::cleanInput($_POST['Cargamasiva']['idcampoadicional']);
+                    //$registro= Cargamasiva::model()->findByPk($id);  
+                   
+                    
+                       }
+                  $registro->addChild($campo);     
+                      echo "Se agrego el campo ".$campo;
+                       
+                  }
+            }
+            
+            
+            public function actionAjaxRefreshChildFields(){
+            //var_dump($_POST);DIE();
+            if(yii::app()->request->isAjaxRequest){
+                     if(isset($_GET['id'])){   
+                    $id= (integer)MiFactoria::cleanInput($_GET['id']);
+                    $registro= Cargamasiva::model()->findByPk($id);  
+                    if(is_null($registro))   
+                        throw new CHttpException(500,'NO se encontro el registro con el id '.$id); 
+                    } 
+                    
+                    $registro->refreshChilds();
+                    echo "Se actualizaron los registros";
+                    
+                  }
+            }
 }

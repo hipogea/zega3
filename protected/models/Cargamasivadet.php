@@ -11,11 +11,12 @@ class Cargamasivadet extends CActiveRecord
 	public function rules()
 	{
 			return array(
+                             array('orden','safe','on'=>'updateorden'),
 			array('hidcarga', 'numerical', 'integerOnly'=>true),
 			array('hidcarga', 'required', 'on'=>'insert'),
 			array('nombrecampo, aliascampo', 'length', 'max'=>100),
 			array('activa, requerida', 'length', 'max'=>1),
-			array('orden,aliascampo,clave,longitud,explicacion', 'safe', 'on'=>'update'),
+			array('orden,activa,aliascampo,modeloforaneo,esclave,requerida,longitud,tipo,explicacion', 'safe', 'on'=>'insert,update'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, hidcarga,longitud, tipo, orden,nombrecampo, aliascampo, activa, requerida', 'safe', 'on'=>'search'),
@@ -87,4 +88,15 @@ class Cargamasivadet extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+        
+        public function getclave(){
+            if($this->esclave=='1')
+                return '1';
+             if( strlen($this->modeloforaneo)>0)
+                 return '2';
+             else{
+                 return '0';
+             }
+                
+        }
 }

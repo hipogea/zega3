@@ -147,6 +147,7 @@ public function FileReceptor($fullFileName,$userdata) {
 		// class name for the relations automatically generated below.
 		return array(
 			'maestro_desolpe' => array(self::HAS_MANY, 'Desolpe', 'codart'),
+                        'grupoventas' => array(self::BELONGS_TO, 'Grupoventas', 'tipogrupoventa'),
 			'maestro_maestrotipos'=>array(self::BELONGS_TO, 'Maestrotipos', 'codtipo'),
 			'maestro_alkardex' => array(self::HAS_MANY, 'Alkardex', 'codart'),
 			'maestro_docompra' => array(self::HAS_MANY, 'Docompra', 'codart'),

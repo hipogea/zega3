@@ -20,6 +20,71 @@
 	
 
 	<?php echo $form->errorSummary($model); ?>
+    
+    <div class="row">
+		<?php
+		$botones = array(
+		'save' => array(
+		'type' => 'A',
+		'ruta' => array(),
+		'visiblex' => array('10'),
+		),
+
+
+
+		'refresh' => array(
+		'type' => 'D', //AJAX LINK
+		'ruta' => array($this->id.'/AjaxRefreshChildFields', array('id' => $model->id)),
+		'opajax' => array(
+		'type' => 'GET',
+		'ruta' => array($this->id.'/AjaxRefreshChildFields', array('id' => $model->id)),
+		'complete' => 'function(){
+		     $.fn.yiiGridView.update("detalle-grid");
+		}'
+		),
+		/*'success'=>'function(data) {
+		$("#myDivision").html(data).fadeIn().animate({opacity: 1.0}, 3000).fadeOut("slow");
+		}'
+		),*/
+		'visiblex' => array('10'),
+
+		),
+
+			
+
+			'pack1'=>array(
+				'type'=>'C',
+				'ruta'=>array('cargamasiva/import',array(
+					'id'=>10,
+					'asDialog'=>1)
+
+							),
+				'dialog'=>'cru-dialogdetalle',
+				'frame'=>'cru-detalle',
+				'visiblex'=>array('10'),
+
+			),
+
+			
+
+		);
+
+		/*VAR_DUMP($model->{$this->campoestado});
+		YII::APP()->END();*/
+		$this->widget('ext.toolbar.Barra',
+		array(
+		//'botones'=>MiFactoria::opcionestoolbar($model->id,$this->documento,$model->codestado),
+		'botones'=>$botones,
+		'size'=>24,
+		'extension'=>'png',
+		'status'=>'10',
+
+		)
+		);
+		// var_dump($model->{$this->campoestado}); var_dump(ESTADO_CREADO);var_dump($model->numeroitems+0);die();
+
+		?>
+	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'modelo'); ?>
@@ -61,8 +126,8 @@
 
 				echo $form->DropDownList($model,'escenario',$valoresx, array('empty'=>'--Escoja el escenario--', 'disabled'=>($model->isNewRecord)?'':'disabled'));
 			}else {
-				
-				echo Chtml::textField("SKJKSFS",$model->escenario);
+				echo $form->hiddenField($model,'id');
+				echo Chtml::textField("SKJKSFS",$model->escenario,array('disabled'=>'disabled'));
 			}
 		
 		
@@ -123,7 +188,7 @@
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar'); ?>
 	</div>
 
-<?php $this->endWidget(); ?>
+
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'detalle-grid',
@@ -198,13 +263,14 @@
 	               ),	
 		//'id',
 		'aliascampo',
-		array('name'=>'nombrecampo','header'=>'Campo','type'=>'raw','value'=>'($data->esclave=="1")?CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."ajustes.png")." - ".$data->nombrecampo:"".$data->nombrecampo'),
+		array('name'=>'nombrecampo','header'=>'Campo','type'=>'raw','value'=>'($data->getclave()!="0")?CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."key_".$data->getclave().".png")." - ".$data->nombrecampo:"".$data->nombrecampo'),
 		ARRAY('name'=>'explicacion','value'=>'substr($data->explicacion,0,40)."..."'),
 		'requerida',
 		'longitud',
 		'tipo',
 		'orden',
 		'activa',
+              'modeloforaneo',
 		/*
 		'descripcion',
 		*/
@@ -219,7 +285,41 @@
 	),
 )); ?>
 
+<div class="row">
+		<?php  ?>
+		<?php //echo $form->textField($model,'modelo',array('size'=>60,'maxlength'=>100)); ?>
+		<?php
+		    if(!$model->isNewRecord and count($model->getFielDifference())>0 ){
+                          echo $form->labelEx($model,'idcampoadicional');
+			$datos= array_combine(array_values($model->getFielDifference()),array_values($model->getFielDifference()));
 
+				echo $form->DropDownList(
+                                        $model,
+                                        'idcampoadicional',
+                                        $datos, 
+                                        array(
+                                            'ajax' => array(
+							'type' => 'POST', 
+                                                       // 'data'=>array();
+							'url' => CController::createUrl($this->id.'/AjaxAddChild'), //  la acción que va a cargar el segundo div 
+							'success'=>"function(data) {
+							   $.fn.yiiGridView.update('detalle-grid'); 
+                                                                $.notify(data, 'info');  
+                                                                return false;
+                                                            }",// el div que se va a actualizar
+							),
+						'prompt' => '--Seleccione campo--' // Valor por defecto 
+						)
+                                                        );
+                    }
+		
+		
+		
+		?>
+		<?php echo $form->error($model,'escenario'); ?>
+	</div>
+    
+    <?php $this->endWidget(); ?>
 </div>
 </div><!-- form -->
 

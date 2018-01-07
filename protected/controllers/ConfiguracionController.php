@@ -22,7 +22,7 @@ class ConfiguracionController extends Controller
 		return array(
 			
 			array('allow',
-                            'actions'=>array('RefreshMenu',   'ajaxEditHidparentMenu',    'ajaxEditAliasMenu',   'ajaxActivate',     'menu',    'editar','index','ver','creaconfig'),
+                            'actions'=>array('creaparametro','admin','RefreshMenu',   'ajaxEditHidparentMenu',    'ajaxEditAliasMenu',   'ajaxActivate',     'menu',    'editar','index','ver','creaconfig'),
 				'users'=>array('@'),
 			),
 			

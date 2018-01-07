@@ -820,4 +820,30 @@ public function cambiaformatofecha($fecha,$salida=true){
     //return 1;
 }
 
+/*
+ * Esta funcion recupera el modelo de la relacion 
+ * HAS_MAMY , en funcion de un  campo relacionado
+ * @fieldRelation: Nombre del campo a evaluar 
+ */
+public  function getModelParentByField($fieldRelation){
+    $relaciones =$this->relations();    
+    $nombremodelo="";
+      foreach($relaciones as $clave=>$valor){   
+          if($valor[0]==self::BELONGS_TO && $valor[2]==$fieldRelation ){
+             $nombremodelo= $valor[1];//retorna un objeto de la clase $valor[1]
+              BREAK;
+               }          
+       }
+     return ($nombremodelo=="")?null:(new $nombremodelo);
+  }
+
+/*
+ * 
+ */
+
+
+
+
+
+
 }

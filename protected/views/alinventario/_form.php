@@ -64,7 +64,7 @@
 			  }
 
           ?>
-          <?PHP  MiFactoria::titulo('Rotacion  : ','arrow_refresh');?>
+        
 			  <div style="display:block; width:160px;padding:5px; margin:5px; float:left;">
 
                    <div >

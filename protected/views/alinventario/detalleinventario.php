@@ -90,7 +90,7 @@ $this->widget('zii.widgets.jui.CJuiTabs', array(
 						),
 
 						'lotes'=>array('id'=>'tab_lotesuu',
-							'content'=>$this->renderpartial('vw_lotes',array('orden'=>$orden,'model'=>$model,'form'=>$form   ), true),
+							'content'=>$this->renderpartial('vw_lotes',array('model'=>$model,'form'=>$form   ), true),
 						),
 						'Conteos'=>array('id'=>'tab_conteosuu',
 							'content'=>$this->renderpartial('vw_conteo',array('model'=>$model,'form'=>$form   ), true),
