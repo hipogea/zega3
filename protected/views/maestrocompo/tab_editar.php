@@ -179,11 +179,15 @@ if(yii::app()->hasModule('ventas')){ ?>
 									}
 								?>
 										<div class="row">
-													<DIV ID="imagenmaterial" >
+										<div id="imagenmaterial" >
   														<?php
-																		Numeromaximo::Pintaimagen(Yii::app()->params['rutaimagenesmateriales'].$model->codigo.".JPG",Yii::app()->params['rutaimagenesmateriales']."NODISPONIBLE.JPG",240,240)
+                                                                                                                //echo yii::app()->baseUrl.'materiales/'.$model->codigo.".JPG";
+                                                                                                                echo yii::app()->imagen->putImage(yii::app()->baseUrl.'/materiales/'.$model->codigo.".JPG",$model->codigo,array("width"=>200,"height"=>200));
+
+                                                                                                                
+																		//Numeromaximo::Pintaimagen(Yii::app()->params['rutaimagenesmateriales'].$model->codigo.".JPG",Yii::app()->params['rutaimagenesmateriales']."NODISPONIBLE.JPG",240,240)
 														?>
-  													</DIV>
+  										</div>
 										</div>
 	   				<div class="row buttons">
 							<?php  echo Chtml::ajaxLink(

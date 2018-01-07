@@ -62,9 +62,15 @@
         
 	<div class="row">
 		<?php echo $form->labelEx($model,'general_directorioimg'); ?>
-		<?php echo $form->textField($model,'general_directorioimg',array('size'=>13,'maxlength'=>13)); ?>
+		<?php echo $form->textField($model,'general_directorioimg',array('size'=>40,'maxlength'=>40)); ?>
 		<?php echo $form->error($model,'general_directorioimg'); ?>
 	</div>
+        <div class="row">
+		<?php echo $form->labelEx($model,'general_imagenophoto'); ?>
+		<?php echo $form->textField($model,'general_imagenophoto',array('size'=>25,'maxlength'=>25)); ?>
+		<?php echo $form->error($model,'general_imagenophoto'); ?>
+	</div>
+        
         <div class="row">
 		<?php echo $form->labelEx($model,'general_nregistrosporcarpeta'); ?>
 		<?php echo $form->textField($model,'general_nregistrosporcarpeta',array('size'=>3,'maxlength'=>3)); ?>

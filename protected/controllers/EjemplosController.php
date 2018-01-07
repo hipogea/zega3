@@ -399,6 +399,14 @@ $mo=New Alinventario();
 
 public $layout='//layouts/column2';
 	public function actionPio() {
+            yii::app()->imagen->putImage('/imagenes/hola.jpg','il',array('width'=>100,'height'=>100),2);die();
+            var_dump(Yii::getPathOfAlias('webroot').yii::app()->settings->get('general','general_directorioimg'));
+            var_dump(is_dir(Yii::getPathOfAlias('webroot').yii::app()->settings->get('general','general_directorioimg')));
+            die();
+            $image = Yii::app()->image->load('themes/imagenes/vallejo.jpg');
+            $image->render();die();
+$image->resize(400, 100)->rotate(-45)->quality(75)->sharpen(20);
+$image->save(); // or $image->save('images/small.jpg');
             print_r(array_values(array_unique(array(0=>'12',1=>'13',2=>'12',3=>'15',4=>'12',5=>'13'))));
             die();
             

@@ -74,20 +74,18 @@ class Image {
 			throw new CException('image getimagesize missing');
 
 		// Check to make sure the image exists
-		if (!file_exists($image))
-			//throw new CException('image file not found     :'.is_file($image) );
-			var_dump(file_exists($image)) . "\n";
-		  echo "la imagen es : " .$image;
-		clearstatcache();
-		  yii::app()->end();
-		// Disable error reporting, to prevent PHP warnings
-		$ER = error_reporting(0);
+		// Check to make sure the image exists
+        if (!is_file($image))
+            throw new CException('image file not found');
 
-		// Fetch the image size and mime type
-		$image_info = getimagesize($image);
+        // Disable error reporting, to prevent PHP warnings
+        $ER = error_reporting(0);
 
-		// Turn on error reporting again
-		error_reporting($ER);
+        // Fetch the image size and mime type
+        $image_info = getimagesize($image);
+
+        // Turn on error reporting again
+        error_reporting($ER);
 
 		// Make sure that the image is readable and valid
 		if ( ! is_array($image_info) OR count($image_info) < 3)

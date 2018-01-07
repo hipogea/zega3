@@ -147,7 +147,10 @@ MiFactoria::titulo('Visualizar material','color_swatch_2')
 
 		</div>
 		<div style="width:180px;float:right;">
-			<?php echo "Imagen <br>"; Numeromaximo::Pintaimagen(Yii::app()->params['rutaimagenesmateriales'].$model->codigo.".JPG",Yii::app()->params['rutaimagenesmateriales']."NODISPONIBLE.JPG",120,120); ?>
+			<?php echo "Imagen <br>"; 
+                         echo yii::app()->imagen->putImage(yii::app()->baseUrl.'/materiales/'.$model->codigo.".JPG",$model->codigo,array("width"=>150,"height"=>150));
+
+                        ?>
 
 		</div>
 

@@ -254,14 +254,14 @@ echo $form->DropDownList($model,'um',$datos, array('empty'=>'--Unidad de medida-
 <div class="row">
 <DIV ID="imagenmaterial" >
   <?php 
-  
+   // ECHO yii::app()->imagen->putImage(Yii::app()->params['rutaimagenesmateriales'].$model->codigo.".JPG",array("width"=>200,"height"=>200));
  /* echo CHtml::image(
   	"/recurso/materiales/".$model->codigo.".jpg"
   ,"",
   array('width'=>'240','height'=>'240')
 
   );*/
-  Numeromaximo::Pintaimagen(Yii::app()->params['rutaimagenesmateriales'].$model->codigo.".JPG",Yii::app()->params['rutaimagenesmateriales']."NODISPONIBLE.JPG",240,240)
+ // Numeromaximo::Pintaimagen(Yii::app()->params['rutaimagenesmateriales'].$model->codigo.".JPG",Yii::app()->params['rutaimagenesmateriales']."NODISPONIBLE.JPG",240,240)
 
   ?>
 

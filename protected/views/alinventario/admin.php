@@ -74,7 +74,7 @@ $('#alinventario-grid2').yiiGridView('update', {
 		'ubicacion',
 
 		'descripcion',
-		array('name'=>'codart','header'=>'Imagen','type'=>'raw','value'=>'Numeromaximo::Pintaimagen("/materiales/".$data->codart.".JPG","/materiales/NODISPONIBLE.JPG",40,40)'),
+		array('name'=>'codart','header'=>'Imagen','type'=>'raw','value'=>'yii::app()->imagen->putImage(yii::app()->baseUrl."/materiales/".$data->codart.".JPG",$data->codart,array("width"=>40,"height"=>40),3)'),
 
 		//'punit',
 		array('name'=>'punit','value'=>'MiFactoria::decimal($data->punit)'),

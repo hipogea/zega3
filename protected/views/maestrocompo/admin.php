@@ -47,7 +47,7 @@ $('.search-form form').submit(function(){
         //'codigo',
         array('name'=>'codigo','header'=>'codigo','type'=>'raw','value'=>'CHtml::openTag("span",array("style"=>"color:red; font-weight:bold;")).CHtml::link($data->codigo,Yii::app()->createurl(\'/maestrocompo/editarmaterial\', array(\'id\'=> $data->codigo ) ) ,array("target"=>"_blank")).CHtml::closeTag("span")'),
         ARRAY('name'=>'codigo','header'=>'Ver','type'=>'raw','value'=>'CHTml::link(CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."find.png"),Yii::app()->createurl("Maestrocompo/ver", array("id"=> $data->codigo)) ,array("target"=>"_blank") )','htmlOptions'=>array('width'=>'10')),
-        array('name'=>'codigo','header'=>'Imagen','type'=>'raw','value'=>'Numeromaximo::Pintaimagen("/materiales/".$data->codigo.".JPG","/materiales/NODISPONIBLE.JPG",40,40)'),
+        array('name'=>'codigo','header'=>'Imagen','type'=>'raw','value'=>'yii::app()->imagen->putImage(yii::app()->baseUrl."/materiales/".$data->codigo.".JPG","/materiales/NODISPONIBLE.JPG",array("width"=>40,"height"=>40),3)'),
         //array('name'=>'codigo','type'=>'raw','value'=>'CHtml::image("/recurso/materiales/".$data->codigo.".JPG","",array("height"=>30,"width"=>"30"))'),
         'maestro_ums.desum',
         'descripcion',

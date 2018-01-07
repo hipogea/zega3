@@ -577,7 +577,9 @@ public function actionprueba() {
 	  {
 		  if(@unlink($yourfile)){//$cfile->delete(true)
 			 // echo "El archivo ".$yourfile." se borro exitosamente ";
-			  Numeromaximo::Pintaimagen( $yourfile,Yii::app()->params['rutaimagenesmateriales']."NODISPONIBLE.JPG",240,240);
+			  echo yii::app()->imagen->putImage(yii::app()->baseUrl.'/materiales/'.$_POST['codiguito'].".JPG",$_POST['codiguito'],array("width"=>200,"height"=>200));
+
+                     // Numeromaximo::Pintaimagen( $yourfile,Yii::app()->params['rutaimagenesmateriales']."NODISPONIBLE.JPG",240,240);
 
 		  } else {
 			 // echo "El archivo ".$yourfile." No pudo ser borrado yuy ";
@@ -592,6 +594,8 @@ public function actionprueba() {
 		  IF($cfile1->set($yourfile1)->exists)
 		  {
 			  if(@unlink($yourfile1)){
+                              echo yii::app()->imagen->putImage(yii::app()->baseUrl.'/materiales/'.$_POST['codiguito'].".JPG",$_POST['codiguito'],array("width"=>200,"height"=>200));
+
 				  //echo "El archivo ".$yourfile1." se borro exitosamente uju";
 			  } else {
 				 // echo "El archivo ".$yourfile1." No pudo ser borrado gty ";

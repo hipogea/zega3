@@ -219,12 +219,9 @@ return array(
 		'estadisticas' => array (
 			'class'=>'application.components.EstadisticasCompo',
 		),
-							'image'=>array(
-            							'class'=>'application.extensions.image.CImageComponent',
-            							 'driver'=>'GD',
-           								 // ImageMagick setup path
-										   'params'=>array('directory'=>'/recurso/extensions/image/drivers'),
-							               ),
+							'imagen'=>array(
+                                                        'class'=>'application.components.Imagen',
+                                                                ),
 							'excel'=>array(
 													'class' => 'application.extensions.phpexcel.Classes.PHPExcel',				
 							               ),

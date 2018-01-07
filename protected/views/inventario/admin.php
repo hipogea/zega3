@@ -108,10 +108,8 @@ $('.search-form form').submit(function(){
 		//array('name'=>'codigosap','header'=>'C. Sap','type'=>'raw','value'=>'CHtml::link($data->codigosap,array("inventario/detalle","id"=>$data->idinventario),array("onClick"=>"Loading.show(); return true;"))'), 
 		 array(
             'name'=>'imagen',
-            'type'=>'html',
-          'value'=>'(is_file($data->fotoprimera()["absoluto"]))?
-						CHtml::link(CHtml::image($data->fotoprimera()["relativo"],$data->codigosap,array(\'width\'=>60,\'height\'=>70)),yii::app()->createUrl("Inventario/detalle",array("id"=>$data->idinventario))):
-						"--"'
+            'type'=>'html', 
+          'value'=>'CHtml::link(yii::app()->imagen->putImage($data->fotoprimera()["relativo"],$data->codigosap,array(\'width\'=>30,\'height\'=>35),3),yii::app()->createUrl("Inventario/detalle",array("id"=>$data->idinventario)))',
                      //'value'=>'$data->fotoprimera()["absoluto"]',
 		           ),
 		array('name'=>'codigoaf','header'=>'Cod','type'=>'raw','value'=>'CHtml::link($data->codigoaf,array("inventario/basicupdate","id"=>$data->idinventario),array("onClick"=>"Loading.show(); return true;"))'), 
