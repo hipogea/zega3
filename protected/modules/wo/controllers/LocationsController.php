@@ -63,7 +63,8 @@ class LocationsController extends Controller
 	public function actionCreate()
                
 	{
-             var_dump($this->getModule()->getComponent('config'));die();
+            var_dump(WoConfig::getPattern());DIE();
+            var_dump($this->getModule()->getComponent('config'));die();
             
 		$model=new Locations;
 

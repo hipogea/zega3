@@ -1,19 +1,21 @@
+<br><BR>
+<?php
+
+
+echo CHtml::link(yii::t('links',"Edit Params"),yii::app()->createUrl($this->id.'/SettingsModules',array('modulename'=>$modulename)));
+
+
+?>
+<br><BR>
+
+
+
+
 <?php 
-$ap=array();
-foreach($aparametros as $clave=>$parametros){
-  $ap[$clave]=array(
-      'label'=>$clave,
-      'type'=>'raw',
-      'value'=>''
-  );
-}
-foreach($aparametros as $clave=>$parametros){
-  
-    MiFactoria::titulo('hola','gear'); 
-    
-    
+
+//var_dump($aparametros);
 $this->widget('zii.widgets.CDetailView', array(
-    'data'=>$parametros,
+    'data'=>$aparametros,
     /*'attributes'=>array(
         'title',             // title attribute (in plain text)
         'owner.name',        // an attribute of the related object "owner"
@@ -26,8 +28,6 @@ $this->widget('zii.widgets.CDetailView', array(
         ),
     ),*/
 ));
-
-}
 
 
 ?>

@@ -22,7 +22,7 @@ class ConfiguracionController extends Controller
 		return array(
 			
 			array('allow',
-                            'actions'=>array('SettingsModules',  'creaparametro','admin','RefreshMenu',   'ajaxEditHidparentMenu',    'ajaxEditAliasMenu',   'ajaxActivate',     'menu',    'editar','index','ver','creaconfig'),
+                            'actions'=>array('AjaxLoadSettingModule',     'Modules',    'SettingsModules',  'creaparametro','admin','RefreshMenu',   'ajaxEditHidparentMenu',    'ajaxEditAliasMenu',   'ajaxActivate',     'menu',    'editar','index','ver','creaconfig'),
 				'users'=>array('@'),
 			),
 			
@@ -576,17 +576,113 @@ public function actionver(){
    } 
    
  public function actionSettingsModules(){
-     $array_parameters=array();
-     $modules=yii::app()->getModules();
-     foreach($modules as $name=>$values){
-         if(isset($values['components']['config'])){
-             $component=yii::app()->getModule($name)->getComponent('config');
-             if(method_exists($component,'getParamsConfig'))
-             $array_parameters[$name]=$component->getParamsConfig();             
+     //yii::app()->settings->set('julian','julio',28);die();
+    if(isset($_POST[$this->id])){
+        //var_dump($_POST[$this->id]);die();
+        foreach($_POST[$this->id] as $nameparameter=>$value){
+            //var_dump($nameparameter); var_dump($value);
+           $category=explode('_',$nameparameter)[0];  
+          //if(isset($nameparam=explode('_',$nameparameter)[1])) 
+           $this->setParam($category,$nameparameter, $value);
+        }
+        //MiFactoria::mensaje('success',yii::t('menu',' Module {modulo} has been Changed ',array('{modulo}'=>$_POST[$this->id]['modulename'])));
+       MiFactoria::mensaje('success',yii::t('menu',' Module has been Changed '));
+        $this->redirect(array('modules'));
+    }else{
+     if(isset($_GET['modulename'])){
+         //echo "ya";
+         $modulename= MiFactoria::cleanInput($_GET['modulename']);
+         $array_parameters=array();      
+              $array_parameters[$modulename]=$this->getParamsFromModule($modulename);
+              if(count($array_parameters)>0){
+                  $this->render('_form_all_parameters',array('modulename'=>$modulename,'aparametros'=>$array_parameters[$modulename])); 
+                  yii::app()->end(); 
+              }
+              throw new CHttpException(500,yii::t('errvalid',"Don't exists any parameter for this Module"));
+		
          }
+     //}
+    // var_dump($array_parameters);die();  
+         
      }
-    // var_dump($array_parameters);die();
-   $this->render('modulesconf',array('aparametros'=>$array_parameters));
+     
+     
+    }
+  
+ 
+ 
+ public function actionModules(){
+     $modules=array_keys(yii::app()->getModules());
+     $modules=array_combine($modules,$modules);
+     $this->render('modules',array('data'=>$modules));
+     
  }
+ 
+ 
+ private function setParam($category,$name,$value){
+     yii::app()->settings->set($category,$name,$value);
+     return 1;
+ }
+ 
+ private function getParam($category,$name){
+     return yii::app()->settings->get($category,$name);
+ }
+ /*funcion que EXTRAE los valores de la baSE DE DATOS SI YA ESTAN REGISTRDOS 
+  * eN CASO DE NOS ESTARLOS POR PRIMERA VEZ SE SACAN DEL ARCHIVO DE FUENTE DEL 
+  * COMPOENNTE DEL MOCULO
+  */
+ private function getValuesParams($modulename,$array_config){
+   //foreach($array_config as $modulename=>$configmodule){
+     $array_new=array();
+       foreach($array_config as $nameparam=>$valuesparam){
+            if(strlen(trim($this->getParam($modulename, $nameparam)).'')>0){
+                $array_config[$nameparam]['value']=$this->getParam($modulename, $nameparam);               
+            }
+       }
+     // }
+      //$array_new[$modulename]=$array_config;
+       //var_dump($array_new);die();
+        return $array_config;
+    }
     
+    
+  public function actionAjaxLoadSettingModule(){
+      if(yii::app()->request->isAjaxRequest){ 
+          //var_dump($_POST);die();
+          if(isset($_POST[$this->id]['module'])){  
+              $namemodule=$_POST[$this->id]['module'];
+              if(strlen($namemodule)>0){
+                 $parametros=$this->getParamsFromModule($namemodule);
+                 if(count($parametros)>0){
+                     $newArray=array();
+                     foreach($parametros as $clave=>$valores){
+                        // var_DUMP($clave);var_DUMP($valores);
+                         $newArray[str_replace(' ','_',$valores['label'])]=$valores['value'];
+                     }
+                     //var_dump($newArray);die();
+                 $this->renderpartial('modulesconf',array('modulename'=>$namemodule,'aparametros'=>$newArray)); 
+                 yii::app()->end();
+                 }
+                 echo yii::t('errvalid',"Don't exists any parameter for this Module");
+		
+              }
+          }                
+          }      
+         }
+   
+   private function getParamsFromModule($modulename){
+        //$modulename= MiFactoria::cleanInput($_GET['modulename']);
+         $array_parameters=array();
+        if(yii::app()->hasModule($modulename)){
+       $module=yii::app()->getModule($modulename);
+            if($module->hasComponent('config')){
+             $component=yii::app()->getModule($modulename)->getComponent('config');
+             if(method_exists($component,'getParamsConfig'))
+              return $this->getValuesParams ($modulename,$component->getParamsConfig());      
+            }      
+        } 
+       return array();
+   }
+   
+   
 }

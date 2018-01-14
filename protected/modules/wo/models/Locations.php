@@ -3,26 +3,27 @@ class Locations extends ModeloGeneral
 {
     
         public $_parent=null; ///modelo parent 
-        const DELIMITER_CODE="-";
+        //const DELIMITER_CODE='-';
         
         /*mejorar este codigo 
          * esta proiedad debe de ser ingresad en 
          * la configuracion del modulo o apllicaicon */         
-        public $_patterncode=array(
+       /* public $_patterncode=array(
                 '/^[A-Z0-9]{4}\\z/',
                 '/^[A-Z0-9]{4}-[A-Z0-9]{2}\\z/',
                 '/^[A-Z0-9]{4}-[A-Z0-9]{2}-[A-Z0-9]{3}\\z/',
                 '/^[A-Z0-9]{4}-[A-Z0-9]{2}-[A-Z0-9]{3}-[A-Z0-9]{5}\\z/',
                 '/^[A-Z0-9]{4}-[A-Z0-9]{2}-[A-Z0-9]{3}-[A-Z0-9]{5}-[A-Z0-9]{5}\\z/',
                 '/^[A-Z0-9]{4}-[A-Z0-9]{2}-[A-Z0-9]{3}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}\\z/'
-            );
-        private $_format_pattern='XXXX-XX-XXX-XXXXX-XXXXX-XXXXX';
+            );*/
+        
+       // private $_format_pattern='XXXX-XX-XXX-XXXXX-XXXXX-XXXXX';
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return '{{locations}}';
+		return '{{locations}}';                
 	}
 
         
@@ -140,7 +141,7 @@ class Locations extends ModeloGeneral
         public function getCodParent(){
             if(is_null($this->getParent())){
                 $cad= strrev($this->codigo);
-                $lon=strpos(self::DELIMITER_CODE,$cad);
+                $lon=strpos(WoConfig::getParam('_delimiterLocations'),$cad);
                return  strrev(substr($cad,$lon+1));
             }else{
                 return $this->CodParent()->codigo;
@@ -196,7 +197,7 @@ class Locations extends ModeloGeneral
       private function getLevelCode(){
           $valor=0;
           if(strlen($this->codigo)>0)
-         foreach($this->_patterncode as $fragmetPattern){
+         foreach(WoConfig::getPattern() as $fragmetPattern){
              if(preg_match($fragmetPattern,$this->codigo)>0){
                  exit;
              }
@@ -238,7 +239,7 @@ class Locations extends ModeloGeneral
       
       public function checkCodeInf($attribute,$params) {
 	 if($this->getLevelCode()== 0)
-             $this->addError ('codigo', yii::t('woModule.errors','Code is not Match With {pattern}',array('{pattern}'=>$this->_format_pattern)));
+             $this->addError ('codigo', yii::t('woModule.errors','Code is not Match With {pattern}',array('{pattern}'=> WoConfig::getParam('_locationsMask'))));
 	if( $this->existsCode() )
              $this->addError ('codigo', yii::t('woModule.errors','This {attribute} already exists',array('{attribute}'=>yii::t('woModule.labels','Code'))));								
 	} 

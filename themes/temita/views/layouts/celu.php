@@ -170,6 +170,16 @@ echo CHtml::script("$(document).ajaxStart(function () {
 		);
                     
                     ?>
+        <div style="float:right;margin-top: 0.6em;">
+            <?php $this->widget(
+                'booster.widgets.TbLabel',
+                         array(
+                            'context' => 'success',
+                            // 'default', 'primary', 'success', 'info', 'warning', 'danger'
+                            'label' => 'DEV',
+                                )
+                   ); ?>
+        </div>
     </div>
     
         

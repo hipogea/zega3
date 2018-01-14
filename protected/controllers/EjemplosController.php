@@ -399,6 +399,8 @@ $mo=New Alinventario();
 
 
 	public function actionPio() {
+            VAR_DUMP(__FILE__);
+            VAR_DUMP(strrev(explode(DIRECTORY_SEPARATOR,strrev(__FILE__))[2]));DIE();
            var_dump(yii::app()->getModules());die();
 var_dump(explode("-","cala-fdff-vfgf",-1)); die();
             $cad='/[A-Z0-9]{4}-[A-Z0-9]{2}-[A-Z0-9]{3}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}/';
