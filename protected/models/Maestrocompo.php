@@ -36,18 +36,14 @@ class Maestrocompo extends ModeloGeneral
 		$reglas= array(
                     array('detalle','safe','on'=>'prueba'),
 			//eSCENARIO BASICO
-			array('descripcion,codigo,codtipo,marca,modelo,nparte,um,esrotativo','safe','on'=>'BATCH_BASICO_INS'),
+			array('descripcion,codtipo,marca,modelo,nparte,um,esrotativo','safe','on'=>'BATCH_BASICO_INS'),
                     array('descripcion,codigo,codtipo,marca,modelo,nparte,um','safe','on'=>'BATCH_BASICO_UPD'),
-                    
-			array('descripcion,codtipo,um','required','on'=>'BATCH_BASICO_INS,BATCH_BASICO_UPD'),
-			array('um','checkvalores','on'=>'BATCH_BASICO_UPD'),
+                    array('descripcion,codtipo,um','required','on'=>'BATCH_BASICO_INS'),
+                    array('descripcion,codtipo,codigo,um','required','on'=>'BATCH_BASICO_UPD'),
+			array('um','checkvalores','on'=>'BATCH_BASICO_UPD,update'),
 			array('um','exist','allowEmpty' => false, 'attributeName' => 'um', 'className' => 'Ums','message'=>'Esta um no es valida','on'=>'BATCH_BASICO_INS,BATCH_BASICO_UPD'),
 			array('codtipo','exist','allowEmpty' => false, 'attributeName' => 'codtipo', 'className' => 'Maestrotipos','message'=>'Este tipo no existe','on'=>'BATCH_BASICO_INS,BATCH_BASICO_UPD'),
 			//array('esrotativo','checkrotativo','on'=>'BATCH_BASICO_UPD'),
-
-
-
-
 			//array('codigo', 'required'), 
 			array('codigo, codpadre', 'length', 'max'=>8,'on'=>'insert,update'),
 			array('um', 'required', 'message'=>'Llena la unidad de medida','on'=>'insert,update'),
@@ -62,7 +58,7 @@ class Maestrocompo extends ModeloGeneral
 			array('codean', 'length', 'max'=>14,'on'=>'insert,update'),
 			array('flag', 'length', 'max'=>1,'on'=>'insert,update'),
 			array('codtipo', 'length', 'max'=>2,'on'=>'insert,update'),
-			array('um','checkvalores','on'=>'update'),
+			//array('um','checkvalores','on'=>'update'),
 			//array('esrotativo','checkrotativo','on'=>'update'),
 			//array('detalle', 'safe'),
 		//	array('codcent,alam,escompletar,codigox,um,esrotativo','safe','on'=>'insert,update'),
@@ -179,7 +175,7 @@ public function FileReceptor($fullFileName,$userdata) {
 	}
 
 public function checkvalores($attribute,$params) {
-	if($this->oldattributes['um'] <> $this->um)  {
+	if($this->cambiocampo("um"))  {
  if($this->sepuedecambiarum()){
 		} else {
 		 $this->adderror('um','No es posible cambiar la unidad de medida, este material ya fue usado con la unidad de medida base original ');
@@ -475,7 +471,7 @@ public function Sepuedecambiarum() {
 
 								        //Si es un tipo de material que hereda el atributo ROTATIVO
 								    ///eNOTOICES COLOCARLO AUTOMATRICAMENTE
-								       if(Maestrotipos::model()->findBypK($this->codtipo)->esrotativo=='1')
+								       if(Maestrotipos::model()->find($this->codtipo)->esrotativo=='1')
 								        $this->esrotativo='1';
 
 										//$g=new Numeromaximo;

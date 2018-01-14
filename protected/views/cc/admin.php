@@ -3,13 +3,14 @@
 /* @var $model Cc */
 
 $this->breadcrumbs=array(
-	'Ccs'=>array('index'),
-	'Manage',
+       // 'classes'=>array(''),
+	yii::t('menu','Groups')=>array('grupocc/admin'),
+	'List',
 );
 
 $this->menu=array(
-	array('label'=>'Listado', 'url'=>array('index')),
-	array('label'=>'Crear centro de costo', 'url'=>array('create')),
+	//array('label'=>'Listado', 'url'=>array('index')),
+	array('label'=>yii::t('menu','create'), 'url'=>array('create')),
 );
 
 Yii::app()->clientScript->registerScript('search', "
@@ -26,11 +27,11 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<h1>CENTROS DE COSTOS</h1>
+<?php MiFactoria::titulo(yii::t('titulos','Colectors'), 'money'); ?>
 
 
 
-<?php echo CHtml::link('Busqueda','#',array('class'=>'search-button')); ?>
+<?php echo CHtml::link(yii::t('app','search'),'#',array('class'=>'search-button')); ?>
 <div class="search-form" style="display:none">
 <?php $this->renderPartial('_search',array(
 	'model'=>$model,
@@ -39,15 +40,16 @@ $('.search-form form').submit(function(){
 
 <?php $this->widget('ext.groupgridview.GroupGridView', array(
 	'id'=>'cc-grid',
-	'mergeColumns' => array('codgrupo','grupo.desgrupo','grupo.clase.desclasecolector'),
+	'mergeColumns' => array('codgrupo','vale','cc'),
 	'itemsCssClass'=>'table table-striped table-bordered table-hover',
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
 	'columns'=>array(
-		'grupo.clase.codclasecolector',
-		'grupo.clase.desclasecolector',
+		array('header'=>yii::t('labels','Cod Class'),'value'=>'$data->grupo->clase->codclasecolector'),
+		array('name'=>'cc','header'=>yii::t('labels','Class'),'value'=>'$data->grupo->clase->desclasecolector'),
 		'codgrupo',
-		'grupo.desgrupo',
+		array('name'=>'vale','header'=>yii::t('labels','Group'),'value'=>'$data->grupo->desgrupo'),
+		
 		'codc',
 		//'cc',
 		//'centro',

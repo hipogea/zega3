@@ -17,7 +17,7 @@ class Configuraciongeneral extends CFormModel
 	public $general_userauto; ///porcenytaje de exceso para la caja chica
         public $general_directorioimg; ///porcenytaje de exceso para la caja chica
           public $general_imagenophoto; ///nombre de imagen NO EXISTE FOTO
-       
+        public $general_rutauploads; ///ruta donde se alojaraan los temporales de las cargas masivas y subidas 
         public $general_nregistrosporcarpeta; ///porcenytaje de exceso para la caja chica
           public $general_codigomanualempresa; ///indinca si el codigo proveedor es manual o automatico
             public $general_codempresa;
@@ -147,7 +147,7 @@ public $materiales_verpresolpe;
 			array(''
                             .'general_formatofechaingreso,general_formatofechasalida,conta_cajachicadevuelvefondo,conta_patroncuentas,conta_montodetraccion,conta_nperiodosabiertos,'
                              .' conta_formatonumerocomprobantes,conta_multisociedad,general_imagenophoto,'
-                            . 'general_codempresa,general_codigomanualempresa,general_cambiofindesemana,general_dni,general_ruc, general_pasaporte,general_extranjeria,email_smptauth,email_usamaildeusuario,email_passwordhost,email_nombrewebmaster,general_codigomanualempresa,transporte_umdefault,'
+                            . 'general_codempresa,general_codigomanualempresa,general_rutauploads,general_cambiofindesemana,general_dni,general_ruc, general_pasaporte,general_extranjeria,email_smptauth,email_usamaildeusuario,email_passwordhost,email_nombrewebmaster,general_codigomanualempresa,transporte_umdefault,'
                             . 'transporte_motivoot,transporte_objinterno,general_nregistrosporcarpeta,transporte_rutafotos,'
                             . 'general_directorioimg,transporte_objenguia,general_userauto,inventario_auto,'
                             . 'inventario_bloqueado,inventario_mascaraubicaciones,materiales_contabilidad,'
@@ -191,6 +191,7 @@ public $materiales_verpresolpe;
                     'general_zonahoraria'=>'Zona Horaria',
                     'general_codempresa'=>'Codigo empresa',
                     'general_imagenophoto'=>'No imagen',
+                    'general_rutauploads'=>'Ruta Upload',
                     'general_cambiofindesemana'=>'Ajustar Tip Cambio por fin de Semana',
 	'documentos_numeromaxbloqueos'=>'Cant Max Documentos abiertos por usuario',
 			'documentos_selloagua'=>'Sello de agua',

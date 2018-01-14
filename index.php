@@ -2,9 +2,9 @@
 
 // change the following paths if necessary
 
-if(strpos(dirname(__FILE__).'','dev')>0)
+//if(strpos(dirname(__FILE__).'','dev')>0)
         $cad='/../framework/yii.php';
-    else  $cad='/framework/yii.php';
+   // else  $cad='/framework/yii.php';
 $yii=dirname(__FILE__).$cad;
 $config=dirname(__FILE__).'/protected/config/main.php';
 //echo $yii; die();

@@ -2,14 +2,16 @@
 /* @var $this GrupoccController */
 /* @var $model Grupocc */
 
+
 $this->breadcrumbs=array(
-	'Grupoccs'=>array('index'),
-	'Manage',
+       // 'classes'=>array(''),
+	yii::t('menu','Colectors')=>array('Cc/admin'),
+	'List',
 );
 
 $this->menu=array(
 	//array('label'=>'List Grupocc', 'url'=>array('index')),
-	array('label'=>'CreaR Grupo', 'url'=>array('create')),
+	array('label'=>yii::t('menu','Create Group'), 'url'=>array('create')),
 );
 
 Yii::app()->clientScript->registerScript('search', "
@@ -26,7 +28,7 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<?php MiFactoria::titulo('Grupos de Colectores','package'); ?>
+<?php MiFactoria::titulo(yii::t('titulos','Group Colectors'),'package'); ?>
 
 
 

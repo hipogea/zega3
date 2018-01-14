@@ -397,8 +397,27 @@ $mo=New Alinventario();
 
 }
 
-public $layout='//layouts/column2';
+
 	public function actionPio() {
+           var_dump(yii::app()->getModules());die();
+var_dump(explode("-","cala-fdff-vfgf",-1)); die();
+            $cad='/[A-Z0-9]{4}-[A-Z0-9]{2}-[A-Z0-9]{3}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}/';
+            $arre=array(
+                '/[A-Z0-9]{4}/',
+                '/[A-Z0-9]{4}-[A-Z0-9]{2}/',
+                '/[A-Z0-9]{4}-[A-Z0-9]{2}-[A-Z0-9]{3}/',
+                '/[A-Z0-9]{4}-[A-Z0-9]{2}-[A-Z0-9]{3}-[A-Z0-9]{5}/',
+                '/[A-Z0-9]{4}-[A-Z0-9]{2}-[A-Z0-9]{3}-[A-Z0-9]{5}-[A-Z0-9]{5}/',
+                '/[A-Z0-9]{4}-[A-Z0-9]{2}-[A-Z0-9]{3}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}/'
+            );
+          var_dump(preg_match('/^[[A-Z0-9]{4}-[A-Z0-9]{1}\\z/','COEX-PE')); die();
+            
+            echo serialize(array('uno'=>'estranda', 'dos'=>array('a','b')));die();
+           $reg=new Maestrodetalle();
+           var_dump($reg->getPrimaryKey());die();
+$content = yii::app()->csv->initParams($reg->search());  
+Yii::app()->getRequest()->sendFile('holaamigos.csv', $content->toCSV(), "text/csv", false);
+exit();
             $maes=new Maestrocompo;
             var_dump($maes->getModelParentByField('codtipo'));
             die();

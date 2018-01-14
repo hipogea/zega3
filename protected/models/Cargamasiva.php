@@ -20,6 +20,8 @@ class Cargamasiva extends ModeloGeneral
 	 private $_modeloatratar=null;
 	 public $ruta;
          public $idcampoadicional=null;
+         public $_arrayclaves=null;
+         public $_aChildFields=null;
 	public function tableName()
 	{
 		return '{{cargamasiva}}';
@@ -39,10 +41,10 @@ class Cargamasiva extends ModeloGeneral
 			array('insercion', 'length', 'max'=>1),
 			array('insercion', 'safe'),
 
-			array('id,fechacreac,escenario,iduser,insercion, fechaejec, descripcion', 'safe'),
+			array('id,cabecera,cabecera,fechacreac,escenario,iduser,insercion, fechaejec, descripcion', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, modelo, iduser, fechacreac, fechaejec, insercion, descripcion', 'safe', 'on'=>'search'),
+			array('id, modelo,cabecera, iduser, fechacreac, fechaejec, insercion, descripcion', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -56,7 +58,8 @@ class Cargamasiva extends ModeloGeneral
 		return array(
 	
 		'detalle'=>array(self::HAS_MANY, 'Cargamasivadet', 'hidcarga', 'order'=>'orden ASC'),
-		'numeroerrores'=>array(self::STAT, 'Logcargamasiva', 'hidcarga', 'select'=> 'COUNT(id)', 'condition'=>"level='0' and iduser=".yii::app()->user->id),
+                    'claves'=>array(self::HAS_MANY, 'Cargamasivadet', 'hidcarga', 'condition'=>"esclave='1'"),
+				'numeroerrores'=>array(self::STAT, 'Logcargamasiva', 'hidcarga', 'select'=> 'COUNT(id)', 'condition'=>"level='0' and iduser=".yii::app()->user->id),
 			'numeroexitos'=>array(self::STAT, 'Logcargamasiva', 'hidcarga', 'select'=> 'COUNT(id)', 'condition'=>"level='1' and iduser=".yii::app()->user->id),
 		'numeroitems'=>array(self::STAT, 'Cargamasivadet', 'hidcarga', 'order'=>'orden ASC'),//el campo foraneo
 			'logcarga'=>array(self::HAS_MANY, 'Logcargamasiva', 'hidcarga', 'condition'=>"level='1' and iduser=".yii::app()->user->id),
@@ -213,7 +216,7 @@ private function getCriteriaField($namefield){
     $croter=New CDbCriteria(); 
     $croter->addCondition("hidcarga=:vcarga");
     $croter->params=array(':vcarga'=>$this->id);
-    $croter->order="esclave,requerida ASC";
+    $croter->order="esclave DESC";
     return $croter;
   }
   
@@ -243,14 +246,25 @@ private function getChildRecord($nameField){
 }
 
 ///lista de campos que estan en el detalle
-private function getChildFields(){
-   return Yii::app()->db->createCommand()
+private function getChildFields($liketext=false){
+  if(is_null($this->_aChildFields)){
+       $this->_aChildFields= Yii::app()->db->createCommand()
 		  ->select('nombrecampo')
 		  ->from('{{cargamasivadet}}')
 		  ->where("hidcarga=:vhidcarga ",
-			  array(":vhidcarga"=>$this->id))		  
-		  ->queryColumn(); 
+			  array(":vhidcarga"=>$this->id))
+                  ->order("orden asc")
+		  ->queryColumn();  
+  }
+   
+   $cad="";
+  foreach($this->_aChildFields as $clave=>$nombrecampo){$cad.=",".$nombrecampo;}
+  $cad=substr($cad,1);
+   return(!$liketext)?$this->_aChildFields:$cad;
+ 
 }
+
+
 
 ///saca la diferencia de lso campos 
 ///del detalle y los campos 'safe'  en el escenario de carga
@@ -258,26 +272,35 @@ private function getChildFields(){
      return array_values(array_diff($this->getModelToPerform()->getSafeAttributeNames(), $this->getChildFields()));
    }
 
- private function getModelToPerform(){
-     if(is_null($this->_modeloatratar)){
-         $this->_modeloatratar=New $this->modelo($this->escenario);
+   
+ public function getModelToPerform($refresh=false){
+     if(is_null($this->_modeloatratar) or $refresh){
+         $this->_modeloatratar=New $this->modelo($this->escenario);         		
      }
-     return $this->_modeloatratar;
+        return $this->_modeloatratar; 
       
  }
+ 
+ //obietne un registro loadmondel de el modelo en custion
+ public function loadModelToPerform($keyField){
+    return $this->getModelToPerform()->findByPk($keyField);
+ }
+ 
+
    
 //agrega un registro hijo  siempre y cuamdo fieldC sea una instancia de columna de tabla
 public function addChild($fieldC=null){
     if(gettype($fieldC)=='string'){
         $fieldC= $this->getModelToPerform()->getMetaData()->columns[$fieldC];
     }
+   
     if(is_object($fieldC) ){
        if(is_null($this->getChildRecord($fieldC->name))){
            $registro=new Cargamasivadet;
            //var_dump($registro->isAttributeSafe('tipo'));die();
            $registro->setAttributes(array(
                                 'nombrecampo'=>trim($fieldC->name),
-                                'esclave'=>($fieldC->isPrimaryKey)?'1':'0',
+                                'esclave'=>($fieldC->isPrimaryKey or in_array(trim($fieldC->name), (is_array($this->getArrayKeys()))?$this->getArrayKeys():array($this->getArrayKeys())       ) )?'1':'0',
                                 'hidcarga'=>$this->id,
                                 'aliascampo'=>$this->getModelToPerform()->getAttributelabel($fieldC->name),
                                 'requerida'=>($this->getModelToPerform()->isAttributeRequired($fieldC->name))?'1':'0',
@@ -287,8 +310,8 @@ public function addChild($fieldC=null){
                                  
                                 ));
           if(get_parent_class($this->getModelToPerform())=='ModeloGeneral')
-              if(!is_null($this->getModelToPerform()->getModelParentByField($fieldC->name)))
-              $registro->modeloforaneo=get_class($this->getModelToPerform()->getModelParentByField($fieldC->name));
+              //if(!is_null($this->getModelToPerform()->getModelParentByField($fieldC->name)))
+              $registro->modeloforaneo=$this->getModelToPerform()->getModelParentByField($fieldC->name);
            $registro->save();
 		
        }
@@ -318,4 +341,167 @@ public function refreshChilds(){
     $this->addChilds();
 }
 
+ public  function limpialogcarga(){
+     return Yii::app()->db->createCommand()
+		  ->delete('{{logcargamasiva}}',"iduser=:viduser ",
+			  array(":viduser"=>yii::app()->user->id)); 
+        
+    }
+    
+    
+ //deuelve lso campos a excluir  en la importacion de datos 
+ public function getFieldsToExclude(){
+    if(!$this->isNewRecord){
+       return array_values(array_diff(
+               $this->getModelToPerform()->attributeNames(),
+               $this->getModelToPerform()->getSafeAttributeNames()
+               ));
+    }
+    return array();
+ } 
+ 
+ 
+ public function sqlBuilderToExport(){
+     return Yii::app()->db->createCommand()
+		  ->select($this->getChildFields(true))
+             ->from($this->getModelToPerform()->tableName())
+             ->limit(2)
+             ;  
+ }
+ 
+ //Genera la plantilla del  archivo CSV
+ //DESDE 
+  public function performCsvFile(){
+      $content = yii::app()->csv->initParams($this->sqlBuilderToExport());
+      $content->setExclude($this->getFieldsToExclude());
+      Yii::app()->getRequest()->sendFile(str_replace(' ','_',$this->descripcion).'.csv', $content->toCSV(), "text/csv", false);
+    
+  }
+
+  //obietne la ruta de carga de temproales 
+  public function getTempPathUpload(){
+     return Yii::getPathOfAlias('webroot').yii::app()->settings->get('general','general_rutauploads').DIRECTORY_SEPARATOR.str_replace(' ','_',$this->descripcion).'_'.time().yii::app()->user->id.'.csv';
+  }
+ 
+  /*Valida la estructura de los datos 
+   * del archivo CSV , de acuerdo a la linea del archivo leida
+   * @data: array devuelto por la funcion fgetcsv
+   */
+ public function validateRow($data){
+    if(count($data) !==$this->numeroitems) {
+        
+    } 
+ }
+
+ 
+ /*
+  * Fucnion que devuelve la propeieda del array asociativo con los 
+  * campos clave y el orden 
+  */
+ private function getArrayKeys(){
+     
+  if(is_null($this->_arrayclaves)){
+    if(count($this->detalle==0)){ //en el caso de que recien este iniciando
+         $this->_arrayclaves=$this->getModelToPerform()->getMetaData()->tableSchema->primaryKey;
+    }else{
+      $filaclaves=$this->claves;
+            //if (count($filaclaves)==0)
+                    //throw new CHttpException(500,'No se hamn definido ningún campo clave');
+       
+                    foreach( $this->claves as $filaclave){
+                            $this->_arrayclaves[$filaclave->orden]=$filaclave->nombrecampo;        
+                                } 
+    
+      }
+  }
+   return  $this->_arrayclaves;
+ }
+ 
+ /*
+  * Fucio que devuleve la clave primaria 
+  * del modelo en fucion del archivo data del csv
+  * @data: Array devuelto por la funcion fgetcsv
+  */
+ public function getPrimaryKeyFromModel($data){
+     $primarykeys=array();
+     $arregloKeys=$this->getArrayKeys();
+    if(count($arregloKeys)==1)
+    return $data[0];
+    if(count($arregloKeys)>1){
+        foreach($arregloKeys as $orden=>$nombrecampo){
+            $primaryKeys[$nombrecampo]=$data[$orden-1];
+        }
+    }
+    return $primaryKeys;
+ }
+ 
+ /*
+  * Fucion que actualiza los campos del modelo 
+  * del modelo en fucion del archivo data del csv
+  * @registro: regsitro : el modelo a trabajar
+  * @data: array devuelto por la funcion fgetcsv
+  * 
+  */
+ public function updateRecordModel(&$registro,$data){
+     $i=1;
+   foreach($this->getChildFields() as $clave=>$nombrecampo){
+       //recordar que getChildFields() saca los campos respetando el orden
+       $registro->{$nombrecampo}=addslashes($data[$i-1]);
+       $i=$i+1;
+   }
+ }
+ 
+  public  function registralogcarga($linea,$mensaje,$campo,$exito){
+        $modelito=new Logcargamasiva();
+        $modelito->setAttributes(array(
+            'numerolinea'=>$linea,
+            'hidcarga'=>$this->id,
+            'campo'=>$campo,
+            'mensaje'=>$mensaje,
+            'level'=>$exito,
+            'iduser'=>Yii::app()->user->id,
+            'fecha'=>date("Y-m-d H:i:s")
+        ));
+        IF(!$modelito->save())PRINT_R($modelito->getErrors());
+    }   
+    public function logUpload($registro,$linea){
+        $registro->validate();
+        $errores=$registro->geterrors();
+	$mensaje="";																						
+	if(count($errores)==0 ) {
+        $this->registralogcarga($linea,' OK',$this->getChildFields()[0],1);																						
+	}  else {
+	foreach($errores as $nombrecampo=>$errores) {
+                 foreach($errores as $clavi=>$valori) {
+			$mensaje.=$clavi.")".$valori."\n";
+                                                     }
+		 $this->registralogcarga($linea,$mensaje,$nombrecampo,0);														
+		}																						
+	}
+      }
+ 
+ /*
+  * Genera un csv de acuerdo al modelo foraneo
+  * Relacion de BELONGS::TO
+  */
+public function performCsvForeign($nameFieldModel){
+     $content = yii::app()->csv->initParams($this->sqlBuilderForeignModel($nameFieldModel));
+      //$content->setExclude($this->getFieldsToExclude());
+      Yii::app()->getRequest()->sendFile(str_replace(' ','_',$nameFieldModel).'.csv', $content->toCSV(), "text/csv", false);
+    
+}
+
+private function sqlBuilderForeignModel($nameFieldModel){
+    $nameTableDb=$nameFieldModel::model()->tablename();
+     return Yii::app()->db->createCommand()
+		  ->select('*')
+             ->from($nameTableDb)
+             ->limit(1000)
+             ;  
+   
+}
+							
+    
+    
+    
 }

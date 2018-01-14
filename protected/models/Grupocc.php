@@ -57,8 +57,10 @@ class Grupocc extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'codgrupo' => 'Codgrupo',
-			'desgrupo' => 'Desgrupo',
+			'codgrupo' => yii::t('labels','Cod group'),
+			'desgrupo' => yii::t('labels','Group'),
+                    'codclase' => yii::t('labels','cod Class'),
+			//'desgrupo' => 'Desgrupo',
 		);
 	}
 

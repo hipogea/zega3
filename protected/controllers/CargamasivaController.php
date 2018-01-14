@@ -1,5 +1,4 @@
 <?php
-
 class CargamasivaController extends ControladorBase
 {
 	/**
@@ -21,7 +20,7 @@ class CargamasivaController extends ControladorBase
 		return array(
 
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('AjaxRefreshChildFields',   'AjaxAddChild','borrafilacampo',   'index','view','admin','create','borracarga','cargaescenario','carga','update','modificadetalle','borradetalle','import'),
+				'actions'=>array(  'cargar','importar',   'generacsvForeign' ,  'generacsv','AjaxRefreshChildFields',   'AjaxAddChild','borrafilacampo',   'index','view','admin','create','borracarga','cargaescenario','carga','update','modificadetalle','borradetalle','import'),
 				'users'=>array('@'),
 			),
 
@@ -112,319 +111,373 @@ public function actionModificadetalle($id)
 	}
 		
 	  
+	public function actionimportar($id){           
+                
+            $carga=$this->loadModel($id);
+            //PRINT_R($carga->attributes);
+            $carga->limpialogcarga();
+            $carga->setScenario('search');
+           if(isset($_POST['Cargamasiva'])){
+               $filelist=CUploadedFile::getInstancesByName('csvfile'); 
+                 foreach($filelist as $file){
+                     //var_dump($carga->getTempPathUpload());
+                    $file->saveAS($carga->getTempPathUpload(),false);
+                    $carga->ruta=$carga->getTempPathUpload();
+                          $handle = fopen("$file->tempName", "r");
+                          $row = 1;
+                          //var_dump( $handle);die();
+                          while (($data = fgetcsv($handle, 1000, 
+                              Yii::app()->user->getField('delimitador'))) !== FALSE
+                               )
+                            {
+                            // var_dump($carga->cabecera);var_dump($row);
+                              if($carga->cabecera=='1' && $row==1)
+                                  {
+                                  //die();
+                                  $row=$row+1; continue;
+                                  
+                                  }
+                                if($carga->insercion=='1'){
+                                      $registro=$carga->getModelToPerform();
+                                   }else{//si es un update
+                                      $registro=$carga->loadModelToPerform($carga->getPrimaryKeyFromModel($data));
+                                   }
+                               $carga->updateRecordModel($registro, $data);
+                               /*print_r($data);*/
+                              // print_r($registro->attributes);
+                              if(isset($_POST['Cargamasiva']['ruta'])){
+                                 if(!$registro->save())
+                                     print_r($registro->geterrors());
+                                  $carga->registralogcarga($row,'Ok','',1);
+                                  
+                              }else{
+                                 $carga->logUpload($registro, $row);  
+                              }
+                                 
+                             
+                                    
+                              $row=$row+1;
+                             }//fin del while
+                                     } //fin del for
+                             if(isset($_POST['Cargamasiva']['ruta'])){
+                                   echo "se cargo con exito";
+                                    yii::app()->end();
+                              }
+                             $this->render('logerrores',array(
+				'model'=>$carga,
+				'ruta'=>$carga->ruta,
+				));
+			yii::app()->end();
+           }else{
+               echo "No se ha enviado ningun archivo";
+           }
+           if (!empty($_GET['asDialog']))
+				$this->layout = '//layouts/iframe';
+			$this->render('cargainventario',array(
+						'model'=>$carga,
+						));
+        }
 	
-	
-	
+	public function actioncargar(){           
+          if(yii::app()->request->isAjaxRequest){
+              //VAR_DUMP($_POST);DIE();
+              if(isset($_POST['id'])){  
+                  $id= (integer)MiFactoria::cleanInput($_POST['id']); 
+                 $carga=$this->loadModel($id);  
+                  if(is_null($carga))                  
+                      throw new CHttpException(500,'NO se encontro el registro con el id '.$id);        
+                    }
+                     $carga->limpialogcarga();
+            $carga->setScenario('search');
+           if(isset($_POST['ruta'])){
+               $carga->ruta=$_POST['ruta'];
+                     $handle = fopen("$carga->ruta", "r");
+                          $row = 1;
+                          //var_dump( $handle);die();
+                          while (($data = fgetcsv($handle, 1000, 
+                              Yii::app()->user->getField('delimitador'))) !== FALSE
+                               )
+                            {
+                            // var_dump($carga->cabecera);var_dump($row);
+                              if($carga->cabecera=='1' && $row==1)
+                                  {
+                                  //die();
+                                  $row=$row+1; continue;
+                                  
+                                  }
+                                if($carga->insercion=='1'){
+                                      $registro=$carga->getModelToPerform(true);
+                                     // echo " es insercion <br>";
+                                   }else{//si es un update
+                                      // echo " es actualizacion <br>";
+                                      $registro=$carga->loadModelToPerform($carga->getPrimaryKeyFromModel($data));
+                                   }
+                                  $carga->updateRecordModel($registro, $data); 
+                                /*var_dump($registro->isNewRecord);  
+                                var_dump(get_class($registro));
+                                var_dump($registro->getScenario());die();*/
+                              // echo "probando ".$row."<br>";
+                               /*var_dump($registro->isNewRecord);
+                                var_dump($registro->getScenario());*/
+                                 if(!$registro->save())
+                                     print_r($registro->geterrors());
+                                 $registro->setScenario($carga->escenario);
+                                 $carga->registralogcarga($row,'Ok','',1); 
+                                   /*var_dump($registro->isNewRecord);
+                                var_dump($registro->getScenario());*/
+                                  unset($registro);
+                              $row=$row+1;
+                             }//fin del while  
+                 echo "Se procesaron ".($row-1)."   Registros";
+           }ELSE{
+               throw new CHttpException(500,'No se ha especificado la ruta');        
+                    
+           }
+                    
+              }
+        }
 	
 	
 		public function actionimport($id)
 		{
-			//$model= Maestrodetalle::Model()->findByPk(array('codart'=>'12000007','codcentro'=>'1203','codal'=>'125')  ); 
-			//VAR_DUMP($model);die();
-		if(yii::app()->request->isAjaxRequest){
+			if(yii::app()->request->isAjaxRequest){
 			if(!isset($_POST['id']))
 			$id=MiFactoria::cleanInput($_POST['id']);
 			if(!isset($_GET['id']))
 			$id=MiFactoria::cleanInput($_GET['id']);
 		}
-$camposclave=array();
+                $camposclave=array();
 		$nombreprimercampo=null;
-			MiFactoria::limpialogcarga();
+			//MiFactoria::limpialogcarga();
 			$carga=Cargamasiva::model()->findByPk($id);
+                        $carga->limpialogcarga();
 			$carga->setScenario('search');
 			//verificando que haya llenado bien los campos de longitud y orden 
 				$filas=$carga->detalle;
 			//VAR_DUMP($filas[0]);DIE();
 				foreach ($filas as $filita) {
-					
-
-					if(!((int)$filita->longitud > 0)  or !((int)$filita->orden >0) )
+                                    if(!((int)$filita->longitud > 0)  or !((int)$filita->orden >0) )
 						throw new CHttpException(500,'Revise la longitud :  ('.$filita->longitud.') y el   orden : ('.$filita->orden.') del campo '.$filita->nombrecampo.'   ');
-					
 					if(is_null($nombreprimercampo))
 					$nombreprimercampo=((int)$filita->orden ==1)?$filita->nombrecampo:null;
-				
-				if($filita->esclave=='1')
-				$camposclave[$filita->orden]=$filita->nombrecampo;
-				
-				
-				
-					
+				  if($filita->esclave=='1')
+				   $camposclave[$filita->orden]=$filita->nombrecampo;
 				}
 		     if(is_null($nombreprimercampo)) {				
 				 throw new CHttpException(500,'NO asign贸 un campo clave para la carga, debe tener el numero de orden 1   ');
 					
 			 }
-
-		/*$modelito= new Inventario();
-			var_dump(get_parent_class($modelito));
-			echo "<br><br><br>";
-			yii::app()->end();*/
-			/*$modelito=Inventario::model()->findByPk(2000);
-			var_dump($modelito);
-			yii::app()->end();*/
-			
-            //hallando el modelo a cargar 
-			
-			
-				if(isset($_POST['Cargamasiva']))
-								{	
-									//$model->attributes=$_POST['Alinventario'];
-									
-									$filelist=CUploadedFile::getInstancesByName('csvfile'); 
-															
-													foreach($filelist as $file)
-																{
-																	  $carga->ruta=Yii::getPathOfAlias('webroot').DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.time().'.'.$file->getExtensionName();
-																	  $file->saveAS($carga->ruta,false);	
-																				//$transaction = Yii::app()->db->beginTransaction();
-																				$handle = fopen("$file->tempName", "r");
-																																							
-																				$row = 1;
-																		while (($data = fgetcsv($handle, 1000, Yii::app()->user->getField('delimitador'))) !== FALSE)
-																		{
-
-
-																			if($row>1){
-																							if($carga->insercion=='1') 
-																								{
-																										$cadena="\$model= new ".$carga->modelo.";";	
-																					            } else {
-																										if(count($camposclave) <= 1 ){ ///si la clave princuipal es un campo
-																											$cadena=" \$model= ".$carga->modelo."::Model()->findByPk(".$data[0]."); ";
-																										$cadvar=$nombreprimercampo."=".$data[0];
-																										}else{//si es mas de un solo campo ahi si ahya chicha
-																											/*FORMADO LA CADENA DE FILREO PARA REGISTROS CON CLAVE PRINCIPAL DE MAS DE UN CAMPO*/
-																											$cadvar="";
-																											foreach($camposclave as $clave=>$valor){
-																												
-																												$cadvar.=",'".$valor."'=>'".$data[$clave-1]."'";																												
-																											}
-																											$cadvar=substr($cadvar,1);//eliminado la primera comita
-																											/* LISTO YA ESTA AHRA LA INSERTAMOS EN LA SENTENCIA FINDBYPK*/
-																											$cadvar="array(".$cadvar.")  ";
-																											$cadena=" \$model= ".$carga->modelo."::Model()->findByPk(".$cadvar."); ";
+				if(isset($_POST['Cargamasiva'])){	
+				$filelist=CUploadedFile::getInstancesByName('csvfile'); 
+                                  foreach($filelist as $file){
+					//$carga->ruta=Yii::getPathOfAlias('webroot').DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.time().'.'.$file->getExtensionName();
+					$file->saveAS($carga->getTempPathUpload(),false);
+                                        $handle = fopen("$file->tempName", "r");
+                                        $row = 1;
+                                        while (($data = fgetcsv($handle, 1000, Yii::app()->user->getField('delimitador'))) !== FALSE)
+                                                {
+                                             if($row>1){
+						if($carga->insercion=='1') 
+							{
+                                                            $cadena="\$model= new ".$carga->modelo.";";	
+							} else {
+                                                                if(count($camposclave) <= 1 ){ ///si la clave princuipal es un campo
+								$cadena=" \$model= ".$carga->modelo."::Model()->findByPk(".$data[0]."); ";
+								$cadvar=$nombreprimercampo."=".$data[0];
+								}else{//si es mas de un solo campo ahi si ahya chicha
+								/*FORMADO LA CADENA DE FILREO PARA REGISTROS CON CLAVE PRINCIPAL DE MAS DE UN CAMPO*/
+								$cadvar="";
+								foreach($camposclave as $clave=>$valor){
+                                                                           $cadvar.=",'".$valor."'=>'".$data[$clave-1]."'";																												
+											}
+								$cadvar=substr($cadvar,1);//eliminado la primera comita
+										/* LISTO YA ESTA AHRA LA INSERTAMOS EN LA SENTENCIA FINDBYPK*/
+										$cadvar="array(".$cadvar.")  ";
+										$cadena=" \$model= ".$carga->modelo."::Model()->findByPk(".$cadvar."); ";
 																										
-																										}
+								}
 																						
-																								}
-																									//echo $cadena;// die();
-																									//echo "<br>";
-																									//echo "<br>"; var_dump($data);echo "<br>";
-																								//$model= Maestrodetalle::Model()->findByPk(array('codart'=>1203,'codcentro'=>125,'codal'=>201) );
-																										eval($cadena);
-																										if(is_null($model))	{
-																											
-																									      MiFactoria::registralogcarga($row-1,$carga->id,' No se encontro ningun registro para el valor : '.$cadvar   ,$filas[$i]->nombrecampo,0);
-																					                       continue;
-																										}
-																										$model->setScenario($carga->escenario);   
-																										
-																			//Si el numero de  campos leidos = numero de campos de la carga
-																			 if (count($data) != $carga->numeroitems) {
-																				  MiFactoria::registralogcarga($row-1,$carga->id,'El numero de campos del objeto Carga y el archivo no coinciden.','todos',0);
-																				throw new CHttpException(500,'El numero de filas del objeto Carga ('.$carga->numeroitems.') y el archivo ('.count($data).') no coinciden.');
-																			 }
-																			 //verificando que los datos ean ocnsistentes
-																			  foreach ($data as $i=>$valorx) 
-																			     {
-																					  //si excede la longitud 
-																					  /* var_dump(strlen(trim($data[$i])));
-																					   echo "<br>";
-																					    $model->{$filas[$i]->nombrecampo}='amigi';	
-																					   var_dump($model->{$filas[$i]->nombrecampo});
-																			           yii::app()->end();	*/
-																				 
-																					
-																				
-																			        if(!($carga->insercion !='1'  and $i==0 )) ///Si  es actuyalizacion y es el primer campo
-																					  if(($filas[$i]->longitud < strlen(trim($valorx))))
-																						  MiFactoria::registralogcarga($row-1,$carga->id,' El valor es demasiado largo para este campo',$filas[$i]->nombrecampo,0);
-																					    //$huboerror=true;
-																					  if(!($carga->insercion !='1'  and $i==0 )) ///Si no  es actuyalizacion y es el primer campo
-																					  //si es requerido y no hay nada 
-																					  if($filas[$i]->requerida=='1' and (is_null($valorx)  or  $valorx=="" or empty($valorx) or trim($valorx)=="" ))
-																					    MiFactoria::registralogcarga($row-1,$carga->id,' Este campo es obligatorio',$filas[$i]->nombrecampo,0);
-																					    //si no es del tipo 
-																					    if($filas[$i]->tipo=='date' and preg_match('/^\d{4}-\d{2}-\d{2}$/',$valorx)==0  )
-																					   	MiFactoria::registralogcarga($row-1,$carga->id,' Los formatos de fecha deben ser de la forma YYYY-MM-DD ',$filas[$i]->nombrecampo,0);
-																					   ///ahora colocar los campos del modelo a llenar 
+							}
+						eval($cadena);
+							if(is_null($model))	{
+                                                               MiFactoria::registralogcarga($row-1,$carga->id,' No se encontro ningun registro para el valor : '.$cadvar   ,$filas[$i]->nombrecampo,0);
+                                                                     continue;
+								}
+							$model->setScenario($carga->escenario); 
+                                                              //Si el numero de  campos leidos = numero de campos de la carga
+									 if (count($data) != $carga->numeroitems) {
+										  MiFactoria::registralogcarga($row-1,$carga->id,'El numero de campos del objeto Carga y el archivo no coinciden.','todos',0);
+                                                        		throw new CHttpException(500,'El numero de filas del objeto Carga ('.$carga->numeroitems.') y el archivo ('.count($data).') no coinciden.');
+									 }
+								 //verificando que los datos ean ocnsistentes
+									  foreach ($data as $i=>$valorx) 
+											     {
+										        if(!($carga->insercion !='1'  and $i==0 )) ///Si  es actuyalizacion y es el primer campo
+												  if(($filas[$i]->longitud < strlen(trim($valorx))))
+														  MiFactoria::registralogcarga($row-1,$carga->id,' El valor es demasiado largo para este campo',$filas[$i]->nombrecampo,0);
+												    //$huboerror=true;
+												  if(!($carga->insercion !='1'  and $i==0 )) ///Si no  es actuyalizacion y es el primer campo
+													  //si es requerido y no hay nada 
+														  if($filas[$i]->requerida=='1' and (is_null($valorx)  or  $valorx=="" or empty($valorx) or trim($valorx)=="" ))
+													    MiFactoria::registralogcarga($row-1,$carga->id,' Este campo es obligatorio',$filas[$i]->nombrecampo,0);
+													    //si no es del tipo 
+											if($filas[$i]->tipo=='date' and preg_match('/^\d{4}-\d{2}-\d{2}$/',$valorx)==0  )
+												   	MiFactoria::registralogcarga($row-1,$carga->id,' Los formatos de fecha deben ser de la forma YYYY-MM-DD ',$filas[$i]->nombrecampo,0);
+												 ///ahora colocar los campos del modelo a llenar 
 																					    
-																					 if($carga->insercion!='1')
-																					 {
-																						if($i > 0)$model->{$filas[$i]->nombrecampo}=$valorx;
-																					} else {
-																						$model->{$filas[$i]->nombrecampo}=$valorx;
-																					}
-																					 
-																																											
-																					}
-																				///Listo ya tratamos la fila ahora a validar el registro del $model llenado 
-																						$model->validate();
-																						$errores=$model->geterrors();
-																						$mensaje="";
-																						/*echo $model->getScenario();
-																						echo "<br>";
-																						echo "<br>";
-																						print_r($model->attributes);
-																						echo "<br>";
-																						echo "<br>";
-																						print_r($errores);																						
+													if($carga->insercion!='1')
+													 {
+													if($i > 0)  $model->{$filas[$i]->nombrecampo}=$valorx;
+													} else {
+                                                                                                                    $model->{$filas[$i]->nombrecampo}=$valorx;
+													}																							
+												}
+														///Listo ya tratamos la fila ahora a validar el registro del $model llenado 
+														$model->validate();
+														$errores=$model->geterrors();
+														$mensaje="";
 																						
-																						yii::app()->end();*/
-																					if(count($errores)==0 ) {
-																						 MiFactoria::registralogcarga($row-1,$carga->id,' OK',$nombreprimercampo,1);
+														if(count($errores)==0 ) {
+														MiFactoria::registralogcarga($row-1,$carga->id,' OK',$nombreprimercampo,1);
 																						
-																					}  else {
-																						 foreach($errores as $clave=>$valor) {
-																							  foreach($valor as $clavi=>$valori) {
-																								  $mensaje.=$clavi.")".$valori."\n";
-																							  }
-																						  MiFactoria::registralogcarga($row-1,$carga->id,$valori,$clave,0);
-																						  
-																						 }
-																						
-																					}
-																			   
-																			  }                     
-																									
-																			$row++;
+														}  else {
+														foreach($errores as $clave=>$valor) {
+                                                                                                                    foreach($valor as $clavi=>$valori) {
+															  $mensaje.=$clavi.")".$valori."\n";
+                                                                                                                                }
+														MiFactoria::registralogcarga($row-1,$carga->id,$valori,$clave,0);
+														
 																		}
+																						
+														}
+																			   
+								}    //fion de row > 1                 
+																									
+								$row++;
+							}//fin del while dela archivo
 																		
-																}
-																
-																$this->render('logerrores',array(
-																'model'=>$carga,
-																'ruta'=>$carga->ruta,
-																		));
-																yii::app()->end();
-								} else  {
-								echo "NO se ha enviado ningun form";
+						} //fin dsubir el arvhico 
+                                                        $this->render('logerrores',array(
+								'model'=>$carga,
+								'ruta'=>$carga->ruta,
+								));
+							yii::app()->end();
+						} else  {
+						echo "NO se ha enviado ningun form";
 				                }
 			if (!empty($_GET['asDialog']))
 				$this->layout = '//layouts/iframe';
 			$this->render('cargainventario',array(
-												'model'=>$carga,
-															));
+						'model'=>$carga,
+						));
     }
 	
 	
 	public function actionCarga($id) {
 		$carga=$this->loadModel($id);
-		MiFactoria::limpialogcarga(); //limpia le log de la carga msdiva
-		$cadena="\$model= new ".$carga->modelo.";";
-			eval($cadena);
-			$model->setScenario($carga->escenario);  
-			
-		
+		$carga->limpialogcarga(); //limpia le log de la carga msdiva
+		$model=$carga->getModelToPerform();
+			//$model->setScenario($carga->escenario);
 		if(isset($_POST['Cargamasiva'])){
-			$carga->ruta=$_POST['Cargamasiva']['ruta'];
-				
-																				//$transaction = Yii::app()->db->beginTransaction();
-																				$handle = fopen("$carga->ruta", "r");																																							
-																				$row = 1;
-																				$filas=$carga->detalle;	
-																		while (($data = fgetcsv($handle, 1000, Yii::app()->user->getField('delimitador'))) !== FALSE)
-																		{
-																			if($row>1){
-																				$cadena="\$model= new ".$carga->modelo.";"; //obteenmos el obejto
-																				eval($cadena);
-																				if(is_null($model))	throw new CHttpException(500,__CLASS__.' - '.__FUNCTION__.' - '.__LINE__.'  Error en la linea : '.($row-1).' del archivo de carga,   Revise el valor de la primera columna ');
+			$carga->ruta=$_POST['Cargamasiva']['ruta'];		
+				//$transaction = Yii::app()->db->beginTransaction();
+				$handle = fopen("$carga->ruta", "r");																																							
+				$row = 1;
+				$filas=$carga->detalle;	
+				while (($data = fgetcsv($handle, 1000, Yii::app()->user->getField('delimitador'))) !== FALSE)
+					{
+					 if($row>1){
+						if($carga->insercion=='1')
+								{
+									$cadena="\$model= new ".$carga->modelo.";";
+							         } else {
 
-																				$claves=$model->getMetadata()->tableSchema->primaryKey;
-																				unset($model);$cadena="";
-																				if($carga->insercion=='1')
-																								{
-																										$cadena="\$model= new ".$carga->modelo.";";
-																					            } else {
+								//si es update ahi esta la chicha
+								if(is_array($claves)){
+										$i=0;
+										$valoresclave=array();
+									foreach($claves as $clave=>$valor){
+											$valoresclave[$valor]=$data[$i];
+											$i+=1;
+																	}
+											$cadena=" \$model= ".$carga->modelo."::Model()->findByPk(\$valoresclave); ";
 
-																				//si es update ahi esta la chicha
-																										if(is_array($claves)){
-																											$i=0;
-																											$valoresclave=array();
-																											foreach($claves as $clave=>$valor){
-																												$valoresclave[$valor]=$data[$i];
-																												$i+=1;
-																											}
-																											$cadena=" \$model= ".$carga->modelo."::Model()->findByPk(\$valoresclave); ";
+										}else{
+										$cadena=" \$model= ".$carga->modelo."::Model()->find('".$filas[0]->nombrecampo."=:param ', array(':param'=>'".$data[0]."')); ";
 
-																										}else{
-																											$cadena=" \$model= ".$carga->modelo."::Model()->find('".$filas[0]->nombrecampo."=:param ', array(':param'=>'".$data[0]."')); ";
+													}
+										}
+								
+																	/*var_dump($carga->insercion);
+																	yii::app()->end();*/
+																	//echo $cadena;die();
+																//echo "cadena  ".$cadena."<br>";die();
+														eval($cadena);
+														if(is_null($model))	throw new CHttpException(500,__CLASS__.' - '.__FUNCTION__.' - '.__LINE__.'  Error en la linea : '.($row-1).' del archivo de carga,   Revise el valor de la primera columna ');
+																					
+															$model->setScenario($carga->escenario);   
+																//Si el numero de  campos leidos = numero de campos de la carga
+														if (count($data) != $carga->numeroitems) {
+																		//MiFactoria::registralogcarga($row-1,$carga->id,'El numero de campos del objeto Carga y el archivo no coinciden.','todos',0);
+															throw new CHttpException(500,'El numero de campos del objeto Carga ('.$carga->numeroitems.') y el archivo ('.count($data).') no coinciden. Por favor revise el caracter delimitador en las propiedades de su cuenta de usuario');
+																			}
+										//verificando que los datos ean ocnsistentes
+													 foreach ($data as $i=>$valorx) {
 
-																										}
+													if(!($carga->insercion !='1'  and $i==0 )) ///Si no  es actuyalizacion y es el primer campo
+													if(($filas[$i]->longitud < strlen(trim($valorx))))
+																		  //MiFactoria::registralogcarga($row-1,$carga->id,' El valor es demasiado largo para este campo',$filas[$i]->nombrecampo,0);
+													throw new CHttpException(500,'Linea '.($row-1).' El valor es demasiado larg.o para el campo  '.$filas[$i]->nombrecampo);
+																	 //$huboerror=true;
+													if(!($carga->insercion !='1'  and $i==0 )) ///Si no  es actuyalizacion y es el primer campo
+																		//si es requerido y no hay nada 
+													if($filas[$i]->requerida=='1' and (is_null($valorx)  or  $valorx=="" or empty($valorx) or trim($valorx)=="" ))
+																	// MiFactoria::registralogcarga($row-1,$carga->id,' Este campo es obligatorio',$filas[$i]->nombrecampo,0);
+													 throw new CHttpException(500,'Linea '.($row-1).' Este campo es obligatorio '. $filas[$i]->nombrecampo);
+																						//si no es del tipo
+													if($filas[$i]->tipo=='date' and preg_match('/^\d{4}-\d{2}-\d{2}$/',$valorx)==0  )
+																		//	MiFactoria::registralogcarga($row-1,$carga->id,' Los formatos de fecha deben ser de la forma YYYY-MM-DD ',$filas[$i]->nombrecampo,0);
+													throw new CHttpException(500,'Linea '.($row-1).' Los formatos de fecha deben ser de la forma YYYY-MM-DD '.$filas[$i]->nombrecampo );
+																			 ///ahora colocar los campos del modelo a llenar
+												if($carga->insercion!='1')
+														{
+												if($i > 0)$model->{$filas[$i]->nombrecampo}=$valorx;
+													} else {
+												$model->{$filas[$i]->nombrecampo}=$valorx;
+												}
+																																							
+													}
+												///Listo ya tratamos la fila ahora a validar el registro del $model llenado 
+										$model->validate();
+										$errores=$model->geterrors();
 
-																								}
-																										
-																										/*var_dump($carga->insercion);
-																										yii::app()->end();*/
-																								//echo $cadena;die();
-																				//echo "cadena  ".$cadena."<br>";die();
-																										eval($cadena);
-																										if(is_null($model))	throw new CHttpException(500,__CLASS__.' - '.__FUNCTION__.' - '.__LINE__.'  Error en la linea : '.($row-1).' del archivo de carga,   Revise el valor de la primera columna ');
-																										
-																										$model->setScenario($carga->escenario);   
-																			//Si el numero de  campos leidos = numero de campos de la carga
-																			 if (count($data) != $carga->numeroitems) {
-																				  //MiFactoria::registralogcarga($row-1,$carga->id,'El numero de campos del objeto Carga y el archivo no coinciden.','todos',0);
-																				throw new CHttpException(500,'El numero de campos del objeto Carga ('.$carga->numeroitems.') y el archivo ('.count($data).') no coinciden. Por favor revise el caracter delimitador en las propiedades de su cuenta de usuario');
-																			 }
-																			 //verificando que los datos ean ocnsistentes
-																			  foreach ($data as $i=>$valorx) {
+									if(count($errores)==0 ) {
+															 //aqui esta la chicha
+										ECHO "OK ";
+										$model->save();
+										echo "<br>";
+											echo "<br>";
+										}  else {
 
-																			        if(!($carga->insercion !='1'  and $i==0 )) ///Si no  es actuyalizacion y es el primer campo
-																					  if(($filas[$i]->longitud < strlen(trim($valorx))))
-																						  //MiFactoria::registralogcarga($row-1,$carga->id,' El valor es demasiado largo para este campo',$filas[$i]->nombrecampo,0);
-																					     throw new CHttpException(500,'Linea '.($row-1).' El valor es demasiado larg.o para el campo  '.$filas[$i]->nombrecampo);
-																					   //$huboerror=true;
-																					  if(!($carga->insercion !='1'  and $i==0 )) ///Si no  es actuyalizacion y es el primer campo
-																					  //si es requerido y no hay nada 
-																					  if($filas[$i]->requerida=='1' and (is_null($valorx)  or  $valorx=="" or empty($valorx) or trim($valorx)=="" ))
-																					   // MiFactoria::registralogcarga($row-1,$carga->id,' Este campo es obligatorio',$filas[$i]->nombrecampo,0);
-																					     throw new CHttpException(500,'Linea '.($row-1).' Este campo es obligatorio '. $filas[$i]->nombrecampo);
-																					  			//si no es del tipo
-																					    if($filas[$i]->tipo=='date' and preg_match('/^\d{4}-\d{2}-\d{2}$/',$valorx)==0  )
-																					   //	MiFactoria::registralogcarga($row-1,$carga->id,' Los formatos de fecha deben ser de la forma YYYY-MM-DD ',$filas[$i]->nombrecampo,0);
-																					     throw new CHttpException(500,'Linea '.($row-1).' Los formatos de fecha deben ser de la forma YYYY-MM-DD '.$filas[$i]->nombrecampo );
-																					  	  ///ahora colocar los campos del modelo a llenar
-																					      if($carga->insercion!='1')
-																					 {
-																						if($i > 0)$model->{$filas[$i]->nombrecampo}=$valorx;
-																					} else {
-																						$model->{$filas[$i]->nombrecampo}=$valorx;
-																					}
-																																											
-																					}
-																				///Listo ya tratamos la fila ahora a validar el registro del $model llenado 
-																						$model->validate();
-																						$errores=$model->geterrors();
-
-																					if(count($errores)==0 ) {
-																						  //aqui esta la chicha
-																						   ECHO "OK ";
-																						   $model->save();
-																							 echo "<br>";
-																						 echo "<br>";
-																					}  else {
-
-																						 echo $model->getScenario();
-																						  echo "<br>";
-																						 echo "<br>";
-																						 print_r($model->attributes);
-																						 echo "<br>";
-																						 echo "<br>";
+									echo $model->getScenario();
+									echo "<br>";
+									echo "<br>";
+									print_r($model->attributes);
+									echo "<br>";
+									echo "<br>";
 																						
-																						 print_r($errores);
-																						 echo "<br>";
-																						 echo "<br>";
-																						 echo "<br>";
-																						 echo "<br>";
+									print_r($errores);
+									echo "<br>";
+									echo "<br>";
+									echo "<br>";
+									echo "<br>";
 																						
-																					}
-																			     unset($model);
-																			  }                     
+									}
+								unset($model);
+								}                     
 																									
-																			$row++;
-																		}
+								$row++;
+		}
 			 
 		} else {
 			throw new CHttpException(500,'NO ha enviado el formulario de datos');
@@ -678,4 +731,28 @@ $camposclave=array();
                     
                   }
             }
+            
+            
+      public function actiongeneracsv($id){
+          $registro=$this->loadModel($id);
+          $registro->performCsvFile();
+          echo CHtml::script(" $.notify('Se genero la plantilla de carga','info');");
+          die();
+      }
+      
+       public function actiongeneracsvForeign($id){
+          $registro= Cargamasivadet::model()->findByPk($id);
+          if(is_null($registro))
+              throw new CHttpException(500,'NO se encontro el registro con el id '.$id); 
+           if(!isset($_GET['nameFieldForeign']))  
+                throw new CHttpException(500,'NO se ha definido el parametro  nombre de modelo Foraneo '); 
+           $nameFieldModel= MiFactoria::cleanInput($_GET['nameFieldForeign']);
+           if(!($nameFieldModel==$registro->modeloforaneo))
+              throw new CHttpException(500,"No coinciden los parametros {$nameFieldModel} y  {$registro->modeloforaneo} " ); 
+            
+          $registro->cargamasiva->performCsvForeign($nameFieldModel);
+          echo CHtml::script(" $.notify('Se genero la plantilla de carga','info');");
+          die();
+      }
+      
 }

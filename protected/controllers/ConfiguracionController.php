@@ -22,7 +22,7 @@ class ConfiguracionController extends Controller
 		return array(
 			
 			array('allow',
-                            'actions'=>array('creaparametro','admin','RefreshMenu',   'ajaxEditHidparentMenu',    'ajaxEditAliasMenu',   'ajaxActivate',     'menu',    'editar','index','ver','creaconfig'),
+                            'actions'=>array('SettingsModules',  'creaparametro','admin','RefreshMenu',   'ajaxEditHidparentMenu',    'ajaxEditAliasMenu',   'ajaxActivate',     'menu',    'editar','index','ver','creaconfig'),
 				'users'=>array('@'),
 			),
 			
@@ -575,6 +575,18 @@ public function actionver(){
        
    } 
    
- 
+ public function actionSettingsModules(){
+     $array_parameters=array();
+     $modules=yii::app()->getModules();
+     foreach($modules as $name=>$values){
+         if(isset($values['components']['config'])){
+             $component=yii::app()->getModule($name)->getComponent('config');
+             if(method_exists($component,'getParamsConfig'))
+             $array_parameters[$name]=$component->getParamsConfig();             
+         }
+     }
+    // var_dump($array_parameters);die();
+   $this->render('modulesconf',array('aparametros'=>$array_parameters));
+ }
     
 }

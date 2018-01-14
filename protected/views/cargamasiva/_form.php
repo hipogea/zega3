@@ -52,15 +52,12 @@
 
 			
 
-			'pack1'=>array(
-				'type'=>'C',
-				'ruta'=>array('cargamasiva/import',array(
-					'id'=>10,
-					'asDialog'=>1)
+			'checklist'=>array(
+				'type'=>'B',
+				'ruta'=>array($this->id.'/generacsv',array(
+					'id'=>$model->id)
 
 							),
-				'dialog'=>'cru-dialogdetalle',
-				'frame'=>'cru-detalle',
 				'visiblex'=>array('10'),
 
 			),
@@ -153,7 +150,13 @@
 	
 	
 	</div>
-
+         <div class="row">
+		<?php echo $form->labelEx($model,'cabecera'); ?>
+		
+		<?php echo $form->checkBox($model,'cabecera'); ?>
+		
+		<?php echo $form->error($model,'cabecera'); ?>
+	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'insercion'); ?>
@@ -176,7 +179,7 @@
 		<div class="row">
 		<?php if(!$model->isNewRecord) { ?>
 		<?php echo CHtml::label('Archivo de carga','Archivo de carga'); ?>
-		<?php echo CHtml::link('Cargar datos ...',Yii::app()->createUrl('/cargamasiva/import',array('id'=>$model->id))); ?>
+		<?php echo CHtml::link('Cargar datos ...',Yii::app()->createUrl('/cargamasiva/importar',array('id'=>$model->id))); ?>
 		<?php } ?>
 		
 		
@@ -184,10 +187,7 @@
 	
 	
 
-	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar'); ?>
-	</div>
-
+	
 
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
@@ -270,7 +270,7 @@
 		'tipo',
 		'orden',
 		'activa',
-              'modeloforaneo',
+              ARRAY('name'=>'modeloforaneo','type'=>'raw','value'=>'CHtml::link(   $data->modeloforaneo,   yii::app()->createUrl($this->grid->controller->id."/generacsvForeign",array("id"=>$data->id ,"nameFieldForeign"=>$data->modeloforaneo) )    )'),
 		/*
 		'descripcion',
 		*/

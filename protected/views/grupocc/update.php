@@ -10,12 +10,12 @@ $this->breadcrumbs=array(
 
 $this->menu=array(
 	//array('label'=>'List Grupocc', 'url'=>array('index')),
-	array('label'=>'Crear', 'url'=>array('create')),
+	array('label'=>yii::t('menu','Create'), 'url'=>array('create')),
 	//array('label'=>'View Grupocc', 'url'=>array('view', 'id'=>$model->codgrupo)),
-	array('label'=>'Listado', 'url'=>array('admin')),
+	array('label'=>yii::t('titulos','List'), 'url'=>array('admin')),
 );
 ?>
 
-<?php MiFactoria::titulo('Actualizar grupo','update'); ?>
+<?php MiFactoria::titulo(yii::t('titulos','Edit Group'),'update'); ?>
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

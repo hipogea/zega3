@@ -834,7 +834,8 @@ public  function getModelParentByField($fieldRelation){
               BREAK;
                }          
        }
-     return ($nombremodelo=="")?null:(new $nombremodelo);
+         //var_dump($nombremodelo); var_dump($nombremodelo);
+     return $nombremodelo;
   }
 
 /*

@@ -64,7 +64,7 @@ class Cc extends CActiveRecord implements IColectores
 			array('semaforopresup','required','message'=>'Indique si es posible presupuesto'),
 			array('codc, cc, centro, vale,validoel,validoal', 'safe', 'on'=>'search'),
 			array('clasecolector', 'safe'),
-			array('codc, cc, centro, clasecolector,vale,,desceco ', 'safe', 'on'=>'search'),
+			array('codc, cc, centro, clasecolector,vale,desceco ', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -178,15 +178,17 @@ public function tienegastos(){
 	{
 		return array(
 			//'idcc' => 'Idcc',
-			'codc' => 'Codc',
-			'correlativo' => 'Colector',
+			'codc' => yii::t('labels','Cod'),
+			//'correlativo' => 'Colector',
 			'cc' => 'Cc',
-			'centro' => 'Centro',
-			'creadopor' => 'Creadopor',
-			'creadoel' => 'Creadoel',
-			'modificadopor' => 'Modificadopor',
-			'modificadoel' => 'Modificadoel',
-			'semaforopresup' => 'Abierto',
+			'centro' => yii::t('labels','Center'),
+                    'codgrupo' => yii::t('labels','Cod Group'),
+                     'desceco' => yii::t('labels','Description'),
+			//'creadopor' => 'Creadopor',
+			//'creadoel' => 'Creadoel',
+			//'modificadopor' => 'Modificadopor',
+			//'modificadoel' => 'Modificadoel',
+			//'semaforopresup' => 'Abierto',
 		);
 	}
 
@@ -204,6 +206,7 @@ public function tienegastos(){
 		//$criteria->compare('idcc',$this->idcc,true);
 		$criteria->compare('codc',$this->codc,true);
 		$criteria->compare('cc',$this->cc,true);
+                $criteria->compare('desceco',$this->desceco,true);
 		$criteria->compare('centro',$this->centro,true);
 		$criteria->compare('clasecolector',$this->clasecolector,true);
 		 

@@ -70,6 +70,14 @@
 		<?php echo $form->textField($model,'general_imagenophoto',array('size'=>25,'maxlength'=>25)); ?>
 		<?php echo $form->error($model,'general_imagenophoto'); ?>
 	</div>
+        <div class="row">
+		<?php echo $form->labelEx($model,'general_rutauploads'); ?>
+		<?php echo $form->textField($model,'general_rutauploads',array('size'=>50,'maxlength'=>50)); ?>
+		<?php echo $form->error($model,'general_rutauploads'); ?>
+	</div>
+        
+        
+        
         
         <div class="row">
 		<?php echo $form->labelEx($model,'general_nregistrosporcarpeta'); ?>

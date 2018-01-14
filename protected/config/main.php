@@ -59,9 +59,24 @@ return array(
 	
 	
 	'modules'=>array(
-           
+                 'wo'=>array(
+                     'components'=>array(
+                                'config'=>array(
+                                     'class' => 'WoConfig',
+                                  ),
+                                ),
+                         ),
+            
+                'importcsv'=>array(
+              'path'=>'uploads/', // path to folder for saving csv file and file with import params
+                     ),
 		// uncomment the following to enable the Gii tool
-          'ventas'=>array(),   
+          'ventas'=>array(
+              'components'=>array(
+               'config'=>array(
+                                     'class' => 'VentasConfig',
+                                  )),
+                        ),   
             'operadores'=>array(),
             'mantto'=>array(
               
@@ -161,7 +176,9 @@ return array(
                 ),
             
             
-            
+            'csv'=>array(
+               'class'=>'application.components.ECSVExport',
+            ),
             
            /* 'jquerymobile'=>array(
 			'class'=>'ext.jquerymobile.JQueryMobileComponent',

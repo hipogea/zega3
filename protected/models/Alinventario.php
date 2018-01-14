@@ -327,6 +327,7 @@ public function getstockTotalmaterial($codmaterial,$adatos=null){
 
 	public function pronostico(){
       //buscando las absisas
+            var_dump($this->almacen);die();
 			$fechainicio=$this->almacen->fecharefpronostico;
 		$xarray=array(); //las fechas
 		$yarray=array();//Las cantidades de inventario
