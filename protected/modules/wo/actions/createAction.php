@@ -15,12 +15,15 @@ class createAction extends CAction
      $controller->performAjaxValidation($model);
     if (isset($_POST[$model_class])) {
         $model->attributes = $_POST[$model_class]; 
-       // echo "hola"; die();
-       // $model->save();
+       //echo "hola"; die();
+       //VAR_DUMP($model->save());DIE();
+         
       if ($model->save()){
+          //ECHO "ERROR ERE";DIE();
        MiFactoria::mensaje('success',yii::t('woModule.messages','Location has been created '));
         $controller->redirect('admin');
       }else{
+         // ECHO "ERROR";DIE();
           print_r($model->geterrors());die();
       }
     }

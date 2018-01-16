@@ -49,10 +49,14 @@ class Locations extends ModeloGeneral
 		// will receive user inputs.
 		return array(
                    array('codigo', 'checkMaster','on'=>'master'),
-                     array('codigo,descripcion', 'required','on'=>'master,root'),
-                    array('activa,essuperior,textolargo,codigo,descripcion', 'safe','on'=>'root,master'),
+                    array('codigo', 'checkInsert','on'=>'insert'),
+                     array('codigo,descripcion', 'required','on'=>'master,root,insert'),
+                    array('activa,essuperior,textolargo,codigo,descripcion', 'safe','on'=>'root,insert,master'),
                     array('codigo', 'checkRoot','on'=>'root'),
-                    
+                   array('colector','exist','allowEmpty' => false, 'attributeName' => 'codc', 'className' => 'Cc','message'=>yii::t('woModule.errors',"Cost Colector {colector} doesn't exists", array('{colector}'=>$this->colector)),'on'=>'insert,update'),
+                   array('codcen','exist','allowEmpty' => false, 'attributeName' => 'codcen', 'className' => 'Centros','message'=>yii::t('woModule.errors',"Cod Center {colector} doesn't exists", array('{colector}'=>$this->codcen)),'on'=>'insert,update'),
+            
+	
                     
                     array('codcen,colector', 'required','on'=>'insert,update'),
                      array('codigo,descripcion', 'safe','on'=>'superior'),
@@ -302,13 +306,13 @@ class Locations extends ModeloGeneral
         public function checkMaster($attribute,$params) {
             //VAR_DUMP($this->getLevelCode());DIE();
             if(!$this->match())
-             $this->addError ('codigo', yii::t('woModule.errors','Code is not Match With {pattern}  level {level}',array('{level}'=>$this->getLevelCode() ,'{pattern}'=> $this->getMaskForLevel())));
+              $this->putMessageError('Code is not Match With {pattern}  level {level}',array('{level}'=>$this->getLevelCode() ,'{pattern}'=> $this->getMaskForLevel()));
             if($this->existsCode())
-                 $this->addError ('codigo', yii::t('woModule.errors','This code already exists '));
+                 $this->putMessageError('This code already exists ');
             if(is_null($this->getCodeParentFromDb()))
-                $this->addError ('codigo', yii::t('woModule.errors',"The code Parent {codeparent} don't exists yet ",array('{codeparent}'=>$this->getCodeParent())));
-            if(!($this->iamRootMaster()))
-              $this->addError ('codigo', yii::t('woModule.errors',"By Settings; System allows create Master locations until {level} level {MYLEVEL} deepth ",array('{MYLEVEL}'=>$this->getLevelCode() ,'{level}'=>WoConfig::getParam('_locationsLevelRoot'))));
+                $this->putMessageError("The code Parent {codeparent} don't exists yet ",array('{codeparent}'=>$this->getCodeParent()));
+            if(!($this->iamRootMaster())) //Si se trata de niveles Master
+              $this->putMessageError("By Settings; System allows create Master locations until {level} level {MYLEVEL} deepth ",array('{MYLEVEL}'=>$this->getLevelCode() ,'{level}'=>WoConfig::getParam('_locationsLevelRoot')));
              
         } 
         
@@ -316,18 +320,22 @@ class Locations extends ModeloGeneral
          public function checkInsert($attribute,$params) {
             //VAR_DUMP($this->getLevelCode());DIE();
             if(!$this->match())
-             $this->addError ('codigo', yii::t('woModule.errors','Code is not Match With {pattern}  level {level}',array('{level}'=>$this->getLevelCode() ,'{pattern}'=> $this->getMaskForLevel())));
+              $this->putMessageError('Code is not Match With {pattern}  level {level}',array('{level}'=>$this->getLevelCode() ,'{pattern}'=> $this->getMaskForLevel()));
+        
             if($this->existsCode())
-                 $this->addError ('codigo', yii::t('woModule.errors','This code already exists '));
+                 $this->putMessageError('This code already exists ',ARRAY());
             if(is_null($this->getCodeParentFromDb()))
-                $this->addError ('codigo', yii::t('woModule.errors',"The code Parent {codeparent} don't exists yet ",array('{codeparent}'=>$this->getCodeParent())));
+                $this->putMessageError("The code Parent {codeparent} don't exists yet ",array('{codeparent}'=>$this->getCodeParent()));
             if(($this->iamRootMaster())) //Si se trata de niveles Master
-              $this->addError ('codigo', yii::t('woModule.errors',"By Settings; System allows create Master locations until {level} level {MYLEVEL} deepth ",array('{MYLEVEL}'=>$this->getLevelCode() ,'{level}'=>WoConfig::getParam('_locationsLevelRoot'))));
+              $this->putMessageError("By Settings; System allows create Master locations until {level} level {MYLEVEL} deepth ",array('{MYLEVEL}'=>$this->getLevelCode() ,'{level}'=>WoConfig::getParam('_locationsLevelRoot')));
              
             
             
         } 
         
+        private function putMessageError($message,$aerror){
+            $this->addError ('codigo', yii::t('woModule.errors',$message,$aerror));
+               }
         
         private function Match($level=null){
           if(is_null($level))
@@ -358,6 +366,7 @@ class Locations extends ModeloGeneral
          private function getMaskForLevel($level=null){   
              if(is_null($level))
            $level=$this->getLevelCode();
+             $smallMask='';
             IF($level==0) return '';
               $mask=WoConfig::getParam('_locationsMask');
               foreach(explode($this->delimiter(),$mask) as $key=>$fragment){
@@ -428,9 +437,11 @@ class Locations extends ModeloGeneral
      
      
      public function beforeSave(){
+          //ECHO "UNO";DIE();
         // VAR_DUMP($this->getParentFromParentCode());DIE();
          if($this->isNewRecord){
-             $this->checkColectorsInRoots();
+            // ECHO "UNO";DIE();
+             $this->checkColectorsInRoots(); //ECHO "DOS";DIE();
               if(!$this->iamRoot())
                $this->parent_id=$this->getParentFromParentCode()->id;
                
@@ -476,4 +487,28 @@ class Locations extends ModeloGeneral
             'pagination'=>false,
         ));
     }
+    
+    public function suggest($keyword,$limit=20)
+	{
+		$models=$this->findAll(array(
+			'condition'=>'codigo LIKE :keyword',
+			'order'=>'codigo',
+			'limit'=>$limit,
+			'params'=>array(':keyword'=>"$keyword%")
+		));
+		$suggest=array();
+		//$suggest=array(JSON_ENCODE($models[0]),'KFSHFKSIY');
+		foreach($models as $model) {
+			$suggest[] = array(
+				'label'=>$model->codigo,  // label for dropdown list
+				'value'=>$model->codigo,  // value for input field
+				//'id'=>$model->id,       // return values from autocomplete
+				//'code'=>$model->code,
+				//'call_code'=>$model->call_code,
+			);
+		}
+		
+		return $suggest;
+	}
+
 }

@@ -8,11 +8,12 @@
 <div class="wide form">
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'locations-form',
-	// Please note: When you enable ajax validation, make sure the corresponding
-	// controller action is handling ajax validation correctly.
-	// There is a call to performAjaxValidation() commented in generated controller code.
-	// See class documentation of CActiveForm for details on this.
-	'enableAjaxValidation'=>false,
+	/*'enableClientValidation'=>false,
+			'clientOptions' => array(
+				'validateOnSubmit'=>true,
+				'validateOnChange'=>true
+			),*/
+			'enableAjaxValidation'=>true,
 )); ?>
 
     <?php //echo $form->errorSummary($model); ?>
@@ -85,14 +86,30 @@
 
 	
         <div class="row">
+               <?php if(!$model->isNewRecord){?>
 		<?php echo $form->labelEx($model,'codeparent'); ?>
 		<?php echo $form->textField($model,'codeparent',array('value'=>$model->getCodeParent(),'size'=>60,'maxlength'=>250,'disabled'=>'disabled')); ?>
+               <?php  } ?>
         </div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'codigo'); ?>
+                <?php if(!$model->checkcompromisos()){ ?>
+                <?php  $this->widget('zii.widgets.jui.CJuiAutoComplete', array(
+			'model'=>$model,
+			'attribute'=>'codigo',
+                        'source'=>$this->createUrl('TaskGeneral/suggestLocations'),
+                        'options'=>array(
+				'showAnim'=>'fold',),
+                             'htmlOptions'=>array(
+        'size'=>60,
+    ),
+						));
+                ?>
+                <?php }else{  ?>
 		<?php echo $form->textField($model,'codigo',array('size'=>60,'maxlength'=>250,'disabled'=>$model->disabledcampo('codigo'))); ?>
-		<?php echo $form->error($model,'codigo'); ?>
+		 <?php }  ?>
+                    <?php echo $form->error($model,'codigo'); ?>
 	</div>
         
 
@@ -106,14 +123,30 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'colector'); ?>
+             <?php if(!$model->checkcompromisos()){ ?>
+                <?php  $this->widget('zii.widgets.jui.CJuiAutoComplete', array(
+			'model'=>$model,
+			'attribute'=>'colector',
+                        'source'=>$this->createUrl('TaskGeneral/suggestCeco'),
+                        'options'=>array(
+				'showAnim'=>'fold',),
+                             'htmlOptions'=>array(
+        'size'=>15,
+    ),
+						));
+                ?>
+                <?php }else{  ?>
 		<?php echo $form->textField($model,'colector',array('size'=>15,'maxlength'=>15,'disabled'=>$model->disabledcampo('colector'))); ?>
+		 <?php }  ?>
 		<?php echo $form->error($model,'colector'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'codcen'); ?>
-		<?php echo $form->textField($model,'codcen',array('size'=>4,'maxlength'=>4,'disabled'=>$model->disabledcampo('codcen'))); ?>
-		<?php echo $form->error($model,'codcen'); ?>
+		 <?php $datos = CHtml::listData(Centros::model()->findAll(),'codcen','nomcen');                
+	echo $form->DropDownList($model,'codcen',$datos, array('empty'=>'--'.yii::t('woModule.menu','Choose a Value',array()).'--')  );
+                    ?>
+                <?php echo $form->error($model,'codcen'); ?>
 	</div>
 
 	<div class="row">

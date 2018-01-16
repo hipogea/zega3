@@ -24,7 +24,7 @@ class MaintenanceController extends Controller
 		return array(
 			
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('CreateValuePoint','UpdateMeasurePoint'  , 'AjaxShowDocumentsPoints',     'ManageMeasurePoints' ,'ReplacePoint',    'createMeasurePoint','updateMeasurePoint'),
+				'actions'=>array( 'ListMeasurePoints',    'CreateValuePoint','UpdateMeasurePoint'  , 'AjaxShowDocumentsPoints',     'ManageMeasurePoints' ,'ReplacePoint',    'createMeasurePoint','updateMeasurePoint'),
 				'users'=>array('@'),
 			),
 			
@@ -194,6 +194,21 @@ class MaintenanceController extends Controller
        
        
    }
+   
+   public function actionListMeasurePoints(){
+       $proveedor= Manttohorometros::model()->search();
+      
+       $this->render('horometros',
+               array(
+                   //'model'=>$equipo,
+                   'proveedor'=>$proveedor,
+               )
+               );
+       
+       
+   }
+   
+   
    
    private function loadEquipment($id){
     $registro= Inventario::model()->findByPk($id);

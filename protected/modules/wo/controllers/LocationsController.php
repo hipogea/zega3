@@ -28,7 +28,7 @@ class LocationsController extends Controller
 		return array(
 			
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('fillLocations',  'createmaster', 'index',  'createroot','admin','view',  'create','update'),
+				'actions'=>array( 'Tree',  'fillLocations',  'createmaster', 'index',  'createroot','admin','view',  'create','update'),
 				'users'=>array('@'),
 			),
 			
@@ -124,15 +124,33 @@ class LocationsController extends Controller
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
-
+                    if($model->iamRootMaster()){
+                         $model->setScenario ('master');
+                         $vista='create_master';
+                    }
+                    
+                    elseif($model->iamRoot()){
+                         $model->setScenario ('root');
+                          $vista='create_root';
+                    }
+                    
+                    else{
+                        $model->setScenario ('update');
+                         $vista='update';
+                    }
+                        
 		if(isset($_POST['Locations']))
 		{
 			$model->attributes=$_POST['Locations'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+			if($model->save()){
+                            $this->redirect(array('admin'));
+                        }ELSE{
+                            PRINT_R($model->geterrors());
+                        }
+				
 		}
 
-		$this->render('update',array(
+		$this->render($vista,array(
 			'model'=>$model,
 		));
 	}
@@ -204,4 +222,12 @@ class LocationsController extends Controller
 			Yii::app()->end();
 		}
 	}
+        
+        public function actionTree()
+	{
+		
+		$this->render('tree');
+	}
+
+        
 }

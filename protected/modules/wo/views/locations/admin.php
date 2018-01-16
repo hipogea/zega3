@@ -14,7 +14,7 @@ if($model->existsCodeRoot())
  $this->menu=array(array('label'=>'Create Root', 'url'=>array('createroot')));
 else
 $this->menu=array(
-	array('label'=>'List Locations', 'url'=>array('index')),
+	array('label'=>'Tree Locations', 'url'=>array('tree')),
 	array('label'=>'Create Locations', 'url'=>array('create')),
         array('label'=>'Create Master Root', 'url'=>array('createmaster')),
 );
