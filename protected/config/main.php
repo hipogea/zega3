@@ -12,7 +12,7 @@ return array(
       'charset' => 'ISO-8859-1',
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 	'name'=>'',
-	'language'=>'es',
+	'language'=>'en',
     'theme'=>'temita',
 
 	//'theme'=>'super',

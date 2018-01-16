@@ -13,10 +13,7 @@ class LocationsController extends Controller
 	 */
 	public function filters()
 	{
-		return array(
-			'accessControl', // perform access control for CRUD operations
-			'postOnly + delete', // we only allow deletion via POST request
-		);
+		return array('accessControl',array('CrugeAccessControlFilter'));
 	}
 
 	/**
@@ -26,19 +23,15 @@ class LocationsController extends Controller
 	 */
 	public function accessRules()
 	{
+		Yii::app()->user->loginUrl = array("/cruge/ui/login");
+		
 		return array(
-			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
-				'users'=>array('*'),
-			),
+			
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+				'actions'=>array('fillLocations',  'createmaster', 'index',  'createroot','admin','view',  'create','update'),
 				'users'=>array('@'),
 			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
-			),
+			
 			array('deny',  // deny all users
 				'users'=>array('*'),
 			),
@@ -56,11 +49,48 @@ class LocationsController extends Controller
 		));
 	}
 
+        public function actions(){
+            $pathClass='application.modules.wo.actions.createAction';
+            return array(
+                        'create'=>array(
+                        'class'=>$pathClass,
+                        'model'=> ucfirst($this->id),
+                         'scenario'=>'insert', 
+                            ),
+                
+                     'createmaster'=>array(  //para crear aquelloos que son nodos padres pricipales
+                         'class'=>$pathClass,
+                       'model'=> ucfirst($this->id),
+                         'scenario'=>'master', 
+                            ),
+                                    
+                          'createroot'=>array(//crear el nodo root
+                         'class'=>$pathClass,
+                       'model'=> ucfirst($this->id),
+                         'scenario'=>'root', 
+                            ),
+                
+                'fillLocations'=>array(
+                'class'=>'ext.actions.XFillTreeAction',
+                'modelName'=>'Locations',
+	//'rootId'=>1,
+	            'showRoot'=>true
+
+                    ),
+                
+                
+                
+                                    );
+            
+            
+            
+                        }
+        
 	/**
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
-	public function actionCreate()
+	/*public function actionCreate()
                
 	{
             var_dump(WoConfig::getPattern());DIE();
@@ -81,7 +111,7 @@ class LocationsController extends Controller
 		$this->render('create',array(
 			'model'=>$model,
 		));
-	}
+	}*/
 
 	/**
 	 * Updates a particular model.
@@ -166,7 +196,7 @@ class LocationsController extends Controller
 	 * Performs the AJAX validation.
 	 * @param Locations $model the model to be validated
 	 */
-	protected function performAjaxValidation($model)
+	public function performAjaxValidation($model)
 	{
 		if(isset($_POST['ajax']) && $_POST['ajax']==='locations-form')
 		{

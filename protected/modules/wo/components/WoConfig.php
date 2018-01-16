@@ -1,9 +1,9 @@
 <?php
 class WoConfig  extends CComponent
 {
-    
+    const MODULE_MANTTO='mantto';
         
-         private $parameters=array(
+         private static $parameters=array(
                 '_locationsLevelRoot'=>array(
                                 'value'=>'3',
                                 'size'=>2,
@@ -33,10 +33,10 @@ class WoConfig  extends CComponent
       //coloca el prefijo del modulo en cada parametro
       public function getParamsConfig(){
           $newKeys=array();
-         foreach(array_keys($this->parameters) as $indice=>$clave){
+         foreach(array_keys($this::$parameters) as $indice=>$clave){
            $newKeys[]= self::getModuleName().$clave;
          }          
-          return array_combine( $newKeys, array_values($this->parameters));
+          return array_combine( $newKeys, array_values($this::$parameters));
       }
       
       public static function getModuleName(){
@@ -49,15 +49,17 @@ class WoConfig  extends CComponent
        */
       public static function getParam($name){
          if(yii::app()->settings->get(self::getModuleName(),$name)=='')
-          if(in_array($name,$this->parameters))
-                  return $this->parameters[$name];
+                 //var_dump(self::$parameters);die();
+          if(in_array($name,array_keys(self::$parameters)))
+                  //return self::parameters[$name];
+                  echo "";
            else
                return null;
-          return  yii::app()->settings->get($type,$name);
+          return  yii::app()->settings->get(self::getModuleName(),self::getModuleName().$name);
       }
       
        public static function setParam($name,$value){
-          return yii::app()->settings->set(self::getModuleName(),$name,$value);
+          return yii::app()->settings->set(self::getModuleName(),self::getModuleName().$name,$value);
       }
       
       /*obierne el aepxresion regualra para codificar las ubiacones tecnicas*/
@@ -69,9 +71,15 @@ class WoConfig  extends CComponent
           $patron=self::getParam('_locationsMask');
           foreach( explode($delimiter,$patron) as $clave=>$fragment  ){
               $lenght=strlen($fragment);
-              $smallString.="/^[A-Z0-9]{".$lenght."}\\z/".$delimiter;
-              $regexpression[]=substr($smallString,0,strlen($smallString)-1);
+              $smallString.="[A-Z0-9]{".$lenght."}".$delimiter;
+              $regexpression[]="/^".substr($smallString,0,strlen($smallString)-1)."\\z/";
           }
           return $regexpression;
       }
+      
+      //verifica si existe el modulo de mantenimiento
+     public static function isModuleMantto(){
+         return yii::ap()->hasModule(self::MODULE_MANTTO);
+     }
+      
 }

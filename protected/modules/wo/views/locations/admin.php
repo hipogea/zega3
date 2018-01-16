@@ -7,11 +7,17 @@ $this->breadcrumbs=array(
 	'Manage',
 );
 
+
+
+
+if($model->existsCodeRoot())
+ $this->menu=array(array('label'=>'Create Root', 'url'=>array('createroot')));
+else
 $this->menu=array(
 	array('label'=>'List Locations', 'url'=>array('index')),
 	array('label'=>'Create Locations', 'url'=>array('create')),
+        array('label'=>'Create Master Root', 'url'=>array('createmaster')),
 );
-
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
 	$('.search-form').toggle();
@@ -26,18 +32,12 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<h1>Manage Locations</h1>
-
-<p>
-You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
-or <b>=</b>) at the beginning of each of your search values to specify how the comparison should be done.
-</p>
-
-<?php echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
-<div class="search-form" style="display:none">
-<?php $this->renderPartial('_search',array(
+<?php MiFactoria::titulo(yii::t('woModule.titulos','List of locations '),'list'); ?>
+<?php  //echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
+<!--<div class="search-form" style="display:none">
+<?php /*$this->renderPartial('_search',array(
 	'model'=>$model,
-)); ?>
+));*/ ?>
 </div><!-- search-form -->
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
@@ -48,7 +48,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		'id',
 		'codigo',
 		'descripcion',
-		'hidpadre',
+		'parent_id',
 		'colector',
 		'codcen',
 		/*
@@ -61,3 +61,9 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		),
 	),
 )); ?>
+
+<?php 
+$this->renderpartial('tree_locations');
+
+
+?>

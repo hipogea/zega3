@@ -399,6 +399,11 @@ $mo=New Alinventario();
 
 
 	public function actionPio() {
+            $cadena="cadena-dere-gtgt-";
+             var_dump((explode('-',$cadena)));die();
+            $delimiter='l';
+            $lon=strpos("hola-amigos",$delimiter);
+            var_dump($lon);die();
             VAR_DUMP(__FILE__);
             VAR_DUMP(strrev(explode(DIRECTORY_SEPARATOR,strrev(__FILE__))[2]));DIE();
            var_dump(yii::app()->getModules());die();

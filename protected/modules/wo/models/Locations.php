@@ -3,8 +3,9 @@ class Locations extends ModeloGeneral
 {
     
         public $_parent=null; ///modelo parent 
-        //const DELIMITER_CODE='-';
-        
+        const LEVEL_ROOT=1;
+        public $campossensibles=array('codigo','colector','codcen','cebe');
+        public $codeparent; //solo para mosmtrar valores, no tiene utulidad 
         /*mejorar este codigo 
          * esta proiedad debe de ser ingresad en 
          * la configuracion del modulo o apllicaicon */         
@@ -27,7 +28,18 @@ class Locations extends ModeloGeneral
 	}
 
         
-        public $campossensibles=array('colector','cebe','codcen','activa');
+         public function behaviors()
+    {
+        return array(
+            'TreeBehavior' => array(
+                'class' => 'ext.behaviors.XTreeBehavior',
+                'treeLabelMethod'=> 'getTreeLabel',
+                'menuUrlMethod'=> 'getMenuUrl',
+            ),
+        );
+    }
+        
+       // public $campossensibles=array('colector','cebe','codcen','activa');
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -36,13 +48,18 @@ class Locations extends ModeloGeneral
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-                     array('codigo,descripcion', 'required','on'=>'root'),
+                   array('codigo', 'checkMaster','on'=>'master'),
+                     array('codigo,descripcion', 'required','on'=>'master,root'),
+                    array('activa,essuperior,textolargo,codigo,descripcion', 'safe','on'=>'root,master'),
+                    array('codigo', 'checkRoot','on'=>'root'),
+                    
+                    
                     array('codcen,colector', 'required','on'=>'insert,update'),
                      array('codigo,descripcion', 'safe','on'=>'superior'),
                     array('codigo,descripcion,codcen,colector', 'safe','on'=>'insert,update'),
                     array('codigo,descripcion','required'),
 			//array('id', 'required'),
-			array(' hidpadre', 'numerical', 'integerOnly'=>true),
+			array(' parent_id', 'numerical', 'integerOnly'=>true),
 			array('codigo', 'length', 'max'=>300),
 			array('colector, cebe', 'length', 'max'=>15),
 			array('codcen', 'length', 'max'=>4),
@@ -50,7 +67,7 @@ class Locations extends ModeloGeneral
 			array('essuperior,textolargo', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, codigo, descripcion, hidpadre, colector, codcen, cebe, textolargo, activa', 'safe', 'on'=>'search'),
+			array('id, codigo, descripcion, parent_id, colector, codcen, cebe, textolargo, activa', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -65,10 +82,10 @@ class Locations extends ModeloGeneral
 			'cc' => array(self::BELONGS_TO, 'Cc', 'colector'),
 			'cebe' => array(self::BELONGS_TO, 'Cc', 'cebe'),
 			'centros' => array(self::BELONGS_TO, 'Centros', 'codcen'),
-                         'padre' => array(self::BELONGS_TO, 'Locations', 'hidparent'),
-			'children' => array(self::HAS_MANY, 'Locations', 'hidparent'),
+                         'padre' => array(self::BELONGS_TO, 'Locations', 'parent_id'),
+			'children' => array(self::HAS_MANY, 'Locations', 'parent_id'),
                         'childequi' => array(self::HAS_MANY, 'Inventario', 'idinventario'),
-			'childCount' => array(self::STAT, 'Pruebaarbol', 'hidparent'),
+			'childCount' => array(self::STAT, 'Locations', 'parent_id'),
 		);
 	}
 
@@ -79,9 +96,10 @@ class Locations extends ModeloGeneral
 	{
 		return array(
 			'id' => 'ID',
+                    'codeparent'=>'Cod Parent',
 			'codigo' => yii::t('woModule.labels','Code'),
 			'descripcion' => yii::t('woModule.labels','Description'),
-			'hidpadre' => yii::t('woModule.labels','Parent Id'),
+			'parent_id' => yii::t('woModule.labels','Parent Id'),
 			'colector' => yii::t('woModule.labels','Colector Cost'),
 			'codcen' => yii::t('woModule.labels','Center'),
 			'cebe' => yii::t('woModule.labels','Colector Benef'),
@@ -111,7 +129,7 @@ class Locations extends ModeloGeneral
 		$criteria->compare('id',$this->id);
 		$criteria->compare('codigo',$this->codigo,true);
 		$criteria->compare('descripcion',$this->descripcion);
-		$criteria->compare('hidpadre',$this->hidpadre);
+		$criteria->compare('parent_id',$this->parent_id);
 		$criteria->compare('colector',$this->colector,true);
 		$criteria->compare('codcen',$this->codcen,true);
 		$criteria->compare('cebe',$this->cebe,true);
@@ -138,13 +156,19 @@ class Locations extends ModeloGeneral
          * Esta funcion deveulve el codigo de la ubicacion del parent
          */
         
-        public function getCodParent(){
+        public function getCodeParent(){
+            IF(strlen(trim($this->codigo))==0)
+                return '';
             if(is_null($this->getParent())){
                 $cad= strrev($this->codigo);
-                $lon=strpos(WoConfig::getParam('_delimiterLocations'),$cad);
+                $lon=stripos($cad,$this->delimiter());
+                /*echo $this->delimiter();echo "<br>";
+                ECHO $cad; echo "<br>";var_dump($lon);die();*/
+               if($lon===false)return $this->codigo;
+               else
                return  strrev(substr($cad,$lon+1));
             }else{
-                return $this->CodParent()->codigo;
+                return $this->getParent()->codigo;
             }
         }
        
@@ -157,12 +181,17 @@ class Locations extends ModeloGeneral
          * @force: Indica si se refresca nuevamednjte l opbjeto
          */
         private function getParent($force=false){
-           if(!$this->isNewRecord or $this->hidparent===null)
-            return null;
-          if($force or is_null($this->_parent)){
-              $this->_parent=$this->padre;
-          }
-           return $this->_parent;
+            if($this->iamRoot()) //es el root
+                return null;
+           if($this->isNewRecord ){
+                return null;
+           }else{
+              if($force or is_null($this->_parent)){
+                            $this->_parent=$this->padre;
+                    }
+                    return $this->_parent; 
+           }
+           
         }
        
        
@@ -175,8 +204,8 @@ class Locations extends ModeloGeneral
          * el cambio debe de propagarse por todos los hijos 
          */
       public function spreadChangesToChilds($fieldName){
-          if($fieldName=='hidpadre')
-              throw new CHttpException(500,yii::t('errors','Can \'t change  field {hidpadre}',array('{hidpadre}'=>$fieldName)));
+          if($fieldName=='parent_id')
+              throw new CHttpException(500,yii::t('errors','Can \'t change  field {parent_id}',array('{parent_id}'=>$fieldName)));
           if(in_array($fieldName,$this->campossensibles))
           //if($this->cambiocampo($fieldName)){
               foreach($this->children as $children){
@@ -195,15 +224,31 @@ class Locations extends ModeloGeneral
        */
     
       private function getLevelCode(){
-          $valor=0;
+          //$valor=0;$retazo="";
           if(strlen($this->codigo)>0)
-         foreach(WoConfig::getPattern() as $fragmetPattern){
-             if(preg_match($fragmetPattern,$this->codigo)>0){
-                 exit;
+          {
+              $cad=$this->codigo;
+              if(substr(strrev($cad),0,1)==$this->delimiter())
+                $cad= substr($cad,0,strlen($cad)-1);
+              if(substr(0,1)==$this->delimiter())
+                $cad= substr($cad,1);
+                 
+            return count(explode($this->delimiter(),$cad));  
+          }
+              
+          return 0;
+         /*foreach(explode($this->delimiter(),$this->codigo) as $fragment){
+              $retazo.=$fragment.$this->delimiter();
+             // var_dump(WoConfig::getPattern()[$valor]);
+              //var_dump(substr($retazo,0,strlen($retazo)-1));
+              if(!preg_match(WoConfig::getPattern()[$valor],substr($retazo,0,strlen($retazo)-1))>0){
+                $valor=$valor+1;
+                  BREAK;
              }
-             $valor+=1;
-           }
-          return $valor;
+             $valor=$valor+1;
+           }*/
+           //die();
+         // return $valor;
       }
       
       
@@ -227,20 +272,208 @@ class Locations extends ModeloGeneral
     
       
       public function existsCode(){
-         $reg=$this->find("codigo=:mycode",array($this->codigo));
+         $reg=$this->find("codigo=:mycode",array(":mycode"=>$this->codigo));
          $retorno=(!is_null($reg))?true:false;
          unset($reg);
          return $retorno;
       }
       
-      private function existsCodeRoot(){
-          
+      public function existsCodeRoot(){
+          return ($this->existsCode() or 
+                  ($this->parent_id==0 
+                  and !$this->isNewRecord))?true:false;
       }
       
       public function checkCodeInf($attribute,$params) {
 	 if($this->getLevelCode()== 0)
-             $this->addError ('codigo', yii::t('woModule.errors','Code is not Match With {pattern}',array('{pattern}'=> WoConfig::getParam('_locationsMask'))));
+             $this->addError ('codigo', yii::t('woModule.errors','Code is not Match With {pattern}',array('{pattern}'=> $this->getMaskForLevel())));
 	if( $this->existsCode() )
              $this->addError ('codigo', yii::t('woModule.errors','This {attribute} already exists',array('{attribute}'=>yii::t('woModule.labels','Code'))));								
 	} 
+        
+        public function checkRoot($attribute,$params) {
+            if(!$this->match(self::LEVEL_ROOT))
+             $this->addError ('codigo', yii::t('woModule.errors','Code is not Match With {pattern}',array('{pattern}'=> $this->getMaskForLevel())));
+            if($this->existsCodeRoot())
+                 $this->addError ('codigo', yii::t('woModule.errors','Node root already exists '));
+            
+	} 
+        
+        public function checkMaster($attribute,$params) {
+            //VAR_DUMP($this->getLevelCode());DIE();
+            if(!$this->match())
+             $this->addError ('codigo', yii::t('woModule.errors','Code is not Match With {pattern}  level {level}',array('{level}'=>$this->getLevelCode() ,'{pattern}'=> $this->getMaskForLevel())));
+            if($this->existsCode())
+                 $this->addError ('codigo', yii::t('woModule.errors','This code already exists '));
+            if(is_null($this->getCodeParentFromDb()))
+                $this->addError ('codigo', yii::t('woModule.errors',"The code Parent {codeparent} don't exists yet ",array('{codeparent}'=>$this->getCodeParent())));
+            if(!($this->iamRootMaster()))
+              $this->addError ('codigo', yii::t('woModule.errors',"By Settings; System allows create Master locations until {level} level {MYLEVEL} deepth ",array('{MYLEVEL}'=>$this->getLevelCode() ,'{level}'=>WoConfig::getParam('_locationsLevelRoot'))));
+             
+        } 
+        
+        
+         public function checkInsert($attribute,$params) {
+            //VAR_DUMP($this->getLevelCode());DIE();
+            if(!$this->match())
+             $this->addError ('codigo', yii::t('woModule.errors','Code is not Match With {pattern}  level {level}',array('{level}'=>$this->getLevelCode() ,'{pattern}'=> $this->getMaskForLevel())));
+            if($this->existsCode())
+                 $this->addError ('codigo', yii::t('woModule.errors','This code already exists '));
+            if(is_null($this->getCodeParentFromDb()))
+                $this->addError ('codigo', yii::t('woModule.errors',"The code Parent {codeparent} don't exists yet ",array('{codeparent}'=>$this->getCodeParent())));
+            if(($this->iamRootMaster())) //Si se trata de niveles Master
+              $this->addError ('codigo', yii::t('woModule.errors',"By Settings; System allows create Master locations until {level} level {MYLEVEL} deepth ",array('{MYLEVEL}'=>$this->getLevelCode() ,'{level}'=>WoConfig::getParam('_locationsLevelRoot'))));
+             
+            
+            
+        } 
+        
+        
+        private function Match($level=null){
+          if(is_null($level))
+           $level=$this->getLevelCode();
+          IF($level==0)
+              RETURN FALSE;
+          if(preg_match($this->getPatternForLevel(),$this->codigo)>0)
+            return true;
+          return false;
+        }
+        
+        public function iamRootMaster(){
+             return ($this->getLevelCode()+0 > 1 and 
+                $this->getLevelCode()+0 <=
+                  WoConfig::getParam('_locationsLevelRoot')+0)
+            ?true:false;
+        }
+        
+        private function getPatternForLevel($level=null){
+            if(is_null($level))
+           $level=$this->getLevelCode();
+            IF($level==0) RETURN '';
+            if(WoConfig::getPattern()[$level-1])
+            return WoConfig::getPattern()[$level-1]; 
+            return '';
+             
+        }
+         private function getMaskForLevel($level=null){   
+             if(is_null($level))
+           $level=$this->getLevelCode();
+            IF($level==0) return '';
+              $mask=WoConfig::getParam('_locationsMask');
+              foreach(explode($this->delimiter(),$mask) as $key=>$fragment){
+                $smallMask.=$fragment.$this->delimiter();
+                if($key==$level-1)
+                 break;
+              }
+              return substr($smallMask,0,strlen($smallMask)-1);
+        }
+        
+        private function delimiter(){
+            return WoConfig::getParam('_delimiterLocations');
+        }
+        
+        public function getCodeRoot(){
+            if($this->isNewRecord or empty($this->codigo)){
+               return $this->getCodeRootFromDb();
+            }else{
+               return explode($this->delimiter(),$this->codigo)[0]; 
+            }
+            
+        }
+        
+        private function getCodeRootFromDb(){
+            $reg=$this->find("hidparent=0");
+         $retorno=(!is_null($reg))?$reg->codigo:null;
+         unset($reg);
+         return $retorno;
+        }
+        
+        private function getCodeParentFromDb(){
+            //echo "este el codigo   *  ".$this->getCodeParent();die();
+            $reg=$this->find("codigo=:vcodigo",array(":vcodigo"=>$this->getCodeParent()));
+         $retorno=(!is_null($reg))?$reg->codigo:null;
+         unset($reg);
+         return $retorno;
+        }
+        
+        private function getParentFromParentCode(){
+            //echo "este el codigo   *  ".$this->getCodeParent();die();
+            $reg=$this->find("codigo=:vcodigo",array(":vcodigo"=>$this->getCodeParent()));
+            //var_dump($reg);DIE();
+            RETURN $reg;
+        }
+        
+     private function getHidParent(){
+         
+     }
+     
+     
+     PUBLIC function iamRoot(){
+         IF($this->isNewRecord){
+           return ($this->getLevelCode()==self::LEVEL_ROOT)?true:false;                 
+         }else{
+           return($this->codigo==$this->getCodeRoot())?true:false;
+         }
+     }
+     
+     private function checkColectorsInRoots(){
+         if($this->iamRootMaster() and $this->isNewRecord){
+                  $this->setAttributes(array(
+                      'colector'=>'000000',//ensure this code: String format '0000' Must be validate with other models 
+                      'codcen'=>'0000',
+                      'cebe'=>'00000'
+                  ));
+              }
+     }
+     
+     
+     public function beforeSave(){
+        // VAR_DUMP($this->getParentFromParentCode());DIE();
+         if($this->isNewRecord){
+             $this->checkColectorsInRoots();
+              if(!$this->iamRoot())
+               $this->parent_id=$this->getParentFromParentCode()->id;
+               
+         }
+          
+         return parent::beforeSave();
+         
+     }
+     
+     
+    public function getTreeLabel()
+    {
+        
+        return ucwords(strtolower ($this->descripcion));
+        return $this->descripcion."   ".$this->childCount;
+       
+// return CHtml::openTag("span",array("style"=>"background-color:".$this->color.";  font-weight:bold;font-size:16px; color:white;border-radius:13px;padding:4px;")).$data->tipodoc.CHTml::closeTag("span").str_pad($this->titulo,($this->nivel==2)?60:0,'.',STR_PAD_RIGHT).':' . $this->childCount;
+    }
+    /**
+     * @return array menu url
+     */
+    public function getMenuUrl()
+    {
+        return 0;
+    }
+    /**
+     * Retrieves a list of child models
+     * @param integer the id of the parent model
+     * @return CActiveDataProvider the data provider
+     */
+    public function getDataProvider($id=null)
+    {
+        if($id===null)
+            $id=$this->TreeBehavior->getRootId();
+        $criteria=new CDbCriteria(array(
+            'condition'=>'parent_id=:id',
+            'params'=>array(':id'=>$id),
+            'order'=>'label',
+            'with'=>'childCount',
+        ));
+        return new CActiveDataProvider(get_class($this), array(
+            'criteria'=>$criteria,
+            'pagination'=>false,
+        ));
+    }
 }

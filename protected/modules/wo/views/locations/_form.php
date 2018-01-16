@@ -83,58 +83,63 @@
 
 	<?php echo $form->errorSummary($model); ?>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'id'); ?>
-		<?php echo $form->textField($model,'id'); ?>
-		<?php echo $form->error($model,'id'); ?>
-	</div>
+	
+        <div class="row">
+		<?php echo $form->labelEx($model,'codeparent'); ?>
+		<?php echo $form->textField($model,'codeparent',array('value'=>$model->getCodeParent(),'size'=>60,'maxlength'=>250,'disabled'=>'disabled')); ?>
+        </div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'codigo'); ?>
-		<?php echo $form->textField($model,'codigo',array('size'=>60,'maxlength'=>300)); ?>
+		<?php echo $form->textField($model,'codigo',array('size'=>60,'maxlength'=>250,'disabled'=>$model->disabledcampo('codigo'))); ?>
 		<?php echo $form->error($model,'codigo'); ?>
 	</div>
+        
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'descripcion'); ?>
-		<?php echo $form->textField($model,'descripcion'); ?>
+		<?php echo $form->textField($model,'descripcion',array('size'=>30,'maxlength'=>30)); ?>
 		<?php echo $form->error($model,'descripcion'); ?>
 	</div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'hidpadre'); ?>
-		<?php echo $form->textField($model,'hidpadre'); ?>
-		<?php echo $form->error($model,'hidpadre'); ?>
-	</div>
+	
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'colector'); ?>
-		<?php echo $form->textField($model,'colector',array('size'=>15,'maxlength'=>15)); ?>
+		<?php echo $form->textField($model,'colector',array('size'=>15,'maxlength'=>15,'disabled'=>$model->disabledcampo('colector'))); ?>
 		<?php echo $form->error($model,'colector'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'codcen'); ?>
-		<?php echo $form->textField($model,'codcen',array('size'=>4,'maxlength'=>4)); ?>
+		<?php echo $form->textField($model,'codcen',array('size'=>4,'maxlength'=>4,'disabled'=>$model->disabledcampo('codcen'))); ?>
 		<?php echo $form->error($model,'codcen'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'cebe'); ?>
-		<?php echo $form->textField($model,'cebe',array('size'=>15,'maxlength'=>15)); ?>
+		<?php echo $form->textField($model,'cebe',array('size'=>15,'maxlength'=>15,'disabled'=>$model->disabledcampo('cebe'))); ?>
 		<?php echo $form->error($model,'cebe'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'textolargo'); ?>
-		<?php echo $form->textArea($model,'textolargo',array('rows'=>6, 'cols'=>50)); ?>
+		 <?php      $this->widget(
+                        'application.components.booster.widgets.TbRedactorJs',
+                                array(
+                                'name' => 'some_text_field',
+                                    'model'=> $model,
+                                    'height'=>300,
+                                    'attribute'=>'textolargo',
+                                )
+                            );?>
 		<?php echo $form->error($model,'textolargo'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'activa'); ?>
-		<?php echo $form->textField($model,'activa',array('size'=>1,'maxlength'=>1)); ?>
-		<?php echo $form->error($model,'activa'); ?>
+		<?php echo $form->checkBox($model,'activa',array('disabled'=>'disabled ')); ?>
+		
 	</div>
 
 	

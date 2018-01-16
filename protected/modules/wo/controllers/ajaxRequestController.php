@@ -1,5 +1,5 @@
 <?php
-class RequestController extends Controller
+class ajaxRequestController extends Controller
 {
 	/**
 	 * @return array actions
