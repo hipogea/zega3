@@ -1,4 +1,3 @@
-<br><br>
 <?php
 /* @var $this DailyworkController */
 /* @var $model Dailywork */

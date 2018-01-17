@@ -70,20 +70,17 @@ $form=$this->beginWidget('CActiveForm', array(
                        <?php //ECHO $form->textField($model,'fecha',array('size'=>10)); ?>
 			<?php //echo $form->error($model,'fecha'); ?>
                 </div>
-
-	
-
-
-   
-       
-            	
-	  
-                   <div class="row">
+        <div class="row">
                         <?php echo CHtml::label('Proyect',uniqid()); ?>
                        <?php echo CHtml::textField(uniqid(),$model['codproyecto'],array('disabled'=>'disabled')); ?>
-                  
+                   </div>
+        <div class="row">
+            <?php echo CHtml::label('Description Project',uniqid()); ?>
                        <?php echo CHtml::textField(uniqid(),$model['textocorto'],array('disabled'=>'disabled','size'=>40)); ?>
-                          <?php echo CHtml::textField(uniqid(),$fecha,array('disabled'=>'disabled','class'=>'numerodocumento')); ?>
+                         </div>
+        <div class="row">
+            <?php echo CHtml::label('fecha',uniqid()); ?>
+                <?php echo CHtml::textField(uniqid(),$fecha,array('disabled'=>'disabled','class'=>'numerodocumento')); ?>
                   
                 </div>
         <div class="row">

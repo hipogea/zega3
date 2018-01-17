@@ -5,7 +5,7 @@
 
 ?>
 
-<div class="form">
+
     <div class="wide form">
         
     <div class="division">
@@ -186,6 +186,9 @@
                     
                 }
                 ?>
+                </div>
+	   <div class="row">
+                   <?php echo CHtml::label('Description Project',uniqid()); ?>
                   <?php echo $form->textField($model,'desobjeto',array('disabled'=>'disabled','value'=> Ot::findByNumero($model->codproyecto)->textocorto)); ?>
                   
                    <?php echo $form->error($model,'codproyecto'); ?>
@@ -194,7 +197,7 @@
 
 <?php $this->endWidget(); ?>
 </div>
-    </div>
+   
 </div><!-- form -->
 
 <?PHP     

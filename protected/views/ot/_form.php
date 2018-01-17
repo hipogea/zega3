@@ -214,7 +214,7 @@
 					//'name'=>'my_date',
 					'model'=>$model,
 					'attribute'=>'fechainiprog',
-					'language'=>'es',
+					'language'=>yii::app()->getLanguage(),
 					'options'=>array(
 						'showAnim'=>'fold', // 'show' (the default), 'slideDown', 'fadeIn', 'fold'
 						'showOn'=>'both', // 'focus', 'button', 'both'
@@ -242,7 +242,7 @@
 					//'name'=>'my_date',
 					'model'=>$model,
 					'attribute'=>'fechafinprog',
-					'language'=>'es',
+					'language'=>yii::app()->getLanguage(),
 					'options'=>array(
 						'showAnim'=>'fold', // 'show' (the default), 'slideDown', 'fadeIn', 'fold'
 						'showOn'=>'both', // 'focus', 'button', 'both'
@@ -273,7 +273,7 @@
 					//'name'=>'my_date',
 					'model'=>$model,
 					'attribute'=>'fechainicio',
-					'language'=>'es',
+					'language'=>'en-NZ',
 					'options'=>array(
 						'showAnim'=>'fold', // 'show' (the default), 'slideDown', 'fadeIn', 'fold'
 						'showOn'=>'both', // 'focus', 'button', 'both'
@@ -473,7 +473,7 @@
 
 				
        
-		echo $form->DropDownList($model,'codobjeto',$datos1, array('empty'=>'--Seleccione Emplazamiento--','disabled'=>($model->escampohabilitado('codobjeto'))?'':'disabled' ) ); 
+		echo $form->DropDownList($model,'codobjeto',$datos1, array('empty'=>'--Seleccione Emplazamiento--',/*'disabled'=>($model->escampohabilitado('codobjeto'))?'':'disabled' */) ); 
                 echo Chtml::ajaxLink(
 			Chtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."filter.png"),
 			CController::createUrl($this->id.'/ajaxobjetosporclipro'), array(

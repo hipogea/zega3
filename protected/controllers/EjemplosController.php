@@ -399,6 +399,8 @@ $mo=New Alinventario();
 
 
 	public function actionPio() {
+            $ne=NEW Ot;
+            echo $ne->correlativo('numero',null,'789',6);die();
             $cadena="cadena-dere-gtgt-";
              var_dump((explode('-',$cadena)));die();
             $delimiter='l';

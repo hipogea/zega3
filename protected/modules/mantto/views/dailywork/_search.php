@@ -3,21 +3,21 @@
 /* @var $model Ot */
 /* @var $form CActiveForm */
 ?>
-<div class="division">
+
+
 <div class="wide form">
+
 
 <?php /*$form=$this->beginWidget('CActiveForm', array(
 	'action'=>Yii::app()->createUrl($this->route),
 	'method'=>'get',
 )); */
-$form = $this->beginWidget(
-    'booster.widgets.TbActiveForm',
+ $form=$this->beginWidget('CActiveForm',
     array(
         //'id' => 'inlineForm',
         'action'=>Yii::app()->createUrl($this->route),
-	'method'=>'get',
-        'type' => 'inline',
-        'htmlOptions' => array('class' => 'well'),
+	'method'=>'get',   
+       
     )
 );
 
@@ -56,15 +56,15 @@ $form = $this->beginWidget(
   
 
 	
-
+<div class="row">
   
 
-                                     <?php echo $form->labelEx($model,'codproyecto'); ?>
-					
-					<?php echo $form->textField($model,'codproyecto', array('size'=>8)  );
-					?>
-
-			<?php echo $form->labelEx($model,'codresponsable'); ?>
+     <?php echo $form->labelEx($model,'codproyecto'); ?>
+         <?php echo $form->textField($model,'codproyecto', array('size'=>8)  );
+	?>
+</DIV> 
+ <div class="row">             
+            <?php echo $form->labelEx($model,'codresponsable'); ?>
 			<?php
 			$this->widget('ext.matchcode1.Seleccionavarios',array(
 					'nombrecampo'=>'codresponsable',
@@ -84,8 +84,8 @@ $form = $this->beginWidget(
 
 
 			?>
-		
-
+</div>		
+<div class="row">
 			<?php echo $form->labelEx($model,'codigoaf'); ?>
 			<?php
 			$this->widget('ext.matchcode1.Seleccionavarios',array(
@@ -107,6 +107,7 @@ $form = $this->beginWidget(
 
 			?>
 	
+</div>
 
 	
 
@@ -115,7 +116,7 @@ $form = $this->beginWidget(
 	
 </div>
     <div class="panelderecho">
-         
+         <div class="row">
 						<?php echo $form->labelEx($model,'fecha'); ?>
 
 						<?php $this->widget('zii.widgets.jui.CJuiDatePicker',
@@ -143,7 +144,8 @@ $form = $this->beginWidget(
 							)
 						);?>
 		
-					
+         
+        
 
 							<?php $this->widget('zii.widgets.jui.CJuiDatePicker',
 								array(
@@ -169,63 +171,36 @@ $form = $this->beginWidget(
 									),
 								)
 							);?>
-		
-		
-    
-    
-                                    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-                       
-    
+        </DIV>   
+    <div class="row">
 
                                      <?php echo $form->labelEx($model,'codcen'); ?>
 					<?php  $datos = CHtml::listData(Centros::model()->findAll(array('order'=>'nomcen')),'codcen','nomcen');
 					echo $form->DropDownList($model,'codcen',$datos, array('empty'=>'--Seleccione un centro --')  );
 					?>
-	
+    </DIV>
+        <div class="row">
                                      <?php echo $form->labelEx($model,'hidturno'); ?>
 					<?php  $datos = CHtml::listData(Regimen::model()->findAll(array('order'=>'desregimen')),'id','desregimen');
 					echo $form->DropDownList($model,'hidturno',$datos, array('empty'=>'--Seleccione un Turno --')  );
-					?>
+				?>
 	
-	
-	
+	</DIV>	
+	<div class="row">
 			<?php echo $form->labelEx($model,'codtipo'); ?>
 			<?php
 			$datos = CHtml::listData(Tipoactivos::model()->findAll(),'codtipo','destipo');
 			echo $form->DropDownList($model,'codtipo',$datos, array('empty'=>'--Indique el tipo--')  )  ;	?>
 			<?php echo $form->error($model,'codtipo'); ?>
-		
-    </div>
 
+        </DIV>
 	
 
 <?php $this->endWidget(); ?>
 
 </div><!-- search-form -->
-</div>
+
+    </div>
 
 <?php
 $this->beginWidget('zii.widgets.jui.CJuiDialog', array(

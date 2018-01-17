@@ -1,30 +1,6 @@
 <?php
-
-/**
- * This is the model class for table "{{dailywork}}".
- *
- * The followings are the available columns in table '{{dailywork}}':
- * @property integer $id
- * @property string $codresponsable
- * @property string $fecha
- * @property string $codturno
- * @property string $horacierre
- * @property string $codproyecto
- * @property string $codocu
- * @property string $codestado
- *
- * The followings are the available model relations:
- * @property Dailydet[] $dailydets
- * @property Estado $codestado0
- * @property Estado $codocu0
- * @property Trabajadores $codresponsable0
- */
 class Dailywork extends ModeloGeneral implements IDocumentsDaily
 {
-	/**
-	 * @return string the associated database table name 
-	 */
-   
     const ESTADO_NUEVO='10';
     const ESTADO_PREVIO='10';
     const COD_DOCU='146';
@@ -71,10 +47,7 @@ class Dailywork extends ModeloGeneral implements IDocumentsDaily
 			array('id, codresponsable, fecha, codturno, horacierre, codproyecto, codocu, codestado', 'safe', 'on'=>'search'),
 		);
 	}
-
-	/**
-	 * @return array relational rules.
-	 */
+        
 	public function relations()
 	{
 		// NOTE: you may need to adjust the relation name and the related
@@ -102,17 +75,17 @@ class Dailywork extends ModeloGeneral implements IDocumentsDaily
 	{
 		return array(
 			'id' => 'ID',
-			'codresponsable' => 'Codresponsable',
-			'fecha' => 'Fecha',
-			'codturno' => 'Codturno',
-			'horacierre' => 'Horacierre',
-			'codproyecto' => 'Codproyecto',
+			'codresponsable' => 'Cod Worker',
+			'fecha' => 'Date',
+			'codturno' => 'Shift',
+			'horacierre' => 'Final hour',
+			'codproyecto' => 'Cod Project',
 			'codocu' => 'Codocu',
-			'codestado' => 'Codestado',
+			'codestado' => 'State',
                     'mes' => 'Month',
 			'anno' => 'Year',
 			'dia' => 'day',
-                    'numero'=>'Numero',
+                    'numero'=>'Number',
 		);
                 
 	}

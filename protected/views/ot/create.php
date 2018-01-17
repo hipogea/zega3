@@ -1,4 +1,6 @@
 <?php
+//echo yii::app()->getLanguage();
+					
 /* @var $this OtController */
 /* @var $model Ot */
 
@@ -13,6 +15,6 @@ $this->menu=array(
 );
 ?>
 
-<?php MiFactoria::titulo('Crear Orden','page_white_gear') ?>
+<?php MiFactoria::titulo('Create Project','page_white_gear') ?>
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

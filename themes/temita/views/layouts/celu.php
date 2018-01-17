@@ -11,6 +11,7 @@
            $cs->registerCssFile($baseUrl.'/css/menu.css');
             $cs->registerScriptFile($baseUrl.'/js/menu.js');
             $cs->registerCssFile($baseUrl.'/css/abound.css');
+                $cs->registerCssFile($baseUrl.'/css/iconosfuentes.css'); 
             $cs->registerScriptFile($baseUrl.'/js/plugins/blockuiplugin.js',CClientScript::POS_HEAD); 
         
            ?>   
