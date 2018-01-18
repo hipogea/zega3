@@ -61,14 +61,15 @@ class VwInventario extends ModeloGeneral
 			array('marca, adicional', 'length', 'max'=>15),
 			array('clasefoto', 'length', 'max'=>30),
 			array('codigopadre', 'length', 'max'=>5),
-			array('desdocu', 'length', 'max'=>45),
-			array('deslugar, despro', 'length', 'max'=>50),
+			//array('desdocu', 'length', 'max'=>45),
+			//array('deslugar, despro', 'length', 'max'=>50),
 			array('nomcen', 'length', 'max'=>35),
 			array('idinventario, comentario, fecha, codorden', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('rocoto,c_direc, coddocu, posicion, codlugar, codep, idinventario, codigo, c_estado, modificadopor, modificadoel, codigosap, codigoaf, descripcion, marca, modelo, comentario, fecha, serie, clasefoto, codigopadre, adicional, numerodocumento, codorden, codeporiginal, codepanterior, baja, tipo, desdocu, nomep, nombreepanterior, nombreeporiginal, deslugar, nomcen, despro', 'safe', 'on'=>'search'),
 		);
+                
 	}
 
 	/**
@@ -88,35 +89,34 @@ class VwInventario extends ModeloGeneral
 	public function attributeLabels()
 	{
 		return array(
-			'rocoto' => 'Rocoto',
-			'coddocu' => 'Coddocu',
-			'posicion' => 'Posicion',
+			'rocoto' => 'Move',
+			'coddocu' => 'Cod Doc',
+			'posicion' => 'Position',
 			'codlugar' => 'Codlugar',
-			'codep' => 'Codep',
-			'idinventario' => 'Idinventario',
-			'codigo' => 'Codigo',
-			'c_estado' => 'C Estado',
-			'modificadopor' => 'Modificadopor',
-			'modificadoel' => 'Modificadoel',
-			'codigosap' => 'Codigosap',
-			'codigoaf' => 'Codigoaf',
-			'descripcion' => 'Descripcion',
-			'marca' => 'Marca',
-			'modelo' => 'Modelo',
-			'comentario' => 'Comentario',
-			'fecha' => 'Fecha',
+			'codep' => 'Code Unit',
+			'idinventario' => 'Id',
+			'codigo' => 'Code',
+			'c_estado' => 'Status',			
+			'codigosap' => 'Cod SAP',
+                    'codestado'=>'Status',
+			'codigoaf' => 'Code Plate',
+			'descripcion' => 'Description',
+			'marca' => 'Make',
+			'modelo' => 'Model',
+			'comentario' => 'Comment',
+			'fecha' => 'Date',
 			'serie' => 'Serie',
 			'clasefoto' => 'Clasefoto',
 			'codigopadre' => 'Codigopadre',
-			'adicional' => 'Adicional',
+			'adicional' => 'Aditional',
 			'numerodocumento' => 'Numerodocumento',
 			'codorden' => 'Codorden',
 			'codeporiginal' => 'Codeporiginal',
 			'codepanterior' => 'Codepanterior',
 			'baja' => 'Baja',
-			'tipo' => 'Tipo',
-			'desdocu' => 'Desdocu',
-			'nomep' => 'Nomep',
+			'tipo' => 'Type',
+			//'desdocu' => 'Desdocu',
+			'nomep' => 'Unit Op',
 			'nombreepanterior' => 'Nombreepanterior',
 			'nombreeporiginal' => 'Nombreeporiginal',
 			'deslugar' => 'Deslugar',
@@ -161,19 +161,19 @@ class VwInventario extends ModeloGeneral
 		$criteria->compare('codepanterior',$this->codepanterior,true);
 		$criteria->compare('baja',$this->baja,true);
 		$criteria->compare('tipo',$this->tipo,true);
-		$criteria->compare('desdocu',$this->desdocu,true);
-		$criteria->compare('nomep',$this->nomep,true);
+		//$criteria->compare('desdocu',$this->desdocu,true);
+		/*$criteria->compare('nomep',$this->nomep,true);
 		$criteria->compare('nombreepanterior',$this->nombreepanterior,true);
 		$criteria->compare('nombreeporiginal',$this->nombreeporiginal,true);
 		$criteria->compare('deslugar',$this->deslugar,true);
 		$criteria->compare('despro',$this->despro,true);
-		$criteria->compare('c_direc',$this->c_direc,true);
+		$criteria->compare('c_direc',$this->c_direc,true);*/
                 
-                if(isset($_SESSION['sesion_Clipro'])) {
+                /*if(isset($_SESSION['sesion_Clipro'])) {
 			$criteria->addInCondition('codpro', $_SESSION['sesion_Clipro'], 'AND');
 		} ELSE {
 			$criteria->compare('codpro',$this->codpro,true);
-		}
+		}*/
                 
                 if(isset($_SESSION['sesion_Inventario'])) {
 			$criteria->addInCondition('codigoaf', $_SESSION['sesion_Inventario'], 'AND');

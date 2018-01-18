@@ -399,6 +399,9 @@ $mo=New Alinventario();
 
 
 	public function actionPio() {
+            $ge=New Dailywork();
+            echo $ge->correlativo('numero',null,'146');die();
+            VAR_DUMP($ge->getValueMeasurePointFromId(904));DIE();
             $ne=NEW Ot;
             echo $ne->correlativo('numero',null,'789',6);die();
             $cadena="cadena-dere-gtgt-";

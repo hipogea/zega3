@@ -114,7 +114,8 @@ class Ot extends  ModeloGeneral
                     'estado'=>array(self::BELONGS_TO,'Estado',array('codestado'=>'codestado','codocu'=>'codocu')),
                     'neot'=>array(self::HAS_MANY,'Neot','hidot'),
                    // 'ncomponentes'=>array(self::STAT,'Neot','hidot','Select'=>'sum(t.cant)'),
-
+                  //  'nmaquinas' => array(self::STAT, 'MachinesWork','hidot' ),
+			
 		);
 	}
 
@@ -462,6 +463,8 @@ public  function  resumenCostosPorCeCo($temp=false){
 		}
 		
 		return $suggest;
-	}                     
+	} 
+        
+       
       
 }

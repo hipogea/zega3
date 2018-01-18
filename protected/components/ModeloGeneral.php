@@ -267,33 +267,45 @@ public function etiquetascampos (){
                             
         }
         
+        
+        
 	public function Correlativo ($attribute,$criteria=null,$prefijo=null,$ancho=null) {
             $maxValue=$this->maxValue($attribute,$criteria);
-            $maxValue=(is_null($maxValue))?'1':$maxValue;
-            $maxValue=($maxValue+1).'';
-            $widthColumn=$this->getSizeColumn($attribute);
+            if(is_null($maxValue)){
+                $maxValue='1';
+                    $widthColumn=$this->getSizeColumn($attribute);
                 if(!is_null($prefijo) and !is_null($ancho)){                
                         $ancho=($ancho > $widthColumn )?$widthColumn:$ancho; 
                         $this->checkPrefixField($prefijo,$ancho);
-                           return $prefijo.str_pad($maxValue,$ancho-strlen($prefijo),"0",STR_PAD_LEFT); 
+                          
                     }
                     
                  if(is_null($prefijo) and !is_null($ancho)){
+                     $prefijo=$this->getPrefijo();
                         $ancho=($ancho > $widthColumn )?$widthColumn:$ancho; 
-                        return str_pad($maxValue,$ancho,"0",STR_PAD_LEFT); 
+                         $this->checkPrefixField($prefijo,$ancho);
+                        
                   }
                   
                 if(!is_null($prefijo) and is_null($ancho)){
                             $ancho=$widthColumn;
                            $this->checkPrefixField($prefijo,$ancho);
-                           return $prefijo.str_pad($maxValue,$ancho-strlen($prefijo),"0",STR_PAD_LEFT);
+                          
                     }
                  if(is_null($prefijo) and is_null($ancho)){
+                   $prefijo=$this->getPrefijo();
                  $ancho=$widthColumn;
-                return str_pad($maxValue,$ancho,"0",STR_PAD_LEFT); 
+                   $this->checkPrefixField($prefijo,$ancho);
+                
                     }
+             return $prefijo.str_pad($maxValue,$ancho-strlen($prefijo),"0",STR_PAD_LEFT); 
+                    
+                
+                 }else{
+               return ($maxValue +1).'';  
+             }
             
-                                            
+                                   
                                             
               /*           
             

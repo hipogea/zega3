@@ -18,8 +18,18 @@ class ManttoModule extends CWebModule
 	{
 		if(parent::beforeControllerAction($controller, $action))
 		{
-			// this method is called before any module controller action is performed
+		       
+                 
+                    // this method is called before any module controller action is performed
 			// you may place customized code here
+                   if(!ManttoConfig::checkDeafultValues())
+                   {
+                       $message=yii::t('manttoModule.errors','Before  use module {module}; You should set some parameters. Fill this values and try Again',array('{module}'=> strtoupper(ManttoConfig::getModuleName())));
+                       MiFactoria::Mensaje('notice', $message);
+                         $controller->redirect(yii::app()->createUrl('/documentos/configuraop',array('codocupadre'=> ManttoConfig::DOCU_DAILYWORK)));
+                
+                       
+                   }
 			return true;
 		}
 		else

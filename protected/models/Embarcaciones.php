@@ -64,13 +64,13 @@ class Embarcaciones extends ModeloGeneral
 	public function attributeLabels()
 	{
 		return array(
-			'codep' => 'Codigo',
-			'nomep' => 'Nombre',
-			'matricula' => 'Matricula',
-			'cbodega' => 'Capacidad',
-			'activa' => 'Activa?',
+			'codep' => 'Code',
+			'nomep' => 'Name',
+			'matricula' => 'Long Code',
+			'cbodega' => 'Capacity',
+			'activa' => 'Active?',
 			'codsap' => 'Codsap',
-			'codcentro' => 'Codcentro',
+			'codcentro' => 'Center',
 		);
 	}
 

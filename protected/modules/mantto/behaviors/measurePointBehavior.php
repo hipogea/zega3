@@ -70,6 +70,7 @@ private function getMeasurePointObject(){
       
     }
     
+    
 }
 
 /*

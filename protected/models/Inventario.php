@@ -67,8 +67,8 @@ class Inventario extends ModeloGeneral
 			  //atribuitos seguros en los escenarios 
 			  //BATCH_INS_BASICO
                         array('codep','safe','on'=>'cambiaep'),
-                         array('codep,tienecarter, codepanterior,codeporiginal,coddocu,fecha,numerodocumento,codlugar,tipo,codpropietario,codarea,codigosap,codigoaf,descripcion,marca,modelo,serie,comentario','safe','on'=>'muybasico'),
-                          array('codep, tipo,codpropietario,codarea,codigosap,codigoaf,descripcion,marca,modelo,serie,comentario','safe','on'=>'muybasicoupdate'),
+                         array('codep,tienecarter,tipo,codpropietario,codarea,codigosap,codigoaf,descripcion,marca,modelo,serie,comentario,capacity,year','safe','on'=>'muybasico'),
+                          array('codep, tipo,codpropietario,codarea,codigosap,codigoaf,descripcion,marca,modelo,serie,comentario,capacity,year','safe','on'=>'muybasicoupdate'),
                     array('tipo,codpropietario,codarea,descripcion,marca,modelo','required','on'=>'muybasicoupdate'),
                     array('codigoaf', 'unique', 'attributeName'=> 'codigoaf', 'caseSensitive' => 'true','message'=>'Este numero de placa ya esta registrada','on'=>'muybasico'),
 			
@@ -235,6 +235,8 @@ class Inventario extends ModeloGeneral
 		'area'=>array(self::BELONGS_TO, 'Areas', 'codarea'),
 		//'estado'=>array(self::BELONGS_TO, 'Estado', array('codestado','codigodoc')),
                 'estado' => array(self::BELONGS_TO, 'Estado', array('codestado'=>'codestado','coddocu'=>'codocu')),
+'centros' => array(self::BELONGS_TO, 'Centros','codpropietario'),
+               'tipoactivos' => array(self::BELONGS_TO, 'Tipoactivos','tipo'),     
 
 			'master'=>array(self::BELONGS_TO, 'Masterequipo','codmaster'),
 		'fisicodetalle'=>array(self::HAS_MANY, 'Inventariofisicodetalle', 'idinventario'),
@@ -296,40 +298,40 @@ public static function canttransporte(){
 	public function attributeLabels()
 	{
 		return array(			
-			'c_estado' => 'C Estado',
-			'codep' => 'Dep act',
-			'codarea'=>'Area',
-			'comentario' => 'Comentario',
-			'fecha' => 'Fecha',			
-			'codlugar' => 'Lugar',
-			'codigosap' => 'Codigo SAP',
-			'codigoaf' => 'Codigo de placa',
-			'descripcion' => 'Descripcion',
-			'marca' => 'Marca',
-			'modelo' => 'Modelo',
-			'codpropietario' => 'Dueño ',
+			'c_estado' => 'Status',
+			'codep' => 'Current Unit',
+			'codarea'=>'Bureau',
+			'comentario' => 'Comment',
+			'fecha' => 'Date',			
+			'codlugar' => 'Location',
+			'codigosap' => 'SAP Code',
+			'codigoaf' => 'Plate Code',
+			'descripcion' => 'Description',
+			'marca' => 'Make',
+			'modelo' => 'Model',
+			'codpropietario' => 'Owner',
 			'serie' => 'Serie',
-			'coddocu'=>'Documento',
-			'clasefoto' => 'Fotografia ',
-			'codigopadre' => 'Codigopadre',
-			'numerodocumento' => 'Numero documento',
-			'adicional' => 'Observacion ',		
-			'posicion' => 'Posicion',
-			'codcentro' => 'Codcentro',
-			'codcentrooriginal' => 'Codcentrooriginal',
-			'codeporiginal' => 'Dep orig',
-			'rocoto' => 'En transporte',
-			'codepanterior' => 'Dep ant',
-			'codcentroanterior' => 'Codcentroanterior',
-			'clase' => 'Clase',
-			'baja' => 'Baja',
+			'coddocu'=>'Document',
+			'clasefoto' => 'Picture ',
+			'codigopadre' => 'Parent Code',
+			'numerodocumento' => 'Num doc',
+			'adicional' => 'Comment ',		
+			'posicion' => 'Position',
+			'codcentro' => 'Center',
+			'codcentrooriginal' => 'Original Center',
+			'codeporiginal' => 'Original unit',
+			'rocoto' => 'on Change',
+			'codepanterior' => 'Old Unit',
+			'codcentroanterior' => 'Old Center',
+			'clase' => 'Class',
+			'baja' => '',
 			'tienecarter'=>'Has Additional Control Time',
-			'lugares.deslugar'=>'Lugar',			
-			'barcoactual.nomep'=>'Ep actual',
-			'barcoanterior.nomep'=>'Ep anterior',
-			'barcooriginal.nomep'=>'Ep origen',
+			'lugares.deslugar'=>'Place',			
+			'barcoactual.nomep'=>'Current Unit',
+			'barcoanterior.nomep'=>'Old Current',
+			'barcooriginal.nomep'=>'Original Unit',
 			'n_direc' => 'N Direc',
-			'codmaster' => 'Clase',
+			'codmaster' => 'Class',
 
 		);
 	}
@@ -841,15 +843,19 @@ public static function canttransporte(){
         
   public function getPoints(){
       return $this->manttohorometros;
-  }   
+  }  
+  //name puede ser el orden tambien
   public function getPoint($name){
       $fila=null;
+      //VAR_DUMP(is_numeric($name));DIE();
+     // print_r($this->getPoints());die();
+      //var_dump(is_numeric($name));die();
       if(is_numeric($name)){
-          //print_r($this->getPoints());die();
+         // echo "salio"; die();
            foreach($this->getPoints() as $point){
-              // var_dump($name);var_dump($point->orden);echo "<br>";
-         if($point->orden==$name){
-             //echo "ocindicne o no";
+              //var_dump($name);var_dump($point->orden);echo "<br>";die();
+         if($point->orden==$name+0){
+             //echo "ocindicne ";
            $fila=$point;  break;
          }
             
@@ -865,7 +871,7 @@ public static function canttransporte(){
     
      }
      //var_DUMP($fila);DIE();
-     return $fila;
+    return $fila;
   }   
   
   public function hasPoints(){

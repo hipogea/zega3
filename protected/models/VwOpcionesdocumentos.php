@@ -213,8 +213,10 @@ class VwOpcionesdocumentos extends CActiveRecord
       //print_r($model->attributes);yii::app()->end();
 	}
         public static function tienevalorpordefecto($model,$campo){
-		$nombreclase=get_class($model);
-
+	if(is_object($model))
+            $nombreclase=get_class($model);
+        else
+         $nombreclase=$model;
 		$criteria=new CDbCriteria;
                // $criteria->addCondition(" 1=1");
 		$criteria->addCondition(" nombredelmodelo=:vnamemodelo and idusuario=:vidusuario and campo=:vnombrecampo");

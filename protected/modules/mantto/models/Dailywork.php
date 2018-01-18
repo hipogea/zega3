@@ -170,6 +170,15 @@ class Dailywork extends ModeloGeneral implements IDocumentsDaily
                    $fechainicioproyecto=$this->cambiaformatofecha(Ot::findByNumero($this->codproyecto)->fechainiprog,false);
                    $fechafinproyecto=$this->cambiaformatofecha(Ot::findByNumero($this->codproyecto)->fechafinprog,false);
                    //no puede haber partes dentro de estas fechas
+                   if(    $this->isFirst() and 
+                          !($this->cambiaformatofecha($this->fecha,false)==
+                           $this->cambiaformatofecha($fechainicioproyecto,false)
+                           )
+                      )
+                   {$this->adderror('fecha',yii::t('errvalid','Can not create a new document because it\'s a first Document; date {fecha} must be equal to initial from project {fechaproyecto}',array('{fecha}'=>$this->fecha,'{fechaproyecto}'=>$this->cambiaformatofecha($fechainicioproyecto,true))));
+                     return ;
+                   }
+                   
                    if(!yii::app()->periodo->estadentrodefechas( $fechainicioproyecto,$this->cambiaformatofecha($this->fecha, false),$fechafinproyecto,true)){
                         $this->adderror('fecha',yii::t('errvalid','Can not create a new document because date {fecha}   is out of period proyect {proyecto} : ({inicio})-({fin}) ',array('{fecha}'=>$this->fecha,'{inicio}'=>$fechainicioproyecto,'{fin}'=>$fechafinproyecto,'{proyecto}'=>$this->codproyecto)));
                     return;
@@ -196,7 +205,7 @@ class Dailywork extends ModeloGeneral implements IDocumentsDaily
                // var_dump($this->getSecuencia());die();
               //verificaque las seuecnia de los tuirnos sean correctas
                 $turnito=(INTEGER)$this->getSecuencia($this->cambiaformatofecha($this->fecha, false));
-                
+               // var_dump($turnito);die();
                 if($turnito<>$this->hidturno){
                     $regi= Regimen::model()->findByPk($turnito)->desregimen;
                      $this->adderror('hidturno',yii::t('errvalid','The Shift is Premature, enter the previous Shift ('.$regi.') Before'));
@@ -218,13 +227,15 @@ class Dailywork extends ModeloGeneral implements IDocumentsDaily
                      
                  }else{
                     //aqui si verificamos la secuencia del turno del dia anteriuor 
-                     //var_dump($ayer);die();
-                     $turnito2=(integer)$this->getSecuencia($ayer);
-                     //var_dump($turnito2);die();
-                     if($turnito2!=-1){//quiere decir que no se ha compeltado los partes el dia anterior 
+                   //  var_dump($this->isFirst());die();
+                     //if(!$this->isFirst()){
+                         $turnito2=(integer)$this->getSecuencia($ayer);                     
+                         if($turnito2!=-1){//quiere decir que no se ha compeltado los partes el dia anterior 
                          $this->adderror('numero',yii::t('errvalid','Can not create a new Document Because has not completed all the shifts in the day {fecha}. First you must complete these',array('{fecha}'=>date("d/m/Y",strtotime($ayer)))));
                        return;
+                     //}
                      }
+                     
                  }
                  
               
@@ -245,27 +256,35 @@ class Dailywork extends ModeloGeneral implements IDocumentsDaily
         //var_dump($this->numero);
         return parent::afterfind();
     }
-    public function getot(){
-       return  Ot::findByNumero($this->codproyecto)->id;
+    public function getot($object=false){
+        $registro=Ot::findByNumero($this->codproyecto);
+       if($object)
+           return $registro;
+       else
+       return (is_null($registro))?null:$registro->id;
     }
     
     public function getSecuencia($fecha){
         //$fecha=$this->cambiaformatofecha($this->fecha, false);
         
-        $secuencia=Dailyturnos::getSecuencia($this->codproyecto);        
+        $secuencia=Dailyturnos::getSecuencia($this->codproyecto);  
+       
         $turnoshechos=yii::app()->db->
                 createCommand()->select('hidturno')->
                 from($this->tableName())->where(
                         "fecha=:vfecha",array(":vfecha"=>$fecha)
                         )->order("numero asc")
                 ->queryColumn();
-        //var_dump($secuencia); var_dump($turnoshechos);die();
+        
+        var_dump($turnoshechos);var_dump( $secuencia);
+       //var_dump($secuencia); var_dump($turnoshechos);die();
         if(count($turnoshechos)> 0){
             $diferencia=array_diff($secuencia,$turnoshechos);
-            //var_dump($diferencia);die();
+            var_dump($diferencia);
             if(count($diferencia)==0){//quiere decior qye ya secompltaron todos los turnos
                 return -1;
             }else{
+                //return $diferencia;
                 //var_dump((integer)$diferencia[0]);die();
                 foreach($diferencia as $clave=>$valor){ //este fopreach es para asegurarnos de no errores en la clave
                     //recordar que en diff array, las claves no se resetean se mantienen
@@ -377,11 +396,12 @@ class Dailywork extends ModeloGeneral implements IDocumentsDaily
     }
     
     public function  isProbablyDataIncomplete(){
-        if(($this->avgutil+0 < 0.2) or
-            ($this->avgdispo+0 > 0.95) or
+       /* if(($this->avgutil+0 < 0.2) or
+            ($this->avgdispo+0 > 0.98) or
             ($this->nparadastotales+0 < 2) )
             return true;
-        return false;
+        return false;*/
+        RETURN FALSE;
      }
      
      
@@ -390,10 +410,11 @@ class Dailywork extends ModeloGeneral implements IDocumentsDaily
       $fields= $this->getNamesColumnsDailyDet();
       foreach($fields as $clave=>$column){          
           $valores=$this->getMeasuresColumn($column);
-          //print_r($valores);
+          
           if(count($valores)>0)
           $incompletes[$column]=array_values($valores);
       }
+      //print_r($incompletes);DIE();
      return $incompletes;
   } 
  private function getMeasuresColumn($column){
@@ -438,6 +459,15 @@ class Dailywork extends ModeloGeneral implements IDocumentsDaily
      return $crite;
      
      }
+    
+     
+  /*Indic asi el campo es inicio de turno */
+  public function isInitialField($namefield){
+      //var_dump($this->initialFields());die();
+      return (in_array($namefield,$this->initialFields()));
+  }
+     
+     
  public function getOrderColumnDailydet($column){
      $orden=0;
      foreach($this->initFields() as $clave=>$valor){
@@ -465,6 +495,27 @@ public function initFields() {
         );
 }
 
+public function initialFields(){
+    $initialFields=array();
+    foreach($this->initFields() as $clave=>$valor){
+      $initialFields[]=$valor[0];
+    }
+    return $initialFields;
+}
+public function finalFields(){
+    $finalFields=array();
+    foreach($this->initFields() as $clave=>$valor){
+      $finalFields[]=$valor[1];
+    }
+    return $finalFields;
+}
+
+public function countMachinesWork(){
+    $ot=$this->getot(true);
+    //var_dump($ot);die();
+    return (!is_null($ot))?ManttoConfig::countMachinesWorking($ot->id):0;
+}
+
 //saca el id de un turno cualquiera para evadir los
 //eroroes de la clave foranea
 public static function getIdShift(){
@@ -475,5 +526,18 @@ public static function getIdShift(){
     return -1;
 }
 
+
+private function isFirst(){
+    if($this->codproyecto===null or empty($this->codproyecto))
+         throw new CHttpException(500,yii::t('errvalid','Proyecto code is null '));
+           
+    $pirm=yii::app()->db->
+                createCommand()->select('count(id)')->
+                from($this->tableName())->where(
+                        "codproyecto=:vproyecto",array(":vproyecto"=>$this->codproyecto)
+                        )->queryScalar();
+    if($pirm!=false)return false;
+    return true;
+}
 
 }

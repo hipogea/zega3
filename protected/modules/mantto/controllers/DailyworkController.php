@@ -16,7 +16,7 @@ class DailyworkController extends Controller
 	 */
 	public function filters()
 	{
-		return array('accessControl',array('CrugeAccessControlFilter'));
+		return array('accessControl',array( 'CrugeAccessControlFilter'));
 	}
 
 	/**
@@ -30,7 +30,7 @@ class DailyworkController extends Controller
 		return array(
 			
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('UpdateMeasurePoint',     'CheckDailyWork',     'events',    'ajaxDeleteShift',    'manageShifts',   'summary','ajaxcargasemanas',  'updatedailyevent','ajaxDeleteEvent', 'view','admin','daily','creaevento','updatedailydet',   'ajaxproyecto','create','update'),
+				'actions'=>array('AjaxShowDocumentsPoints',  'UpdateMeasurePoint',     'CheckDailyWork',     'events',    'ajaxDeleteShift',    'manageShifts',   'summary','ajaxcargasemanas',  'updatedailyevent','ajaxDeleteEvent', 'view','admin','daily','creaevento','updatedailydet',   'ajaxproyecto','create','update'),
 				'users'=>array('@'),
 			),
 			
@@ -58,6 +58,7 @@ class DailyworkController extends Controller
 	public function actionCreate()
 	{
 	
+            
             $this->warningWrongData();
             $model=new Dailywork;
                  $model->valorespordefecto();
@@ -66,7 +67,12 @@ class DailyworkController extends Controller
                  $model->codresponsable= Trabajadores::getCodigoFromUsuario(yii::app()->user->id);
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
-
+              if($model->countMachinesWork()==0)
+              {
+                  MiFactoria::mensaje('notice',yii::t('manttoModule.errors','You should Associate Projects With Machines, before '));
+                  $this->redirect(yii::app()->createUrl('inventario/admin'));
+                  
+              }
 		if(isset($_POST['Dailywork']))
 		{
 			$model->attributes=$_POST['Dailywork'];
@@ -242,8 +248,9 @@ $criterio=new CDbCriteria();
                     $horometro=-1;
                    $horometrop=-1;   
                    }*/
-                   
-                   $model->attachBehaviorMeasure('hidlectura1',
+                   $previa=$model->previous();
+                   if(!IS_NULL($previa)){
+                       $model->attachBehaviorMeasure('hidlectura1',
                            $filamaq->inventario->getPoint(1),
                            $model->getDateInitial(), 
                            $model->getValueMeasurePointFromId($model->previous()->hidlectura2)
@@ -256,6 +263,11 @@ $criterio=new CDbCriteria();
                            $model->getValueMeasurePointFromId($model->previous()->hidlectura4)
                            );
                    $model->putMeasureInPoint();
+                   }else{
+                       
+                   }
+                   
+                   
                    }
                    $model->setAttributes(
                            array(
@@ -674,12 +686,15 @@ $criterio=new CDbCriteria();
              }   
          
          $registro=$this->getLastDaily($proyecto);
+         if(is_null($registro))
+         return;
          $link= CHtml::link(yii::t('errvalid','  Click here to see '),yii::app()->createUrl('/mantto/'.$this->id.'/update/',array('id'=>$registro->id)));
                  
          /*print_r($this->CheckDailyWork($registro->id));echo "<br>";
          var_dump(count($this->CheckDailyWork($registro->id)));echo "<br>";*/
          if(count($this->CheckDailyWork($registro->id))>0){
-           // var_dump($this->CheckDailyWork($registro->id));die();
+             
+            //var_dump($this->CheckDailyWork($registro->id));die();
               $mensaje= yii::t('errvalid','The  Document ({documento} -'
                          . ' {fecha} - {turno})  has incomplet data. '
                          . 'Before to continue; make sure to check events and hour meters '.$link
@@ -801,7 +816,7 @@ $criterio=new CDbCriteria();
                      $pk= MiFactoria::cleanInput($_POST['pk']);
                      // $idlectura= MiFactoria::cleanInput($_POST['idlectura']);
                }
-              
+              //var_dump($name);die();
              
             /*var_dump($value);
             var_dump(substr($value,0,1));            
@@ -817,6 +832,7 @@ $criterio=new CDbCriteria();
           throw new CHttpException(500,yii::t('errvalid','This equipment do not have any meausre point '));
            
           if( $registro->{$name} > 0) {
+              //var_dump($registro->{$name});die();
               $measure= Manttolecturahorometros::model()->findByPk($registro->{$name});
               $measure->setScenario('update');
           }else{
@@ -828,25 +844,31 @@ $criterio=new CDbCriteria();
           if(!(in_array($name,$cols)))
           throw new CHttpException(500,yii::t('errvalid','The column name {name}  passed do not exists ',array('{name}'=>$name)));
           $dateRef=null;
-          $order=$registro->dailywork->getOrderColumnDailydet($name);
-          //var_dump($order);die();
-          if($order==1)
+          $escampoinicial=$registro->dailywork->isInitialField($name);
+          //var_dump($order);
+          if($escampoinicial)
              $dateRef=$registro->getDateInitial();
-          if($order==2)
+          else
               $dateRef=$registro->getDateFinal();
+          $order=$registro->dailywork->getOrderColumnDailydet($name);
           
           $horometro=$registro->inventario->getPoint($order);
-          if(is_null($horometro))
-          throw new CHttpException(500,yii::t('errvalid','For this  this Equipment   do not exists measure point.',array('{name}'=>$name)));
           if(!$registro->inventario->tienecarter=='1' && $order==2)  
            throw new CHttpException(500,yii::t('errvalid','In this  this Equipment this measure point is disabled. Make sure activate in master data options ',array('{name}'=>$name)));
-          
+         
+          if(is_null($horometro))
+          throw new CHttpException(500,yii::t('errvalid','For this  this Equipment   do not exists measure point.',array('{name}'=>$name)));
+          // ECHO $dateRef; die();
           $measure->setAttributes(
                   array(
                       'hidhorometro'=>$registro->inventario->getPoint($order)->id,
                       'fecha'=>$dateRef,
                        'lectura'=>$value
                       ));
+          /*var_dump($escampoinicial);
+          var_dump($order);
+          //var_dump($measure->isNewRecord);
+          var_dump($measure->attributes);die();*/
         
       $transaction= Yii::app()->db->beginTransaction();
        if($measure->save()){   
@@ -870,11 +892,45 @@ $criterio=new CDbCriteria();
                } 
            
        } 
-         
+         $measure->refresh();
         print_r($registro->attributes); print_r($measure->attributes);
       }  
       
-  private function getDateLimit(){
+/*Muestra las lecturas de 
+ *de un horometro especifgico*/     
+
+      public function actionAjaxShowDocumentsPoints(){
+          if(yii::app()->request->isAjaxRequest){               
+              if(isset($_GET['id'])){
+                 if(isset($_GET['order'])){
+                     $order=(integer)MiFactoria::cleanInput($_GET['order']); 
+                      $id= (integer)MiFactoria::cleanInput($_GET['id']); 
+                  $registro= Dailydet::model()->findByPk($id);   
+                  if(is_null($registro))             
+                      throw new CHttpException(500,'NO se encontro el registro con el id '.$id);    
+                
+                    }
+                    //var_dump($order);var_dump($id);die();
+                    $point=$registro->getMeasurePointByName($order+0);
+                    //var_dump($point);die();
+                    if(is_null($point))             
+                      throw new CHttpException(500,'Measure Point not found '.$id);    
+                    // $proveedorlecturas= Manttolecturahorometros::model()->search_por_horometro($id);
+             // var_dump($proveedorlecturas);
+              //echo "hola";
+                       $lastMeasure=$point->getLastObject();
+                        echo  yii::t('manttoModule.titulos','Code ')." : ".$point->codigo."\n";
+                        if(!is_null($lastMeasure)){
+                        echo  yii::t('manttoModule.errors','Last measure')." : ".$lastMeasure->lectura."-".$lastMeasure->getUnitsMeasure()."\n";
+                        echo  yii::t('manttoModule.errors','Registered on ')." : ".$lastMeasure->fecha."\n";
+                        echo  yii::t('manttoModule.notices','Created By ')." : ".Yii::app()->user->um->loadUserById($lastMeasure->iduser)->username;
+                       // ECHO $this->renderPartial('/maintenance/lecturas',array('proveedorlecturas'=>$proveedorlecturas),true, true);
+                        }else{
+                          echo  yii::t('manttoModule.titulos','This measure Point don\'t have measures yet ')."  \n";
+                          
+                        }
+                  }
+              }
+      }
       
-  }
 }

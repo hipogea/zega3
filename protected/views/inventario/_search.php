@@ -53,26 +53,26 @@
 		//datos = CHtml::listData(Estado::model()->find($criteria),'codestado','estado');
 	 echo $form->label($model,'codestado'); 
 		 $datos = CHtml::listData(Estado::model()->findall($criteria),'codestado','estado');
-		 				 echo $form->DropDownList($model,'codestado',$datos, array('empty'=>'--Indique el status--')  )  ;	
+		 				 echo $form->DropDownList($model,'codestado',$datos, array('empty'=>'--Choose a Option--')  )  ;	
 		?>
 	</div>
 	<div class="row">
 		<?php echo $form->label($model,'codep'); ?>
 				<?php  $datos = CHtml::listData(Embarcaciones::model()->findAll(array('order'=>'nomep')),'codep','nomep');
-					echo $form->DropDownList($model,'codep',$datos, array('empty'=>'--Seleccione Dependencia --')  )
+					echo $form->DropDownList($model,'codep',$datos, array('empty'=>'--Choose a Option --')  )
 					?>
 		 </div>
 		 
 		 <div class="row">
-				<?php echo $form->label($model,'codeporiginal'); ?>		
-				<?php  $datos = CHtml::listData(Embarcaciones::model()->findAll(array('order'=>'nomep')),'codep','nomep');
-						echo $form->DropDownList($model,'codeporiginal',$datos, array('empty'=>'--Original --')  )
+				<?php //echo $form->label($model,'codeporiginal'); ?>		
+				<?php  //$datos = CHtml::listData(Embarcaciones::model()->findAll(array('order'=>'nomep')),'codep','nomep');
+						//echo $form->DropDownList($model,'codeporiginal',$datos, array('empty'=>'--Original --')  )
 				?>
 		 </div>
 		  <div class="row">
-				<?php echo $form->label($model,'codepanterior'); ?>		
-				<?php  $datos = CHtml::listData(Embarcaciones::model()->findAll(array('order'=>'nomep')),'codep','nomep');
-						echo $form->DropDownList($model,'codepanterior',$datos, array('empty'=>'--Anterior --')  )
+				<?php //echo $form->label($model,'codepanterior'); ?>		
+				<?php  //$datos = CHtml::listData(Embarcaciones::model()->findAll(array('order'=>'nomep')),'codep','nomep');
+						//echo $form->DropDownList($model,'codepanterior',$datos, array('empty'=>'--Anterior --')  )
 				?>
 		 </div>
 
@@ -170,25 +170,22 @@
 	<?php  //$datos = array('A' => 'Maquinaria embarcaciones ','B'=> 'Artefactos operaciones flota','C'=> 'Muebles oficina','D' => 'Equipos de computo','E' => 'Equipos de local','F'=>'Seguridad naval','G'=>'Equipos PAMA');
 	$datos = CHtml::listData(Tipoactivos::model()->findAll(),'codtipo','destipo');
 
-	echo $form->DropDownList($model,'tipo',$datos, array('empty'=>'--Indique el tipo--')  )  ;	?>
+	echo $form->DropDownList($model,'tipo',$datos, array('empty'=>'--Choose a Option--')  )  ;	?>
 	</div>
 
 	
-	<div class="row">
-			<?php echo $form->label($model,'deslugar'); ?>
-			<?php echo $form->textField($model,'deslugar',array('size'=>25,'maxlength'=>40)); ?>
-	</div>
+	
 	
 	<div class="row">
-			<?php echo $form->label($model,'codlugar'); ?>
-			<?php  $datos = CHtml::listData(Lugares::model()->findAll(array('condition'=>'codlugar  in (select  codlugar from {{inventario}} where codlugar is not null)','order'=>'deslugar')),'codlugar','deslugar');
-					echo $form->DropDownList($model,'codlugar',$datos, array('empty'=>'--Seleccione un lugar --')  );
+			<?php //echo $form->label($model,'codlugar'); ?>
+			<?php // $datos = CHtml::listData(Lugares::model()->findAll(array('condition'=>'codlugar  in (select  codlugar from {{inventario}} where codlugar is not null)','order'=>'deslugar')),'codlugar','deslugar');
+					//echo $form->DropDownList($model,'codlugar',$datos, array('empty'=>'--Seleccione un lugar --')  );
 						?>					
 	</div>
 	 <div class="row">
-		<?php echo $form->label($model,'codpro'); ?>
+		<?php //echo $form->label($model,'codpro'); ?>
                             <?php
-				$this->widget('ext.matchcode1.Seleccionavarios',array(		
+				/*$this->widget('ext.matchcode1.Seleccionavarios',array(		
 							'nombrecampo'=>'codpro',												
 						//'ordencampo'=>1,
 							'controlador'=>'VwInventario',
@@ -201,7 +198,7 @@
 						'nombreframe'=>'cru-frame3',
 						//'nombrearea'=>'fehdfj',
 						));  
-			   ?>		
+			   */?>		
 	                     </div>
 	 
          <div class="row">

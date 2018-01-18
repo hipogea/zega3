@@ -110,25 +110,25 @@
 	</div>
 	 <div class="row">
 		<?php echo $form->labelEx($model,'descripcion'); ?>
-		<?php echo $form->textField($model,'descripcion',array('size'=>30,'maxlength'=>40)); ?>
+		<?php echo $form->textField($model,'descripcion',array('size'=>40,'maxlength'=>60)); ?>
 		<?php echo $form->error($model,'descripcion'); ?>
 	</div>
 	
 	 <div class="row">
 		<?php echo $form->labelEx($model,'marca'); ?>
-		<?php echo $form->textField($model,'marca',array('size'=>15,'maxlength'=>15)); ?>
+		<?php echo $form->textField($model,'marca',array('size'=>40,'maxlength'=>40)); ?>
 		<?php echo $form->error($model,'marca'); ?>
 	</div>
 
 	 <div class="row">
 		<?php echo $form->labelEx($model,'modelo'); ?>
-		<?php echo $form->textField($model,'modelo',array('size'=>25,'maxlength'=>25)); ?>
+		<?php echo $form->textField($model,'modelo',array('size'=>40,'maxlength'=>40)); ?>
 		<?php echo $form->error($model,'modelo'); ?>
 	</div>
 	
 	<div class="row">
 		<?php echo $form->labelEx($model,'codigoaf'); ?>
-		<?php echo $form->textField($model,'codigoaf',array('size'=>14,'maxlength'=>14)); ?>
+		<?php echo $form->textField($model,'codigoaf',array('size'=>18,'maxlength'=>18)); ?>
 		<?php echo $form->error($model,'codigoaf'); ?>
 	</div>
       
@@ -144,15 +144,33 @@
 			
 	
 	
-
+<div class="row">
+		<?php echo $form->labelEx($model,'codep'); ?>
+	<?php  $datosw = CHtml::listData(Embarcaciones::model()->findAll(),'codep','nomep');
+					echo $form->DropDownList($model,'codep',$datosw, array('empty'=>'--Choose Value--'));
+					?>
+          <?php echo $form->error($model,'codep'); ?>
+	</div>
 	
 	
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'serie'); ?>
-		<?php echo $form->textField($model,'serie',array('size'=>20,'maxlength'=>20)); ?>
+		<?php echo $form->textField($model,'serie',array('size'=>35,'maxlength'=>50)); ?>
 		<?php echo $form->error($model,'serie'); ?>
 	</div>
+            
+            <div class="row">
+		<?php echo $form->labelEx($model,'capacity'); ?>
+		<?php echo $form->textField($model,'capacity',array('size'=>12,'maxlength'=>12)); ?>
+		<?php echo $form->error($model,'capacity'); ?>
+	</div>
+            <div class="row">
+		<?php echo $form->labelEx($model,'year'); ?>
+		<?php echo $form->textField($model,'year',array('size'=>4,'maxlength'=>4)); ?>
+		<?php echo $form->error($model,'year'); ?>
+	</div>
+            
 	
 	<div class="row">
 		<?php echo $form->labelEx($model,'comentario'); ?>

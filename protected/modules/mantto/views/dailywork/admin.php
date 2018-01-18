@@ -4,12 +4,13 @@
 
 $this->breadcrumbs=array(
 	'Dailyworks'=>array('index'),
-	'Manage',
+	'List',
 );
 
 $this->menu=array(
 	//array('label'=>'List Dailywork', 'url'=>array('index')),
 	array('label'=>'New Dailywork', 'url'=>array('create')),
+    array('label'=>'Events', 'url'=>array('events')),
 );
 
 Yii::app()->clientScript->registerScript('search', "

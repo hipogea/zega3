@@ -6,12 +6,7 @@ if($this->action->id=='editadocumento'){
      $provedor= Detot::model()->search_por_ot($model->id);
 }
 ?>
-<?php
-		$this->beginWidget('zii.widgets.CPortlet', array(
-			'title'=>"CGridview - Row hovering",
-		));
-		
-	?>
+
     
     <?php
    
@@ -235,6 +230,6 @@ if ($this->estasEnsesion($model->id)) {
         //ECHO "BOtOTNE<BR>";VAR_DUMP($this::ESTADO_PREVIO);die(); 
 }
 ?>
-<?php $this->endWidget();?>
+
 
 

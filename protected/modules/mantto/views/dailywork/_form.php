@@ -332,7 +332,7 @@ $clasenormal='zii.widgets.grid.CDataColumn';
             ),
             
             
-             array('name'=>'hmt','type'=>'html'),
+             array('name'=>'hmt','type'=>'raw','value'=>'CHtml::link($data->hmt,"#",array("id"=>"link_".$data->id,"ajax"=>array("type"=>"GET","data"=>array("id"=>$data->id,"order"=>1),"success"=>"function(data){\$.notify(data,\"info\")}" ,"url"=>yii::app()->createUrl("/mantto/dailywork/AjaxShowDocumentsPoints")  )  )  )'),
               array(
                 'class' => 'application.components.booster.widgets.TbEditableColumn',
                 'name' => 'hidlectura3',
@@ -425,9 +425,14 @@ $clasenormal='zii.widgets.grid.CDataColumn';
 		//array('name'=>'nada','type'=>'raw','header'=>'Notificar','value'=>'CHtml::link("Responder","#",array("onclick"=>$(#cru-frame1).attr("src",""); $(#cru-dialog1).dialog("open");))' ),
 		
 	),
-)); 
+));
+
+
+  
+
 
 ?>
+
 
 
 <?PHP     

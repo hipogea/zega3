@@ -3,14 +3,14 @@
 /* @var $model Inventario */
 
 $this->breadcrumbs=array(
-	'Inventarios'=>array('index'),
-	'Manage',
+	'Assets'=>array('index'),
+	'List',
 );
 
 
 $this->menu=array(
 	//array('label'=>'List Inventario', 'url'=>array('index')),
-	array('label'=>'Crear Equipo', 'url'=>array('createBasic')),
+	array('label'=>'Create Asset', 'url'=>array('createBasic')),
 	//array('label'=>'Observaciones ', 'url'=>array('observaciones')),
 	//array('label'=>'Confirmar movimientos', 'url'=>array('/vwloginventari')),
 	//array('label'=>'Inventario Fisico', 'url'=>array('/admin')),
@@ -115,16 +115,19 @@ $('.search-form form').submit(function(){
 		array('name'=>'codigoaf','header'=>'Cod','type'=>'raw','value'=>'CHtml::link($data->codigoaf,array("inventario/basicupdate","id"=>$data->idinventario),array("onClick"=>"Loading.show(); return true;"))'), 
 		//array('name'=>'idinventario','header'=>'Id','type'=>'raw','value'=>'CHtml::link($data->idinventario,array("inventario/basicupdate","id"=>$data->idinventario),array("onClick"=>"Loading.show(); return true;"))'), 
 		
-		array('name'=>'descripcion','header'=>'Descripcion','value'=>'$data->descripcion'),
-		array('name'=>'nomep'),
-              array('name'=>'c_direc'),
-		array('name'=>'.','header'=>'.','type'=>'raw','value'=>'(!$data->rocoto=="1")?CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."ancla.png","",array("width"=>15,"height"=>15)):CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."truck.png","",array("width"=>25,"height"=>25))','htmlOptions'=>array('width'=>'30')),
+		array('name'=>'descripcion','value'=>'$data->descripcion'),
+		array('name'=>'marca'),
+            array('name'=>'modelo'),
+            array('name'=>'serie'),
+            array('name'=>'nomep'),
+              //array('name'=>'c_direc'),
+		//array('name'=>'.','header'=>'.','type'=>'raw','value'=>'(!$data->rocoto=="1")?CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."ancla.png","",array("width"=>15,"height"=>15)):CHtml::image(Yii::app()->getTheme()->baseUrl.Yii::app()->params["rutatemaimagenes"]."truck.png","",array("width"=>25,"height"=>25))','htmlOptions'=>array('width'=>'30')),
 		//array('name'=>'lugares_lugar','header'=>'Lugar','value'=>'$data->lugares->deslugar'),
-            array('name'=>'despro','header'=>'Ubicac','value'=>'$data->despro'),
-             array('name'=>'deslugar','header'=>'Pto Dir','value'=>'$data->deslugar'),
-		array('name'=>'numerodocumento','header'=>'Num Doc'),
-                array('name'=>'desdocu','header'=>'Doc'),
-            array('name'=>'fecha','value'=>'date("d/m/Y",strtotime($data->fecha))'),
+           // array('name'=>'despro','header'=>'Ubicac','value'=>'$data->despro'),
+             //array('name'=>'deslugar','header'=>'Pto Dir','value'=>'$data->deslugar'),
+		//array('name'=>'numerodocumento','header'=>'Num Doc'),
+                //array('name'=>'desdocu','header'=>'Doc'),
+           // array('name'=>'fecha','value'=>'date("d/m/Y",strtotime($data->fecha))'),
             // array('name'=>'numerodocumento','header'=>'N° Docum','value'=>'$data->numerodocumento'),
 		
 	),
@@ -136,7 +139,7 @@ $('.search-form form').submit(function(){
 <?php
 //Capture your CGridView widget on a variable
 //$gridWidget=$this->widget('bootstrap.widgets.TbGridView', array( . . .
-$this->renderExportGridButton($gridWidget,'Exportar resultados',array('class'=>'btn btn-info pull-right'));
+$this->renderExportGridButton($gridWidget,'Export results',array('class'=>'btn btn-info pull-right'));
  ?>
  
  <div style="float:left; width:200px; height:200px ; border 1px #000 solid;">

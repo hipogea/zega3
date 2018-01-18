@@ -568,15 +568,7 @@
 
 	
 			</div>
-
-<br>
-<br><br>
-<br><br>
-<br><br>
-
-
-
-
+  </div>
 <div>
 <?php  
  if(!$model->isNewRecord){
@@ -632,7 +624,7 @@ $this->widget('zii.widgets.jui.CJuiTabs', array(
  }
 ?>
 </div>
-</div>
+
 
 
 

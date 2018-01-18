@@ -476,12 +476,13 @@ $criteria->params=array(":vhidparte"=>$idparte);
                  
                  //El tiemppo de trabajo (horometros) mas los break downs no pueden ser mayores a las horas del turno
                  if($elmayor >$this->gethorasturno()+$tolerancia){
-               $this->adderror('hmt',yii::t('errvalid','The meter hours difference  added to the break down hours ({parada}), is greater than the hours ({turno}) of the shift ',array('{parada}'=>$this->tbd   ,'{turno}'=>$this->gethorasturno())));
+               $this->adderror('hmt',yii::t('errvalid','The meter  hours difference  added to the break down hours ({parada}), is greater than the hours ({turno}) of the shift ',array('{parada}'=>$this->tbd   ,'{turno}'=>$this->gethorasturno())));
               return;
                  }
                
-               //El tiempo de trabajo  mas llas hroas de hroometro no pueden menores al turno 
+               //El tiempo de trabajo  mas llas hroas de hroometro no pueden SER menores al turno 
                  if($elmayor +$tolerancia < $this->gethorasturno()){
+                   // var_dump($elmayor);var_dump($tolerancia);die();
                $this->adderror('hmt',yii::t('errvalid','The meter hours difference  added to the break down hours ({parada}), is less than the hours ({turno}) of the shift ',array('{parada}'=>$this->tbd   ,'{turno}'=>$this->gethorasturno())));
                   return;
                  }
@@ -637,7 +638,8 @@ $criteria->params=array(":vhidparte"=>$idparte);
     
      ///OBEITNEE LE OBEJTO PUNTO DEN MEDIDA 
      public function getMeasurePointByName($name){
-       $this->getEquipment()->getPoint($name);         
+         //var_dump($this->getEquipment());
+       return $this->getEquipment()->getPoint($name);         
      }
      
       ///OBEITNEE LE OBEJTO PUNTO DEN MEDIDA 

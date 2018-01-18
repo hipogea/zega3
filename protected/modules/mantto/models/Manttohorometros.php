@@ -265,9 +265,11 @@ public $fechareemplazo;
    
    public function getLastObject(){
        $id=$this->getLastIdLecture();
+      // var_dump($id);die();
        if(is_null($id))
            return null;
-      return  $this->Modellecturas()->findByPk($id);
+     
+      return Manttolecturahorometros::model()->findByPk($id);
    }
    
    private function getCriterio(){
@@ -354,6 +356,7 @@ public $fechareemplazo;
      }
      
      private function Modellecturas(){
-        return Manttolecturahorometros::model();
+        $da=Manttolecturahorometros::model();
+        return $da;
      }
 }

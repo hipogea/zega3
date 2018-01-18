@@ -63,3 +63,28 @@
 )); 
 
 ?>
+<div id="lecturas">
+    
+</div>
+
+<?php
+//--------------------- begin new code --------------------------
+   // add the (closed) dialog for the iframe
+    $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+    'id'=>'cru-dialog1',
+    'options'=>array(
+        'title'=>'Explorador',
+        'autoOpen'=>false,
+        'modal'=>true,
+        'width'=>600,
+        'height'=>600,
+    ),
+    ));
+?>
+<iframe id="cru-frame1" width="100%" height="100%"></iframe>
+<?php
+ 
+$this->endWidget();
+//--------------------- end new code --------------------------
+?>
+

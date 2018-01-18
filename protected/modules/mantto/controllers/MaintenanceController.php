@@ -245,7 +245,8 @@ class MaintenanceController extends Controller
                $id= (integer)MiFactoria::cleanInput($_GET['id']); 
              $proveedorlecturas= Manttolecturahorometros::model()->search_por_horometro($id);
              // var_dump($proveedorlecturas);
-            ECHO $this->renderPartial('lecturas',array('proveedorlecturas'=>$proveedorlecturas),true, true);
+             //echo "datra2;";
+            ECHO $this->renderPartial('lecturas',array('proveedorlecturas'=>$proveedorlecturas),false, false);
               //  var_dump($cad);    
                }
     //}

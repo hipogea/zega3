@@ -977,7 +977,7 @@ public function actionpio() {
 			//$modelitoactivo=Inventario::model()->findByPk($model->hidinventario);
 			//$model->codestado='10';
                         $model->hidinventario=$id;
-			$model->save();		 
+                        if(!$model->save()){print_r($model->geterrors());die();}		 
                            // $model->refresh();				
 			if (!empty($_GET['asDialog']))
 			{

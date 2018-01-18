@@ -42,7 +42,7 @@ class Manttolecturahorometros extends ModeloGeneral implements ImeasurePoints
                     array('lectura', 'checkLectura', 'on'=>'insert,update'),
                     array('hidhorometro,lectura,fecha', 'safe', 'on'=>'insert,update'),
 		array('fecha+hidhorometro', 'application.extensions.uniqueMultiColumnValidator','on'=>'insert','message'=>'This Date already has a measure'),
-			
+			array('iduser', 'safe'),
 			array('lectura', 'length', 'max'=>20),
 			array('fecha', 'length', 'max'=>19),
 			// The following rule is used by search().
@@ -136,7 +136,8 @@ class Manttolecturahorometros extends ModeloGeneral implements ImeasurePoints
         }
         
         public function next(){
-            $identidad=$this->getIdVecino(false);           
+            $identidad=$this->getIdVecino(false);  
+           // ECHO $identidad; die();
             if($identidad!=false){
                 return $this::model()->findByPk($identidad);
             }else{
@@ -310,7 +311,7 @@ class Manttolecturahorometros extends ModeloGeneral implements ImeasurePoints
            if($isFirst){
               
               if($isIncremental && ($this->lectura() < $initialValuePoint)) {
-               $this->adderror('lectura',yii::t('errvalid','This value is less than the initial value of measure point '));
+               $this->adderror('lectura',yii::t('errvalid','This value {value} is less than the initial value {initialvalue} of measure point ',array('{value}'=>$this->lectura,'{initialvalue}'=>$initialValuePoint)));
               return;}
                if(!$isIncremental && ($this->lectura() > $initialValuePoint)) {
                $this->adderror('lectura',yii::t('errvalid','This value is greater than the initial value of measure point '));
@@ -510,6 +511,19 @@ class Manttolecturahorometros extends ModeloGeneral implements ImeasurePoints
        
    }
     
+   public function getUnitsMeasure(){
+       if($this->isNewRecord){
+           if($this->hidhorometro > 0){
+              $horom= Manttohorometros::model()->findByPk($this->hidhorometro);
+              if(!is_null($horom))
+                  return $horom->manttohorometros->ums->desum; 
+              else
+                  return null;
+           }
+       }else{
+          return $this->manttohorometros->ums->desum; 
+       }
+   }
     
      public function  updatePoint($difference){
        
@@ -519,5 +533,10 @@ class Manttolecturahorometros extends ModeloGeneral implements ImeasurePoints
        
    }
     
+   
+   public function beforeSave() {
+       $this->iduser=yii::app()->user->id;
+      return parent::beforeSave();
+   }
     
 }
