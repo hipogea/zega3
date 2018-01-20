@@ -20,7 +20,7 @@ class createAction extends CAction
          
       if ($model->save()){
           //ECHO "ERROR ERE";DIE();
-       MiFactoria::mensaje('success',yii::t('woModule.messages','Location has been created '));
+       MiFactoria::mensaje('success',yii::t('woModule.messages','Location {location} has been created ',array('{location}'=>$model->codigo)));
         $controller->redirect('admin');
       }else{
          // ECHO "ERROR";DIE();

@@ -954,10 +954,10 @@ public function actionpio() {
 			$model->attributes=$_POST['Inventario'];
                        
 			if($model->save()) {
-				Yii::app()->user->setFlash('success',' Se ha creado el activo Fijo ');
-			   $this->render('update',array(
+				Yii::app()->user->setFlash('success',' Asset '.$model->codigoaf.' has been created');
+			  /* $this->render('update',array(
 			'model'=>$model,
-		           ));
+		           ));*/ $this->redirect('admin');
 				Yii::app()->end();   
 			}
 		}

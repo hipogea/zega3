@@ -57,7 +57,7 @@
 				'botones'=>$botones,
 				'size'=>24,
 				'extension'=>'png',
-				'status'=>$model->{$this->campoestado},
+				'status'=>'10',
 			)
 		);?>
 	</div>

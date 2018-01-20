@@ -530,7 +530,7 @@ public static function model($className=__CLASS__)
      ******************************/    
    public function checkcompromisos ($nombreclase=null){
        //verificando la propedad relatriosn
-       
+       //VAR_DUMP($this->_estacomprometido);DIE();
        if(!$this->_estacomprometido){ //Solo efectuarla en el caso de que el flag de compromisos ea falso
            //en otro caso se supopne q  ue ya esta comppemtido, para evitar sobrecarga de trabajo 
        $relaciones =$this->relations();

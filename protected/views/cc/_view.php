@@ -18,18 +18,7 @@
 	<?php echo CHtml::encode($data->centro); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('creadopor')); ?>:</b>
-	<?php echo CHtml::encode($data->creadopor); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('creadoel')); ?>:</b>
-	<?php echo CHtml::encode($data->creadoel); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('modificadopor')); ?>:</b>
-	<?php echo CHtml::encode($data->modificadopor); ?>
-	<br />
-
+	
 	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('modificadoel')); ?>:</b>
 	<?php echo CHtml::encode($data->modificadoel); ?>

@@ -138,14 +138,14 @@ class LocationsController extends Controller
                         $model->setScenario ('update');
                          $vista='update';
                     }
-                        
+                        $this->performAjaxValidation($model);
 		if(isset($_POST['Locations']))
 		{
 			$model->attributes=$_POST['Locations'];
 			if($model->save()){
                             $this->redirect(array('admin'));
                         }ELSE{
-                            PRINT_R($model->geterrors());
+                            PRINT_R($model->geterrors());DIE();
                         }
 				
 		}

@@ -4,7 +4,7 @@
    <meta name="viewport" content="width=device-width, initial-scale=1">
    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
 
-<title>Nautilus Solver</title>
+<title>Maintenance</title>
     <?php       
 	  $baseUrl = Yii::app()->theme->baseUrl;
 	  $cs = Yii::app()->getClientScript();
@@ -16,7 +16,7 @@
         
            ?>   
 
-<link rel="shortcut icon" href="<?php echo $baseUrl; ?>/img/icons/favicon.png" type="image/png" />
+<link rel="shortcut icon" href="<?php echo $baseUrl; ?>/img/icons/favicon.ico" type="image/ico" />
 
 </head> 
 <?php
@@ -63,11 +63,7 @@ echo CHtml::script("$(document).ajaxStart(function () {
         <?php 
                     $botones=array(
 
-			'th-list'=>array(
-				'type'=>'B',
-				'ruta'=>array('/listamateriales/admin',ARRAY()),
-				'visiblex'=>array('10'),
-			),
+			
 
 
 			'star' => array(

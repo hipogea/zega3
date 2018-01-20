@@ -1,48 +1,18 @@
 <?php
-class Locations extends ModeloGeneral Implements Ilocations
+class Equipments extends ModeloGeneral Implements Ilocations
 {
     
         public $_parent=null; ///modelo parent 
         const LEVEL_ROOT=1;
-        public $campossensibles=array('codigo','colector','codcen','cebe');
+       // public $campossensibles=array('codigo','colector','codcen','cebe');
         public $codeparent; //solo para mosmtrar valores, no tiene utulidad 
-        /*mejorar este codigo 
-         * esta proiedad debe de ser ingresad en 
-         * la configuracion del modulo o apllicaicon */         
-       /* public $_patterncode=array(
-                '/^[A-Z0-9]{4}\\z/',
-                '/^[A-Z0-9]{4}-[A-Z0-9]{2}\\z/',
-                '/^[A-Z0-9]{4}-[A-Z0-9]{2}-[A-Z0-9]{3}\\z/',
-                '/^[A-Z0-9]{4}-[A-Z0-9]{2}-[A-Z0-9]{3}-[A-Z0-9]{5}\\z/',
-                '/^[A-Z0-9]{4}-[A-Z0-9]{2}-[A-Z0-9]{3}-[A-Z0-9]{5}-[A-Z0-9]{5}\\z/',
-                '/^[A-Z0-9]{4}-[A-Z0-9]{2}-[A-Z0-9]{3}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}\\z/'
-            );*/
-        
-       // private $_format_pattern='XXXX-XX-XXX-XXXXX-XXXXX-XXXXX';
-	/**
-	 * @return string the associated database table name
-	 */
+       
 	public function tableName()
 	{
-		return '{{locations}}';                
+		return '{{inventario}}';                
 	}
 
         
-         public function behaviors()
-    {
-        return array(
-            'TreeBehavior' => array(
-                'class' => 'ext.behaviors.XTreeBehavior',
-                'treeLabelMethod'=> 'getTreeLabel',
-                'menuUrlMethod'=> 'getMenuUrl',
-            ),
-        );
-    }
-        
-       // public $campossensibles=array('colector','cebe','codcen','activa');
-	/**
-	 * @return array validation rules for model attributes.
-	 */
 	public function rules()
 	{
 		// NOTE: you should only define rules for those attributes that
@@ -90,8 +60,7 @@ class Locations extends ModeloGeneral Implements Ilocations
 			'children' => array(self::HAS_MANY, 'Locations', 'parent_id'),
                         'childequi' => array(self::HAS_MANY, 'Inventario', 'idinventario'),
 			'childCount' => array(self::STAT, 'Locations', 'parent_id'),
-		        'nequipments'=>array(self::STAT, 'Equipments', 'parent_id'),
-                    );
+		);
 	}
 
 	/**
@@ -157,25 +126,6 @@ class Locations extends ModeloGeneral Implements Ilocations
 		return parent::model($className);
 	}
         
-        /*
-         * Esta funcion deveulve el codigo de la ubicacion del parent
-         */
-        
-        public function getCodeParent(){
-            IF(strlen(trim($this->codigo))==0)
-                return '';
-            if(is_null($this->getParent())){
-                $cad= strrev($this->codigo);
-                $lon=stripos($cad,$this->delimiter());
-                /*echo $this->delimiter();echo "<br>";
-                ECHO $cad; echo "<br>";var_dump($lon);die();*/
-               if($lon===false)return $this->codigo;
-               else
-               return  strrev(substr($cad,$lon+1));
-            }else{
-                return $this->getParent()->codigo;
-            }
-        }
        
         /*
          * Devuelve el objeto parent; pero se validan algunos casos
@@ -186,20 +136,41 @@ class Locations extends ModeloGeneral Implements Ilocations
          * @force: Indica si se refresca nuevamednjte l opbjeto
          */
         public function getParent($force=false){
-            if($this->iamRoot()) //es el root
-                return null;
-           if($this->isNewRecord ){
-                return null;
-           }else{
-              if($force or is_null($this->_parent)){
-                            $this->_parent=$this->padre;
-                    }
-                    return $this->_parent; 
-           }
-           
+          if($this->parent_id==0 or
+            is_null($this->parent_id)){
+              return null;
+          }else{
+            if(is_null($this->_parent) or $force){
+                $register=Locations::model()->findByPk($this->parent_id);
+                if($register===null)
+                     throw new CHttpException(500,yii::t('woModule.errors','This Asset don\'t have any parent reference by {id}',array('{id}'=>$this->parent_id)));
+         
+                $this->_parent=$register;unset($register);
+            }              
+            else
+            {
+                return $this->_parent;
+            }
+          }
         }
        
-       
+     
+      public function isMounted($force=false){
+          if($force){
+              if($this->parent_id>0){
+                  $parent=$this->getParent($force);
+                  if(is_null($parent)){
+                      unset($parent);return false;
+                  }else{
+                      unset($parent);return true; 
+                  }
+              }else{
+                  return false;
+              }
+          }else{
+             return ($this->parent_id>0)?true:false;
+          }
+      }  
         
         
         /*
@@ -544,6 +515,4 @@ class Locations extends ModeloGeneral Implements Ilocations
        return true;
    }    
 
-   
-   
 }

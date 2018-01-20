@@ -8,12 +8,12 @@
 <div class="wide form">
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'locations-form',
-	/*'enableClientValidation'=>false,
+	'enableClientValidation'=>false,
 			'clientOptions' => array(
 				'validateOnSubmit'=>true,
 				'validateOnChange'=>true
-			),*/
-			'enableAjaxValidation'=>true,
+			),
+			'enableAjaxValidation'=>TRUE,
 )); ?>
 
     <?php //echo $form->errorSummary($model); ?>
@@ -94,7 +94,8 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'codigo'); ?>
-                <?php if(!$model->checkcompromisos()){ ?>
+             <?php //VAR_DUMP($model->checkcompromisos());DIE(); ?>
+                <?php if($model->escampohabilitado('codigo'))  { ?>
                 <?php  $this->widget('zii.widgets.jui.CJuiAutoComplete', array(
 			'model'=>$model,
 			'attribute'=>'codigo',
@@ -107,7 +108,7 @@
 						));
                 ?>
                 <?php }else{  ?>
-		<?php echo $form->textField($model,'codigo',array('size'=>60,'maxlength'=>250,'disabled'=>$model->disabledcampo('codigo'))); ?>
+		<?php echo $form->textField($model,'codigo',array('size'=>60,'maxlength'=>250,'disabled'=>'disabled')); ?>
 		 <?php }  ?>
                     <?php echo $form->error($model,'codigo'); ?>
 	</div>
@@ -123,7 +124,7 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'colector'); ?>
-             <?php if(!$model->checkcompromisos()){ ?>
+             <?php if($model->escampohabilitado('colector'))  { ?>
                 <?php  $this->widget('zii.widgets.jui.CJuiAutoComplete', array(
 			'model'=>$model,
 			'attribute'=>'colector',
@@ -136,7 +137,7 @@
 						));
                 ?>
                 <?php }else{  ?>
-		<?php echo $form->textField($model,'colector',array('size'=>15,'maxlength'=>15,'disabled'=>$model->disabledcampo('colector'))); ?>
+		<?php echo $form->textField($model,'colector',array('size'=>15,'maxlength'=>15,'disabled'=>'disabled')); ?>
 		 <?php }  ?>
 		<?php echo $form->error($model,'colector'); ?>
 	</div>

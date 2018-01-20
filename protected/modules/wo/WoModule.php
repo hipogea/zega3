@@ -11,6 +11,7 @@ class WoModule extends CWebModule
 		$this->setImport(array(
 			'wo.models.*',
 			'wo.components.*',
+                    'wo.interfaces.*',
 		));
 	}
 

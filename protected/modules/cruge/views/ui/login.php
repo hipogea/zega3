@@ -8,7 +8,8 @@
 <!--</div>-->
 <?php else: ?>
         <!--
-<div style="height:1700px;margin-left:200px; padding-left:50px; display:block; background-image:url('<?php echo Yii::app()->getTheme()->baseUrl.DIRECTORY_SEPARATOR."img".DIRECTORY_SEPARATOR."inicio.jpg"; ?>');background-repeat: no-repeat;padding-top: 100px;">
+<div style="height:1700px;margin-left:200px; padding-left:50px; display:block; background-image:url('
+    <?php echo Yii::app()->getTheme()->baseUrl.DIRECTORY_SEPARATOR."img".DIRECTORY_SEPARATOR."fondo2.jpg"; ?>');background-repeat: no-repeat;padding-top: 100px;">
   -->
     <?php
 $form=$this->beginWidget('CActiveForm', array(

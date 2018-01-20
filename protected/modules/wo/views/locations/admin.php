@@ -10,7 +10,7 @@ $this->breadcrumbs=array(
 
 
 
-if($model->existsCodeRoot())
+if(!$model->existsCodeRoot())
  $this->menu=array(array('label'=>'Create Root', 'url'=>array('createroot')));
 else
 $this->menu=array(
@@ -62,8 +62,3 @@ $('.search-form form').submit(function(){
 	),
 )); ?>
 
-<?php 
-$this->renderpartial('tree_locations');
-
-
-?>
